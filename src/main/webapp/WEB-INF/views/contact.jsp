@@ -23,7 +23,7 @@
 	<meta name="twitter:card" content="" />
 
 	<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="shortcut icon" href="/resources/images/favicon.ico">
 
 	<link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
 	
@@ -53,7 +53,6 @@
 	<script src="/resources/js/jquery.flexslider-min.js"></script>
 	<!-- Sticky Kit -->
 	<script src="/resources/js/sticky-kit.min.js"></script>
-	
 	
 	<!-- MAIN JS -->
 	<script src="/resources/js/main.js"></script>
@@ -182,10 +181,20 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 							</div>
 						</div>
 					</div>
-				</div>
+			<div id="map" style="width:500px;height:400px;"></div>
+			<!-- 다음 지도 API -->
+			<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=31fba0106b8bbef9d66bc6ff1a7295ad"></script>
+			<script>
+			var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+			var options = { //지도를 생성할 때 필요한 기본 옵션
+				center: new daum.maps.LatLng(35.26712648061961, 129.07900865286373), //지도의 중심좌표.
+				level: 3 //지도의 레벨(확대, 축소 정도)
+			};
+		
+			var map = new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
+			</script>	
 			</div>
-
-			<div id="map"></div>	
+				</div>
 		</div>
 	</div>
 

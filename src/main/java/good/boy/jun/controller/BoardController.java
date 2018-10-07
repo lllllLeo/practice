@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,16 +24,23 @@ public class BoardController {
 	@Autowired
 	boardService service;
 	
+	/*
+	 private : 외부에서 로그를 가로채지 못하도록 하기 위해서
+	 static final : 로그 내용이 바뀌지 않으므로
+	 
+	 로그를 수집할 method에서 로그 수집 명령어 호출
+	 logger.info("로그 타이틀", 출력할 값);
+	*/
+	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	//게시판 글 전체 조회
 	@RequestMapping(value="", method=RequestMethod.GET)
 	public String boardlist(Model model) {
-		System.out.println(": : : : B o a r d : : : :");
+		logger.info(": : : : B o a r d : : : :");
 		try {
 			List <boardDTO> list = service.readall();
-			System.out.println(list.get(0)+"/1");
 			model.addAttribute("list",list);
-			System.out.println(list.get(0)+"/2");
-			System.out.println(list);
+			logger.info("list는 "+list);
+			logger.info("list는 "+list.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -42,11 +51,12 @@ public class BoardController {
 	// 글 조회
 	@RequestMapping(value="/{board_num}", method=RequestMethod.GET)
 	public String readGET(@PathVariable int board_num, Model model, boardDTO dto) {
-		System.out.println(": : : : R E A D : : : :");
+		logger.info(": : : : R E A D : : : :");
+		logger.info("board_num은 "+board_num);
 		try {
 			service.viewcount(board_num);
 			dto = service.read(board_num);
-			System.out.println(dto);
+			logger.info("dto는 "+ dto);
 			model.addAttribute("dto",dto);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,14 +68,15 @@ public class BoardController {
 	//글 등록페이지 GET
 	@RequestMapping(value="register", method=RequestMethod.GET)
 	public String registerGET() {
+		logger.info(" : : : : R E G I S T E R ( G E T ) : : : :");
 		return "register";
 	}
 	
 	//글 등록하기 POST 
 	@RequestMapping(value="register", method=RequestMethod.POST)
 	public @ResponseBody void registerPOST(boardDTO dto, HttpServletResponse response) {
-		System.out.println(": : : : R E G I S T E R : : : :");
-		System.out.println(dto);
+		logger.info(": : : : R E G I S T E R ( P O S T ) : : : :");
+		logger.info("받아온 dto content는 "+dto.getBoard_content());
 		
 		try {
 			service.register(dto);
@@ -78,10 +89,10 @@ public class BoardController {
 	//글 수정페이지 GET
 	@RequestMapping(value="update/{board_num}", method=RequestMethod.GET)
 	public String updateGET(@PathVariable int board_num, boardDTO dto, Model model) {
-		System.out.println(": : : : U P D A T E ( G E T ) : : : :");
+		logger.info(": : : : U P D A T E ( G E T ) : : : :");
 		try {
 			dto = service.read(board_num);
-			System.out.println(dto.getBoard_content());
+			logger.info("dto content는 "+dto.getBoard_content());
 			model.addAttribute("dto",dto);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -93,10 +104,11 @@ public class BoardController {
 	//글 수정페이지 POST
 	@RequestMapping(value="update/{board_num}", method=RequestMethod.POST)
 	public String updatePOST(boardDTO dto) {
-		System.out.println(": : : : U P D A T E ( P O S T ) : : : :");
+		logger.info(": : : : U P D A T E ( P O S T ) : : : :");
 		try {
+			logger.info(""+dto);
+			logger.info("수정 후 바뀐 내용 "+dto.getBoard_title()+ " "+ dto.getBoard_content());
 			service.update(dto);
-			System.out.println(dto.getBoard_content());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -108,7 +120,7 @@ public class BoardController {
 	// 굳이 error를 만들어줄필요있나 어처피 있는 게시글에서 그 게시글 번호를 받아서 삭제하는건데
 	@RequestMapping(value="delete/{board_num}", method=RequestMethod.POST)
 	public @ResponseBody String delete(@PathVariable int board_num, HttpServletResponse response) {
-		System.out.println(": : : : D E L E T E : : : :");
+		logger.info(": : : : D E L E T E : : : :");
 		boolean result;
 		String check = "success";
 		try {

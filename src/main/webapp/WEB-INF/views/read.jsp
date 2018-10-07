@@ -4,30 +4,33 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
+	<link rel="shortcut icon" href="/resources/images/favicon.ico">
 	<title>: : : : : Y U J U N : : : : :</title>
 	
 	<!-- jQuery -->
 	<script src="/resources/js/jquery.min.js"></script>
 	
 	<script>
-	$(function() {
-		$('#delete').on('click', function(){
-		alert();
-			$.ajax({
-				url : "board/delete/${board_num}",
-				type : "post",
-			}).done(function(responseData){
-				var data = responseData;
-				
-				if(data.indexOf('success') != -1){
-					alert('삭제성공');					
-					location.replace('/board');
-				}else if(data.indexOf('error') != -1){
-					alert();
-				}
+	
+		$(function() {
+			$('#delete').on('click', function() {
+				if (confirm("삭제하시겠습니까?") == true) {
+					$.ajax({
+						url : "/board/delete/${board_num}",
+						type : "post",
+					}).done(function(responseData) {
+						var data = responseData;
+
+						if (data.indexOf('success') != -1) {
+							alert('삭제성공');
+							location.replace('/board');
+						} else if (data.indexOf('error') != -1) {
+							alert('에러가 발생했습니다.');
+						}
+					})
+				} else	return;
 			})
-		})
-	});
+		});
 	</script>
 	</head>
 	<body>

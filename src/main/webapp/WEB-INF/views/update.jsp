@@ -3,6 +3,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
+	<link rel="shortcut icon" href="/resources/images/favicon.ico">
 	<title>: : : : : Y U J U N : : : : :</title>
 	
 	<!-- jQuery -->

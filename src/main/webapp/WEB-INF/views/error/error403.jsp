@@ -7,6 +7,7 @@
 <title>Error 403</title>
 
 <link rel="stylesheet" href="/resources/css/error.css">
+<link rel="shortcut icon" href="/resources/images/favicon.ico">
 <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Oxygen:700' rel='stylesheet' type='text/css'>
 
