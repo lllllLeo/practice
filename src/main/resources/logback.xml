@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+	<!--  
+		logger : 출력할 메시지를 appender에 전달한다.
+		appender : 전달된 로그를 어디에 출력할지 결정한다.(console, 파일출력, db저장 등)
+		layout : 로그를 어떤 형식으로 출력할 것인지 결정한다.
+	-->
     <!-- log4jdbc-log4j2 -->
 	<logger name="jdbc.sqlonly"        level="DEBUG"/> <!-- SQL문만을 로그로 남기며, PreparedStatement일 경우 관련된 argument 값으로 대체된 SQL문이 보여진다. -->
     <logger name="jdbc.sqltiming"      level="INFO"/> <!-- SQL문과 해당 SQL을 실행시키는데 수행된 시간 정보(milliseconds)를 포함한다. -->

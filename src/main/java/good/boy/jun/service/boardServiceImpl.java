@@ -44,4 +44,9 @@ public class boardServiceImpl implements boardService {
 		dao.viewcount(board_num);
 	}
 
+	@Override
+	public int pageCount() throws Exception {
+		return dao.pageCount();
+	}
+
 }

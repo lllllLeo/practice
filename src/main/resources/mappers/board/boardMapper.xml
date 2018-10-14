@@ -58,6 +58,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE 
 			board_num = #{board_num}
 	</update>
+
+	<!--<select id="pageCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			tbl_board;
+	</select>
+	<select id="readPage" resultType="good.boy.jun.model.dto.boardDTO">
+		SELECT
+			board_num, board_title, board_writer, board_viewcount, board_date
+		FROM
+			tbl_board
+		WHERE
+			board_num > 0
+		ORDER BY
+			board_num DESC, board_date DESC
+
+	</select>-->
 	
 </mapper>
 

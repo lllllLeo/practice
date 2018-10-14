@@ -46,5 +46,14 @@ public class boardDAOImpl implements boardDAO {
 		session.update("board.viewcount", board_num);
 	}
 
+	@Override
+	public List<boardDTO> readPage(int page) throws Exception {
+		return session.selectList("board.readPage", page);
+	}
+
+	@Override
+	public int pageCount() throws Exception {
+		return session.selectOne("board.pageCount");
+	}
 
 }

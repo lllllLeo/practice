@@ -17,4 +17,6 @@ public interface boardService {
 	public List<boardDTO> readall() throws Exception;
 	
 	public void viewcount(int board_num) throws Exception;
+
+    public int pageCount() throws Exception;
 }

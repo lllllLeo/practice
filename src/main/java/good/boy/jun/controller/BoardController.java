@@ -33,7 +33,8 @@ public class BoardController {
 	*/
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	//게시판 글 전체 조회
-	@RequestMapping(value="", method=RequestMethod.GET)
+
+    @RequestMapping(value="", method=RequestMethod.GET)
 	public String boardlist(Model model) {
 		logger.info(": : : : B o a r d : : : :");
 		try {
@@ -46,8 +47,21 @@ public class BoardController {
 		}
 		return "board";
 	}
-	
-	
+
+   /* //게시판 글 전체 조회(페이징 처리)
+    @RequestMapping(value="", method=RequestMethod.GET)
+    public String boardListPaging(Model model){
+        logger.info(": : : : B O A R D : : : :");
+        try {
+            int page = service.pageCount();
+            page = page / 10 + 1;
+            service.boardListPaging(page);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "board";
+    }*/
+
 	// 글 조회
 	@RequestMapping(value="/{board_num}", method=RequestMethod.GET)
 	public String readGET(@PathVariable int board_num, Model model, boardDTO dto) {
