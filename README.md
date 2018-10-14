@@ -1,5 +1,4 @@
 # portfolio
-My Portfolio
 
  ## 남은 기능 구현 (계속 추가 예정)
 
