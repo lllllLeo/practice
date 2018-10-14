@@ -21,4 +21,6 @@ public interface boardDAO {
 	public List<boardDTO> readPage(int page) throws Exception;
 
 	public int pageCount() throws Exception;
+
+	List<boardDTO> readAllPaging(int startCount, int endCount);
 }

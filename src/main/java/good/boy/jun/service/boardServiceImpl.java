@@ -49,4 +49,9 @@ public class boardServiceImpl implements boardService {
 		return dao.pageCount();
 	}
 
+	@Override
+	public List<boardDTO> readAllPaging(int startCount, int endCount) {
+		return dao.readAllPaging(startCount, endCount);
+	}
+
 }
