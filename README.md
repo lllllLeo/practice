@@ -18,8 +18,8 @@
 - work 페이지 글쓰기
 - 관리자페이지
 - 로딩 css넣기
-- 채팅(음)
-- 쿠키 넣어서 Remember me (login)
+- 채팅(굳이)
+- Remember me (login)
 
  ---
 
