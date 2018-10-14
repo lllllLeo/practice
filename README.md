@@ -1,7 +1,7 @@
 # portfolio
 My Portfolio
 
-##남은 기능 구현 (계속 추가 예정)
+ ##남은 기능 구현 (계속 추가 예정)
 
 - 소셜로그인
 - 자동로그인 당장 안할거면 Remember Me 지우기
