@@ -35,7 +35,7 @@
 				type : "post",
 				data : formArray
 			}).done(function(responseData){
-				location.replace('/board');				
+				location.replace('/board?page=1');
 			})
 		})
 	})

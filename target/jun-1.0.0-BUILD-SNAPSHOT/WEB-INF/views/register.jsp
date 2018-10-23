@@ -45,7 +45,7 @@
 					"board_content" : $("#board_content").val()
 				}
 			}).done(function(responseData){
-					location.replace('/board');
+					location.replace('/board?page=1');
 				})
 			});
 		});

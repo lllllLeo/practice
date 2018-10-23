@@ -86,7 +86,7 @@
 /* 		var id = document.getElementById('yj_id'); 	
 		var password = document.getElementById('yj_password'); */
 		
-		if($('#yj_id').value == ""){
+		if($('#yj_id').val() == ""){
 			alert('아이디를 입력해주세요.');
 			$('#yj_id').focus();
 			return false;

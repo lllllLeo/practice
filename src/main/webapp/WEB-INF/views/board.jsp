@@ -45,15 +45,6 @@
 	<!--[if lt IE 9]>
 	<script src="js/respond.min.js"></script>
 	<![endif]-->
-		<script>
-			$(function(){
-			    $('#boardRead').on('click',function () {
-			        $.ajax({
-                        data: nowpage
-			        }).done
-                })
-			})
-		</script>
 
 	</head>
 	<body>
@@ -84,9 +75,6 @@
 			</nav>
 
 			<div class="colorlib-footer">
-				<p style="color:white;"><small><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank"  style="color:white;">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> </span> <span>Demo Images: <a href="http://nothingtochance.co/" target="_blank"  style="color:white;">nothingtochance.co</a></span></small></p>
 				<ul>
 					<li><a href="#"><i class="icon-facebook2"></i></a></li>
 					<li><a href="#"><i class="icon-twitter2"></i></a></li>

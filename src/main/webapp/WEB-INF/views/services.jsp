@@ -67,7 +67,7 @@
 					<li class="colorlib-active"><a href="/services">Services</a></li>
 					<li><a href="/blog">Blog</a></li>
 					<li><a href="/contact">Contact</a></li>
-					<li><a href="/board">Board</a></li>
+					<li><a href="/board?page=1">Board</a></li>
 				</ul>
 			</nav>
 
