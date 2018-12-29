@@ -144,6 +144,7 @@
 					},3000);
 				}
 			} */
+		//	젠킨스 테스트
 		}).done(function(responseData){
 			$(this).remove();  //이게 뭘까 뭘 지우는거지 
 			var data = responseData;
