@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">		<!-- MyBatis의 경우 작성된 XML Mapper는 상단의 파일에서 사용하는 태그들에 대한 정보가 기록된 DTD를 추가 -->
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="work">
+	<select id="allwork" resultType="good.boy.jun.model.dto.workDTO">
+		<!-- work page  
+		/  rownum, title, used, viewcount, image1 -->
+		SELECT 
+				work.work_number, work.work_title, work.work_used, work.work_viewcount, image.work_image1
+        FROM   
+        		tbl_work work, tbl_work_image image
+        WHERE  
+        		work.work_number = image.work_ref
+        ORDER BY
+        		work.work_number
+	</select>
+	
+		<!-- work detail page  
+		/  rownum, title, description, viewcount, image1, image2, image3, image4 -->
+	<select id="workDetail" resultType="good.boy.jun.model.dto.workDTO">
+		SELECT	
+				work.work_title, work.work_used, work.work_description, work.work_viewcount,
+				image.work_image1, image.work_image2, image.work_image3, image.work_image4
+		FROM	
+				tbl_work work, tbl_work_image image
+		WHERE	
+				work.work_number = #{work_number}
+			AND
+				image.work_ref = #{work_number}
+	</select>
+	
+	<insert id="workviewcount" parameterType="good.boy.jun.model.dto.workDTO">
+		UPDATE 
+				tbl_work 
+		SET 
+				work_viewcount = work_viewcount + 1 
+		WHERE 
+				#{work_number} = work_number
+	</insert>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">		<!-- MyBatis의 경우 작성된 XML Mapper는 상단의 파일에서 사용하는 태그들에 대한 정보가 기록된 DTD를 추가 -->
+
+<!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
+<mapper namespace="board">
+
+	<insert id="register">
+		INSERT INTO
+			tbl_board
+			(board_num, board_title, board_writer, board_content)
+		VALUES
+			(seq_board.nextval, #{board_title}, #{board_writer}, #{board_content})
+	</insert>
+
+	<update id="update">
+		UPDATE
+			tbl_board
+		SET
+			board_title = #{board_title}, board_content = #{board_content}
+		WHERE
+			board_num = #{board_num}
+	</update>
+
+	<delete id="delete">
+		DELETE FROM
+			tbl_board
+		WHERE 
+			board_num = #{board_num}
+	</delete>
+
+	<select id="read" resultType="good.boy.jun.model.dto.boardDTO">
+		SELECT
+			board_num, board_title, board_writer, board_content, board_viewcount, board_date
+		FROM
+			tbl_board
+		WHERE
+			board_num = #{board_num}
+	</select>
+
+	<select id="readall" resultType="good.boy.jun.model.dto.boardDTO">
+		SELECT 
+			board_num, board_title, board_writer, board_viewcount, board_date
+		FROM
+			tbl_board
+		WHERE
+			board_num > 0
+		ORDER BY
+			board_num DESC, board_date DESC
+	</select>
+
+	<update id="viewcount" parameterType="good.boy.jun.model.dto.boardDTO">
+		UPDATE 
+			tbl_board
+		SET
+			board_viewcount = board_viewcount + 1
+		WHERE 
+			board_num = #{board_num}
+	</update>
+
+	<select id="pageCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			tbl_board
+	</select>
+
+	<select id="readAllPaging" resultType="good.boy.jun.model.dto.boardDTO">
+		SELECT *
+			FROM
+				(SELECT rownum rnum, board_num, board_title, board_writer, board_viewcount,board_date
+				 	FROM
+						(SELECT *
+							FROM tbl_board
+						 ORDER BY
+						 	board_num DESC))
+						 WHERE rnum >= #{startCount}
+						 	AND
+						 		rnum <![CDATA[  <= #{endCount} ]]>
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
