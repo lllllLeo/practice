@@ -72,14 +72,14 @@
 					<li><a href="/services">Services</a></li>
 					<li><a href="/blog">Blog</a></li>
 					<li><a href="/contact">Contact</a></li>
-					<li><a href="/board?page=1">Board</a></li>
+					<li><a href="/board">Board</a></li>
 				</ul>
 			</nav>
 
 			<div class="colorlib-footer">
-				<%--<p><small><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+				<p><small><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> </span> <span>Demo Images: <a href="http://nothingtochance.co/" target="_blank">nothingtochance.co</a></span></small></p>--%>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> </span> <span>Demo Images: <a href="http://nothingtochance.co/" target="_blank">nothingtochance.co</a></span></small></p>
 				<ul>
 					<li><a href="#"><i class="icon-facebook2"></i></a></li>
 					<li><a href="#"><i class="icon-twitter2"></i></a></li>
@@ -122,7 +122,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									</a>
 								</h1> -->
 								<h3>Hola! Me llamo Yu Jun!</h3>
-								<p>김 유 준 (KIM YU JUN)</p>
+								<p>안녕하십니까 행님덜</p>
 							</div>
 							<div class="fancy-collapse-panel">
 								<div class="panel-group" id="accordion" role="tablist"
@@ -146,6 +146,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 														<p>나는</p>
 													</div>
 												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<p style="margin-bottom:0px">블로그 : <a href="https://cmleo.tistory.com">https://cmleo.tistory.com</a></p>
+														<p style="margin-bottom:0px">GitHub : <a href="https://github.com/lllllLeo">https://github.com/lllllLeo</a></p>
+														<p style="margin-bottom:0px">GitLab : <a href="https://github.com/lllllLeo">https://gitlab.com/kwb103</a></p>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -162,16 +169,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 											role="tabpanel" aria-labelledby="headingTwo">
 											<div class="panel-body">
 												<p>
-													2012.02 ~ 2019.02 부산외국어대학교 졸업 예정 <br>
-													전공 : 스페인어 | 부전공 : 컴퓨터공학과 <br>
-												</p>
-
-												<p>
 													- 2017.12 ~ 2018.02 비트교육센터 단기과정 수료<br>
-													- 2018.03 ~ 2018.08 비트교육센터 고급과정 수료<br>
-													- 2018.07 ~ 2018.11 고용노동부 청년취업아카데미(비트교육센터 주관) 진행중
+													- 2018.03 ~ 2018.09 비트교육센터 고급과정 수료<br>
+													- 2018.07 ~ 2018.11 고용노동부 청년취업아카데미(비트교육센터 주관) 이수중
 												</p>
-
+												
+												<p> 
+													JSP, Spring, Oracle, MariaDB, Javascript, jQuery, Ajax, HTML, CSS, Bootstrap, git, aws, ubuntu 
+												</p>
 												<!-- <ul>
 														<li>Separated they live in Bookmarksgrove right</li>
 														<li>Separated they live in Bookmarksgrove right</li>
@@ -193,27 +198,26 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 											<div class="panel-body">
 												<div class="row">
 													<div class="col-md-6">
-														<p style="font-size: 15pt; font-weight: bold; margin-bottom: 0px">
-															보유 자격증
-														</p>
 														<p>
-															- 정보처리기사 <br>
-															- 리눅스마스터2급 <br>
-															- C Programming Master <br>
-															- JAVA Programing Master
+															- 정보처리기사 <br>- 리눅스마스터2급
 														</p>
 													</div>
-													<div class="col-md-12">
+													<div class="col-md-6">
 														<p>
-															JSP, Spring, Oracle, MariaDB, Javascript, jQuery, Ajax, HTML, CSS, Bootstrap, git, aws, ubuntu
+															- C programming master<br>- JAVA programing master
 														</p>
 													</div>
 												</div>
 												<div class="row">
-													<div class="col-md-12">
-													<p style="margin-bottom:0px">블로그 : <a href="https://cmleo.tistory.com">https://cmleo.tistory.com</a></p>
-													<p style="margin-bottom:0px">GitHub : <a href="https://github.com/lllllLeo">https://github.com/lllllLeo</a></p>
-													<p style="margin-bottom:0px">GitLab : <a href="https://github.com/lllllLeo">https://gitlab.com/kwb103</a></p>
+													<div class="col-md-6">
+														<p>
+															- GitHub, GitLab <br> - Spring 
+														</p>
+													</div>
+													<div class="col-md-6">
+														<p>
+															- Oracle, MariaDB, MySQL <br>
+														</p>
 													</div>
 												</div>
 											</div>

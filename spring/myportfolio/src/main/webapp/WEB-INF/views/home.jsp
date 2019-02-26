@@ -69,7 +69,7 @@
 					<li><a href="/services">Services</a></li>
 					<li><a href="/blog">Blog</a></li>
 					<li><a href="/contact">Contact</a></li>
-					<li><a href="/board?page=1">Board</a></li>
+					<li><a href="/board">Board</a></li>
 				</ul>
 			</nav>
 
@@ -155,15 +155,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-md-6">
-							<div class="about-img animate-box" data-animate-effect="fadeInLeft" style="background-image: url(/resources/images/about1.jpg);">
-								<div class="about-img-2 animate-box" data-animate-effect="fadeInRight" style="background-image: url(/resources/images/about2.jpg);"></div>
+							<div class="about-img animate-box" data-animate-effect="fadeInLeft" style="background-image: url(${pageContext.request.contextPath}/resources/images/img_bg_2.jpg);">
+								<div class="about-img-2 animate-box" data-animate-effect="fadeInRight" style="background-image: url(${pageContext.request.contextPath}/resources/images/img_bg_3.jpg);"></div>
 							</div>
 						</div>
 						<div class="col-md-6 animate-box" data-animate-effect="fadeInLeft">
 							<div class="about-desc">
 								<span class="heading-meta">Welcome &amp; Introduce</span>
 								<h3>Hola! me llamo Yu Jun!</h3>
-								<p>김 유 준 (KIM YU JUN)</p>
+								<p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.</p>
 							</div>
 							<div class="fancy-collapse-panel">
 								<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -178,10 +178,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									         <div class="panel-body">
 									            <div class="row">
 										      		<div class="col-md-6">
-														<p>저는 </p>
+										      			<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
 										      		</div>
 										      		<div class="col-md-6">
-														<p>나는</p>
+										      			<p>Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
 										      		</div>
 										      	</div>
 									         </div>
@@ -196,16 +196,11 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									    </div>
 									    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 									        <div class="panel-body">
-												<p>
-													2012.02 ~ 2019.02 부산외국어대학교 졸업 예정 <br>
-													전공 : 스페인어 | 부전공 : 컴퓨터공학과 <br>
-												</p>
-
-												<p>
-													- 2017.12 ~ 2018.02 비트교육센터 단기과정 수료<br>
-													- 2018.03 ~ 2018.08 비트교육센터 고급과정 수료<br>
-													- 2018.07 ~ 2018.11 고용노동부 청년취업아카데미(비트교육센터 주관) 진행중
-												</p>
+									            <p>Far far away, behind the word <strong>mountains</strong>, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
+													<ul>
+														<li>Separated they live in Bookmarksgrove right</li>
+														<li>Separated they live in Bookmarksgrove right</li>
+													</ul>
 									        </div>
 									    </div>
 									</div>
@@ -218,31 +213,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									    </div>
 									    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
 									        <div class="panel-body">
-												<div class="row">
-													<div class="col-md-6">
-														<p style="font-size: 15pt; font-weight: bold; margin-bottom: 0px">
-															보유 자격증
-														</p>
-														<p>
-															- 정보처리기사 <br>
-															- 리눅스마스터2급 <br>
-															- C Programming Master <br>
-															- JAVA Programing Master
-														</p>
-													</div>
-													<div class="col-md-12">
-														<p>
-															JSP, Spring, Oracle, MariaDB, Javascript, jQuery, Ajax, HTML, CSS, Bootstrap, git, aws, ubuntu
-														</p>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-md-12">
-														<p style="margin-bottom:0px">블로그 : <a href="https://cmleo.tistory.com">https://cmleo.tistory.com</a></p>
-														<p style="margin-bottom:0px">GitHub : <a href="https://github.com/lllllLeo">https://github.com/lllllLeo</a></p>
-														<p style="margin-bottom:0px">GitLab : <a href="https://github.com/lllllLeo">https://gitlab.com/kwb103</a></p>
-													</div>
-												</div>
+									            <p>Far far away, behind the word <strong>mountains</strong>, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>	
 									        </div>
 									    </div>
 									</div>

@@ -86,7 +86,7 @@
 /* 		var id = document.getElementById('yj_id'); 	
 		var password = document.getElementById('yj_password'); */
 		
-		if($('#yj_id').val() == ""){
+		if($('#yj_id').value == ""){
 			alert('아이디를 입력해주세요.');
 			$('#yj_id').focus();
 			return false;
@@ -144,10 +144,6 @@
 					},3000);
 				}
 			} */
-		//	젠킨스 테스트합니다
-		//	젠킨스 테스트합니다2
-		//	젠킨스 테스트합니다3
-		//	젠킨스 테스트합니다4
 		}).done(function(responseData){
 			$(this).remove();  //이게 뭘까 뭘 지우는거지 
 			var data = responseData;

@@ -75,6 +75,9 @@
 			</nav>
 
 			<div class="colorlib-footer">
+				<p style="color:white;"><small><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank"  style="color:white;">Colorlib</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> </span> <span>Demo Images: <a href="http://nothingtochance.co/" target="_blank"  style="color:white;">nothingtochance.co</a></span></small></p>
 				<ul>
 					<li><a href="#"><i class="icon-facebook2"></i></a></li>
 					<li><a href="#"><i class="icon-twitter2"></i></a></li>
@@ -93,7 +96,7 @@
 			
 		</aside>
 	</div>
-	<div style="padding:80px 0px 0px 305px">
+	<div style="padding:80px 0px 0px 300px">
 		<table border="1">
 			<tr>
 				<td style="width: 5%; text-align: center">글 번호</td>
@@ -105,58 +108,16 @@
 			<c:forEach var="list" items="${list}">
 				<tr>
 					<td style="width: 10%; text-align: center">${list.board_num}</td>
-					<td style="width: 40%"><a href="/board/${list.board_num}?page=${nowpage}" id="boardRead">${list.board_title}</a></td>
+					<td style="width: 40%"><a href="/board/${list.board_num}">${list.board_title}</a></td>
 					<td style="width: 10%">${list.board_writer}</td>
-					<td style="width: 15%; text-align: center"><fmt:formatDate value="${list.board_date}" pattern="yyyy-MM-dd kk:mm" /></td>
+					<td style="width: 15%; text-align: center"><fmt:formatDate
+							value="${list.board_date}" pattern="yyyy-MM-dd kk:mm" /></td>
 					<td style="width: 5%; text-align: center">${list.board_viewcount}</td>
 
 				</tr>
 			</c:forEach>
 		</table>
 		<a href="board/register">[글 등록]</a>
-
-		<%-- ㄱㄱㄱㄱㄱㄱ--%>
-		<div>
-			<div class="row">
-				<div class="col-md-12" style="text-align:center">
-			<c:choose>
-					<c:when test="${page <=10 }"></c:when>
-					<c:otherwise>
-						<a href="/board?page=${startpage-10 }">◀◀</a>
-					</c:otherwise>
-				</c:choose>
-				<c:choose>
-					<c:when test="${page <=1 }"></c:when>
-					<c:otherwise>
-						<a href="/board?page=${nowpage-1 }">◀</a>
-					</c:otherwise>
-				</c:choose>
-
-				<c:forEach var="listnumber" begin="${startpage }" end="${ endpage }">
-					<c:choose>
-						<c:when test="${listnumber == nowpage }">
-							<a style="font-size: 13pt;"><b>${listnumber }</b></a>
-						</c:when>
-						<c:otherwise>
-							<a href="/board?page=${listnumber }">[${listnumber }]</a>
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				<c:choose>
-					<c:when test="${nowpage>=maxpage }"></c:when>
-					<c:otherwise>
-						<a href="/board?page=${nowpage+1 }">▶</a>
-					</c:otherwise>
-				</c:choose>
-				<c:choose>
-					<c:when test="${startpage +10 > maxpage }"></c:when>
-					<c:otherwise>
-						<a href="/board?page=${startpage+10 }">▶▶</a>
-					</c:otherwise>
-				</c:choose>
-				</div>
-			</div>
-		</div>
 	</div>
 </body>
 </html>

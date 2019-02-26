@@ -4,21 +4,6 @@
 <html>
 	<head>
 	<link rel="shortcut icon" href="/resources/images/favicon.ico">
-		<link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
-
-		<!-- Animate.css -->
-		<link rel="stylesheet" href="/resources/css/animate.css">
-		<!-- Icomoon Icon Fonts-->
-		<link rel="stylesheet" href="/resources/css/icomoon.css">
-		<!-- Bootstrap  -->
-		<link rel="stylesheet" href="/resources/css/bootstrap.css">
-		<!-- Flexslider  -->
-		<link rel="stylesheet" href="/resources/css/flexslider.css">
-		<!-- Theme style  -->
-		<link rel="stylesheet" href="/resources/css/style.css">
-
-		<!-- Modernizr JS -->
-		<script src="/resources/js/modernizr-2.6.2.min.js"></script>
 	<title>: : : : : Y U J U N : : : : :</title>
 	
 	<!-- jQuery -->
@@ -35,7 +20,7 @@
 				type : "post",
 				data : formArray
 			}).done(function(responseData){
-				location.replace('/board?page=1');
+				location.replace('/board');				
 			})
 		})
 	})
@@ -72,7 +57,7 @@
 	</form>
 	<a href="javascript:void(0);" id="update">수정하기</a>
 	<a href="javascript:history.go(-1);">뒤로가기</a>
-	<%--<a href="/board">목록</a>--%>
+	<a href="/board">목록</a>
 	</body>
 </html>
 

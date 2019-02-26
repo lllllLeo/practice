@@ -32,8 +32,7 @@ public class YujunController {
 		logger.info(": : : : L O G I N ( G E T ) : : : :");
 		return "login";
 	}
-
-	// Map에 put 한거 어딨지 담에 고치기 ㄱㄱ
+	
 	// 로그인 페이지 POST
 	//여기서 Map에 넣지말고 DaoImpl에서 Map에 넣더라 책에서
 	@RequestMapping(value="/login", method = RequestMethod.POST)
@@ -46,6 +45,7 @@ public class YujunController {
 		logger.info("넘어온 yj_password는 "+yj_password);	//login에서 넘어온 password
 		logger.info("map에서 꺼낸 "+forlogin.get("yj_id"));			//map에서 꺼낸 id
 		logger.info("map에서 꺼낸 "+forlogin.get("yj_password"));	//map에서 꺼낸 password
+		
 
 		result = yujunservice.logincheck(forlogin);
 		//System.out.println(result);

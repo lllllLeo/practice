@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import good.boy.jun.model.dto.boardDTO;
 import good.boy.jun.service.boardService;
@@ -30,8 +33,7 @@ public class BoardController {
 	*/
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 	//게시판 글 전체 조회
-
-   /* @RequestMapping(value="", method=RequestMethod.GET)
+	@RequestMapping(value="", method=RequestMethod.GET)
 	public String boardlist(Model model) {
 		logger.info(": : : : B o a r d : : : :");
 		try {
@@ -43,59 +45,19 @@ public class BoardController {
 			e.printStackTrace();
 		}
 		return "board";
-	}*/
-
-    //게시판 글 전체 조회(페이징 처리)
-    @RequestMapping(value="", method=RequestMethod.GET)
-    public String boardListPaging(Model model, @RequestParam int page){
-        logger.info(": : : : B O A R D : : : :");
-        logger.info("",page);
-        int countPage =10;   // limit 1페이지당 10개 뽑음
-        int nowpage = page;  // 현재 페이지
-        int totalCount = 0;	  // 게시글 총 개수
-        int startCount = (page - 1) * 10 + 1;  //  현재 3페이지면 게시글이 21부터 시작
-        int endCount = page * countPage ;		//  현재 3페이지면 게시글이 30이 마지막 or startCount + limit -1;
-		/*int startPage = ((page - 1) / 10) * 10 + 1;	// 하단의 페이지 start번호
-		int endPage = startPage + countPage - 1;		// 하단의 페이지 end번호*/
-
-		try {
-			totalCount = service.pageCount(); //총 게시글 개수
-			List <boardDTO> list =  service.readAllPaging(startCount, endCount);
-			int maxpage = (int) ((double) totalCount / countPage + 0.95);
-			int startpage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;
-			int endpage = maxpage;
-
-			if (endpage > startpage + 10 - 1) {
-				endpage = startpage + 10 - 1;
-			}
-			model.addAttribute("list",list);
-			model.addAttribute("page",page);
-			model.addAttribute("maxpage",maxpage);
-			model.addAttribute("totalCount",totalCount);
-			model.addAttribute("startpage",startpage);
-			model.addAttribute("nowpage",nowpage);
-			model.addAttribute("endpage",endpage);
-
-		} catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "board";
-    }
-
+	}
+	
+	
 	// 글 조회
 	@RequestMapping(value="/{board_num}", method=RequestMethod.GET)
-	public String readGET(@PathVariable int board_num, Model model, boardDTO dto, @RequestParam int page) {
+	public String readGET(@PathVariable int board_num, Model model, boardDTO dto) {
 		logger.info(": : : : R E A D : : : :");
 		logger.info("board_num은 "+board_num);
-		logger.info("page은 "+page);
 		try {
 			service.viewcount(board_num);
 			dto = service.read(board_num);
 			logger.info("dto는 "+ dto);
 			model.addAttribute("dto",dto);
-			model.addAttribute("page",page);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -151,7 +113,7 @@ public class BoardController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "board2";
+		return "/board";
 	}
 	
 	//글 삭제

@@ -1,6 +1,5 @@
 package good.boy.jun.model.dao;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
@@ -47,23 +46,5 @@ public class boardDAOImpl implements boardDAO {
 		session.update("board.viewcount", board_num);
 	}
 
-	@Override
-	public List<boardDTO> readPage(int page) throws Exception {
-		return session.selectList("board.readPage", page);
-	}
-
-	@Override
-	public int pageCount() throws Exception {
-		return session.selectOne("board.pageCount");
-	}
-
-	@Override
-	public List<boardDTO> readAllPaging(int startCount, int endCount) {
-		HashMap<String, Integer> map = new HashMap<>();
-		map.put("startCount",startCount);
-		map.put("endCount",endCount);
-
-		return session.selectList("board.readAllPaging",map);
-	}
 
 }

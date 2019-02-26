@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!-- 다른 mapper와 중복되지 않도록 네임스페이스 기재 -->
 <mapper namespace="board">
-
+	
 	<insert id="register">
 		INSERT INTO
 			tbl_board
@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		VALUES
 			(seq_board.nextval, #{board_title}, #{board_writer}, #{board_content})
 	</insert>
-
+	
 	<update id="update">
 		UPDATE
 			tbl_board
@@ -28,8 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			tbl_board
 		WHERE 
 			board_num = #{board_num}
-	</delete>
-
+	</delete>	
+	 
 	<select id="read" resultType="good.boy.jun.model.dto.boardDTO">
 		SELECT
 			board_num, board_title, board_writer, board_content, board_viewcount, board_date
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE
 			board_num = #{board_num}
 	</select>
-
+	
 	<select id="readall" resultType="good.boy.jun.model.dto.boardDTO">
 		SELECT 
 			board_num, board_title, board_writer, board_viewcount, board_date
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		ORDER BY
 			board_num DESC, board_date DESC
 	</select>
-
+	
 	<update id="viewcount" parameterType="good.boy.jun.model.dto.boardDTO">
 		UPDATE 
 			tbl_board
@@ -58,28 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE 
 			board_num = #{board_num}
 	</update>
-
-	<select id="pageCount" resultType="int">
-		SELECT
-			count(*)
-		FROM
-			tbl_board
-	</select>
-
-	<select id="readAllPaging" resultType="good.boy.jun.model.dto.boardDTO">
-		SELECT *
-			FROM
-				(SELECT rownum rnum, board_num, board_title, board_writer, board_viewcount,board_date
-				 	FROM
-						(SELECT *
-							FROM tbl_board
-						 ORDER BY
-						 	board_num DESC))
-						 WHERE rnum >= #{startCount}
-						 	AND
-						 		rnum <![CDATA[  <= #{endCount} ]]>
-	</select>
-
+	
 </mapper>
 
 

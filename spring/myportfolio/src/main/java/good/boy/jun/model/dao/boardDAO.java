@@ -17,10 +17,4 @@ public interface boardDAO {
 	public List<boardDTO> readall() throws Exception;
 	
 	public void viewcount(int board_num) throws Exception;
-
-	public List<boardDTO> readPage(int page) throws Exception;
-
-	public int pageCount() throws Exception;
-
-	List<boardDTO> readAllPaging(int startCount, int endCount);
 }
