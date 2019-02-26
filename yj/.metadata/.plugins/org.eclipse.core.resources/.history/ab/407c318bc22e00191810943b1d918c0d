@@ -1,9 +1,0 @@
-package main;
-
-public class main {
-	int 숫자후보[] = new int[3]; 
-		숫자후보 = (int) (Math.random() * 9);
-	public main() {
-
-	}
-}
