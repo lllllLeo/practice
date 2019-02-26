@@ -1,0 +1,13 @@
+ <Context> 
+   <Resource 
+	maxWait="-1" 
+	maxIdle="10" 
+	maxActive="20" 
+	username="yu_jun" 
+	password="kim" 
+	url="jdbc:oracle:thin:@127.0.0.1:1521:myoracle" 
+	type="javax.sql.DataSource" 
+	driverClassName="oracle.jdbc.driver.OracleDriver" 
+	auth="Container" 
+	name="jdbc/OracleDB"/> 
+ </Context>

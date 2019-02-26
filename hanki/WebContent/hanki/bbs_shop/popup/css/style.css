@@ -1,0 +1,177 @@
+@charset "utf-8";
+
+body {padding:0; margin:0; font-family:Sans-serif;}
+form {margin:0;}
+fieldset {border:none; padding:0; margin:0;}
+.blind {overflow:hidden; width:0; height:0; font-size:0; line-height:0; visibility:hidden;}
+
+.ul {margin:0; padding:0; list-style:none;}
+
+.btngroup {margin:1em 0; text-align:center;}
+
+.multiply {padding:0 .5em; font-family:verdana;}
+
+
+/* color */
+.co-red {color:red;}
+
+
+/* Button Style */
+.ibtn {
+	display:inline-block; padding:.5em 1em .5em 1em; cursor:pointer; text-decoration:none; font-size:14px;
+	border:1px solid #aaa; border-radius:.5em;
+	font-weight:bold; color:#555;
+	box-shadow:0px 1px 2px rgba(0,0,0,.2);
+	text-shadow:0px 1px 0px rgba(255,255,255,1);
+	background:#eee;
+	background:-webkit-linear-gradient(#FFFFFF, #E8E8E8);
+	background:linear-gradient(#FFFFFF, #E8E8E8);
+}
+.ibtn.block {display:block;}
+.ibtn:hover {
+	background:#eee;
+	background:-webkit-linear-gradient(#E8E8E8, #FFFFFF);
+	background:linear-gradient(#E8E8E8, #FFFFFF);
+}
+.ibtn.blue {
+	color:#fff; text-shadow:0px 1px 0px rgba(0,0,0,.5);
+	border:1px solid #0b56b2;
+	background:#0c5db8;
+	background:-webkit-linear-gradient(#1b7cc9, #06409f);
+	background:linear-gradient(#1b7cc9, #06409f);
+}
+.ibtn.blue:hover {
+	background:-webkit-linear-gradient(#06409f, #1b7cc9);
+	background:linear-gradient(#06409f, #1b7cc9);
+}
+
+
+/* Form(text) */
+.ipt_txt {border:1px solid #999; border-radius:5px; padding:5px; background:#eaf6fa; margin:2px 0;}
+.ipt_txt.block {display:block;}
+.ipt_txt input{width:100%; margin:0; padding:0; border:none; height:20px; line-height:20px; background:transparent; font-size:12px;}
+.ipt_txt.ipt_inline>input {width:auto;}
+.ipt_txt textarea {border:none; margin:0; padding:0; width:100%; font-size:12px; background:transparent;}
+
+
+/* infomation */
+.hud-info {font-size:.75em; line-height:18px; border:1px solid #ccc; padding:.6em .8em; border-radius:4px; color:#555;}
+.hud-info>p {margin:0;}
+
+
+/* 본문내용 */
+.container h1,
+#h1_title {
+	font-size:1em; margin:0; padding:.8em 0 .6em 1em; border-bottom:1px solid #aaa;
+	background:#eee;
+	background: -webkit-linear-gradient(#FFFFFF, #E8E8E8);
+	background: linear-gradient(#FFFFFF, #E8E8E8);
+}
+
+
+/* 댓글수정 */
+.comment_modify fieldset {padding:1em; text-align:center;}
+.comment_modify textarea {width:98%; height:150px; border:none; padding:3px; margin:0 auto; border:1px solid #aaa;}
+.comment_modify .btngroup {text-align:center; margin-top:10px;}
+.comment_modify .btngroup .input {}
+
+
+/* 답글작성 */
+.reply_write {}
+.reply_write fieldset {padding:1em;}
+.reply_write fieldset p {margin:0 0 12px;}
+.reply_write fieldset label {display:block; margin-bottom:4px; font-size:12px;}
+.reply_write fieldset textarea {height:70px;}
+.reply_write .btngroup {text-align:center;}
+
+
+/* 패스워드 확인 */
+.password_confirm fieldset {padding:1em; text-align:center;}
+.password_confirm .txt {line-height:1.5em; font-size:.875em; color:#666;}
+.password_confirm .txt strong {color:#333;}
+.password_confirm .txt .red {color:#c80000;}
+.password_confirm .formbox {margin-top:15px; padding:.7em 0;border:1px solid #ddd;}
+.password_confirm .formbox label {display:block; font-size:.875em; margin-bottom:5px;}
+.password_confirm .formbox input {
+	display:inline-block; width:90%; padding:.3em 0; font-size:20px; line-height:20px; text-align:center;
+	border-radius:.5em; border:1px solid #aaa;
+	box-shadow:inset 1px 2px 3px rgba(0,0,0,.2);
+}
+.password_confirm .btngroup {margin-top:1em;}
+
+
+/* 게시물 이동 */
+.document_move fieldset {padding:0 1em 0; text-align:center;}
+.document_move .subject {border:1px solid #ccc; border-radius:.5em; padding:1em 0; line-height:1.3em;}
+.document_move .subject span {font-size:.75em; color:#666;}
+.document_move .subject strong {font-size:.80em; color:#333; color:#002c76;}
+.document_move .txt1 {font-size:.875em; color:#555;}
+.document_move .selects select {display:block; width:100%; height:2.2em; margin:.5em 0;}
+.document_move .btngroup {margin-top:1em;}
+
+
+/* 설문조사 항목추가 */
+.poll fieldset {padding:0 1em 0; text-align:center;}
+.poll .list {margin:0; list-style:none; padding:1em 0 .3em;}
+.poll .list li {display:table; width:100%; margin:.1em 0 .5em 0;}
+.poll .list li label {display:table-cell; width:55px; text-align:left; vertical-align:middle; padding:0; font-size:.875em; color:#333;}
+.poll .list li span {display:table-cell; padding:0 .3em; text-align:left; vertical-align:middle; border:1px solid #bbb; border-radius:4px;}
+.poll .list li input {padding:0; border:none; width:100%; height:26px; line-height:26px; background:transparent;}
+.poll .btngroup {margin:15px 0 15px;}
+
+
+/* 배경음악 첨부 */
+.bgmfile fieldset {padding:0 1em 0; text-align:center;}
+.bgmfile .list {margin:0; padding:1em 0 0 0; list-style:none;}
+.bgmfile .list li {display:table; width:100%; margin:.1em 0 .5em 0;}
+.bgmfile .list li label {display:table-cell; width:55px; font-size:14px; text-align:left; vertical-align:middle; color:#333;}
+.bgmfile .list li span {display:table-cell; padding:0 .3em; text-align:left; vertical-align:middle;}
+.bgmfile .list li span.ipt_text {padding:0 .3em; text-align:left; vertical-align:middle; border:1px solid #ccc; border-radius:4px; background:#eaf6fa;}
+.bgmfile .list li input {padding:0; border:none; width:100%; height:26px; line-height:26px; background:transparent;}
+.bgmfile .inf {font-size:14px; line-height:22px; border:1px solid #ccc; padding:.8em .5em;border-radius:8px; color:#333;}
+.bgmfile .btngroup {margin:15px 0 15px;}
+
+
+/* 파일첨부 */
+.attachFile fieldset {padding:1em 1em 0; text-align:center;}
+.attachFile .inf {margin:1em 0 0 0; font-size:.875em; color:#333; line-height:20px;}
+.attachFile .inf span {color:#aaa;}
+.attachFile .btngroup {margin:15px 0 15px;}
+
+
+/* 게시물 신고 */
+.report fieldset {padding:1em 1em 0; text-align:center;}
+.report .list {margin:0; padding:0; list-style:none; border-top:1px solid #aaa;}
+.report .list li {padding:7px 0; border-bottom:1px solid #aaa;}
+.report .list li label {display:table; width:100%;}
+.report .list li .dt {display:table-cell; width:70px; text-align:right; padding-right:10px; font-size:.875em; vertical-align:middle;}
+.report .list li .dd {display:table-cell; text-align:left; font-size:.875em; color:#555;}
+.report .list li .dd textarea {width:95%; height:100px; padding:2px; border:none; border:1px solid #ccc;}
+.report .btngroup {margin:10px 0 0 0;}
+
+
+/* 동영상 첨부 */
+.attachMov fieldset {margin:1em;}
+.attachMov .list>li {margin:1em 0;}
+.attachMov .list>li>label {font-weight:bold; font-size:.875em;}
+.attachMov .list>li>div {font-size:.75em;}
+.attachMov .list>li>div label {}
+.attachMov .list>li>div>p {margin:.5em 0 .5em;}
+.attachMov .list>li ul {list-style:disc; padding-left:.7em; margin-left:.7em;}
+.attachMov .list>li ul>li {margin:.3em 0; color:#555;}
+
+
+/* 유투브 동영상 파일첨부 */
+.youtubeFile {font-size:.875em;}
+.youtubeFile .tit {margin-bottom:20px; font-weight:bold; text-align:left;}
+.youtubeFile .ytbChk {margin-top:30px; padding-bottom:30px; text-align:center; border-bottom:1px solid #cccccc;}
+.youtubeFile .ytbSubj, .youtubeFile .ytbSel {margin-top:25px; padding:0 30px;}
+.youtubeFile .ytbSubj input {width:250px;}
+.youtubeFile .ytbSel select {width:300px; height:27px;}
+.youtubeFile .ytbSubj2 {padding-bottom:10px; border-bottom:1px solid #cccccc;}
+.youtubeFile .ytbSubj2 strong {margin-right:8px;}
+.youtubeFile .ytbUpFile {padding:.3em; border:1px solid #cccccc; border-radius:4px;}
+.youtubeFile .ytbUpFile input {width:100%;}
+.youtubeFile .infoTxt {margin:20px 0 0 -40px; font-size:12px;}
+.youtubeFile .infoTxt li {list-style-type:none; line-height:18px;}
+.youtubeFile .btngroup.mgt {margin-top:30px;}

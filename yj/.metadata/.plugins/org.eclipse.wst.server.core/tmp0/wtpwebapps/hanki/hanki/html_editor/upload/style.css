@@ -1,0 +1,102 @@
+@charset "utf-8";
+
+/* Body */
+body {padding:0; margin:0; font-family:NanumGothic, Sans-serif;}
+form {margin:0;}
+fieldset {border:none; padding:0; margin:0;}
+
+
+/* Attribute */
+.block {display:block;}
+.blind {overflow:hidden; width:0; height:0; font-size:0; line-height:0; visibility:hidden;}
+.bline1 {display:block; border:1px solid #ccc; padding:.3em; border-radius:4px;}
+.clear {clear:both;}
+
+
+/* Color */
+.ct_red1 {color:#d3222a;}
+
+
+/* Size */
+.w100p {width:100%;}
+
+
+/* Form Element */
+.ipt_file {display:block; width:100%;}
+.ipt_text_span {
+	display:inline-block; margin:2px 4px 2px 0; padding:0 5px;
+	border:1px solid #ccc; border-radius:4px; background:#eaf6fa;
+}
+.ipt_text_span input {
+	border:none; background:transparent; padding:0; height:28px; line-height:28px; color:#333;
+}
+.ipt_text_span.block {display:block; margin-right:0;}
+.ipt_text_span.block input {width:100%;}
+
+
+/* Button Style */
+.ibtn {
+	display:inline-block; padding:.5em 1em .5em 1em; cursor:pointer; text-decoration:none; font-size:14px;
+	border:1px solid #aaa; border-radius:.5em;
+	font-weight:bold; color:#555;
+	box-shadow:0px 1px 2px rgba(0,0,0,.2);
+	text-shadow:0px 1px 0px rgba(255,255,255,1);
+	background:#eee;
+	background:-webkit-linear-gradient(#FFFFFF, #E8E8E8);
+	background:linear-gradient(#FFFFFF, #E8E8E8);
+}
+.ibtn.block {display:block;}
+.ibtn:hover {
+	background:#eee;
+	background:-webkit-linear-gradient(#E8E8E8, #FFFFFF);
+	background:linear-gradient(#E8E8E8, #FFFFFF);
+}
+.ibtn.blue {
+	color:#fff; text-shadow:0px 1px 0px rgba(0,0,0,.5);
+	border:1px solid #0b56b2;
+	background:#0c5db8;
+	background:-webkit-linear-gradient(#1b7cc9, #06409f);
+	background:linear-gradient(#1b7cc9, #06409f);
+}
+.ibtn.blue:hover {
+	background:-webkit-linear-gradient(#06409f, #1b7cc9);
+	background:linear-gradient(#06409f, #1b7cc9);
+}
+
+
+/* Contents */
+.container h1 {
+	font-size:1em; margin:0; padding:.8em 0 .8em 1em; border-bottom:1px solid #aaa;
+	background:#eee;
+	background: -webkit-linear-gradient(#FFFFFF, #E8E8E8);
+	background: linear-gradient(#FFFFFF, #E8E8E8);
+}
+
+
+/* /html_editor/upload/imgup_form.htm */
+.imgup fieldset {padding:0 1em;}
+.imgup .list {margin:0; padding:0; list-style:none;}
+.imgup .list li {margin-top:.5em; padding-bottom:.5em; border-bottom:1px solid #ccc;}
+.imgup .list li input,
+.imgup .list li label {vertical-align:middle;}
+.imgup .list li .dt {font-size:.875em; font-weight:bold; margin-bottom:.3em;}
+.imgup .list li .dd {font-size:.75em;}
+.imgup .list li .dd .inf {display:block; color:#555; margin-top:.3em;}
+.imgup .list li.watermark .dd {color:#555;}
+.imgup .list li .colset {display:table; margin:.5em 0;}
+.imgup .list li .col {display:table-cell;}
+.imgup .list li .col1 {width:45px;}
+
+.imgup .list li.alignType .dd {
+	display:table; width:100%;
+}
+.imgup .list li.alignType .dd label {
+	display:table-cell; width:25%; text-align:center; padding:.5em 0;
+	border-left:1px dashed #ddd;
+}
+.imgup .list li.alignType .dd label:first-child {border-left:none;}
+.imgup .list li.alignType .dd label img {display:block; margin:0 auto 1px auto;}
+.imgup .list li.alignType .dd label input {display:block; margin:3px auto 0;}
+.imgup .btngroup {text-align:center; margin:1em 0;}
+
+

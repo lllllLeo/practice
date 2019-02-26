@@ -1,0 +1,25 @@
+package main;
+
+import java.util.Scanner;
+
+public class Gugudan {
+	public static void main(String[] args) {
+		Gugudan gugudan = new Gugudan();
+		
+		int num;
+		Scanner sc = new Scanner(System.in);
+		System.out.println("원하는 구구단의 숫자를 입력하세요");
+		num = sc.nextInt();
+		
+		gugudan.gugu(num);
+	}
+	
+	public void gugu(int num) {
+		System.out.println(num + "단입니다.");
+		for(int i = 1; i < 10; i++) {
+			System.out.println(num+" x "+ i +" ="+ num * i );
+		}
+	}
+	
+	
+}

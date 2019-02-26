@@ -1,0 +1,13 @@
+package main;
+
+public class Account {
+	private int balance;
+	public Account(int i) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getBalance() {
+		return this.balance;
+	}
+
+}

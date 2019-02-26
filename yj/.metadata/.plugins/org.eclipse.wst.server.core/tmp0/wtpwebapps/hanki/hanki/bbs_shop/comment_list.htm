@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>
+<META HTTP-EQUIV="imagetoolbar" CONTENT="no" />
+<title>댓글</title>
+<script type="text/javascript" src="../img_up/_addon/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript">var MOBILE_CONN_YN = false;</script>
+<link rel="stylesheet" type="text/css" href="http://anybuild.com/img_up/tmp_img/service/board_tpl/8/pc/css/default_mobile.css" media="all">
+<link rel="stylesheet" type="text/css" href="http://anybuild.com/img_up/tmp_img/service/board_tpl/8/pc/css/default_tablet.css" media="only all and (min-width:768px)">
+<link rel="stylesheet" type="text/css" href="http://anybuild.com/img_up/tmp_img/service/board_tpl/8/pc/css/co-basic.css" media="screen">
+<!--[if lt IE 9]><link rel="stylesheet" type="text/css" href="http://anybuild.com/img_up/tmp_img/service/board_tpl/8/pc/css/default_tablet.css" media="all"><![endif]-->
+<!--[if IE]><link rel="stylesheet" type="text/css" href="http://anybuild.com/img_up/tmp_img/service/board_tpl/8/pc/css/ie.css" media="all"><![endif]-->
+<!--[if lt IE 8]><link rel="stylesheet" type="text/css" href="http://anybuild.com/img_up/tmp_img/service/board_tpl/8/pc/css/ie7.css" media="all"><![endif]-->
+</head>
+<script language="javascript" src="../js/all_default.js"></script>
+<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+<iframe src='' width=0 height=0 style='border:0' title='시스템 프레임' name='ok_frame'></iframe>
+
+<script type="text/javascript">
+function comment_orderby_chk(orderby){
+	if(!orderby) orderby = '';
+	location.href = "../bbs_shop/comment_list.htm?me_popup=&auto_frame=&board_code=g1&board_code=g1&board_idx=269812&orderby="+orderby;
+}
+
+function comment_chu_ok(idx){
+	if(confirm("추천 하시겠습니까?")){
+		var iframe_name = create_iframe();
+		document.getElementById(iframe_name).src="/bbs_shop/comment_chu_ok.php?idx="+idx;
+	}
+}
+
+function comment_chu_not(idx){
+	if(confirm("반대 하시겠습니까?")){
+		var iframe_name = create_iframe();
+		document.getElementById(iframe_name).src="/bbs_shop/comment_chu_not.php?idx="+idx;
+	}
+}
+
+function deleteComment(idx){
+	if (confirm("댓글을 삭제하시겠습니까?")){
+		var iframe_name = create_iframe();
+		document.getElementById(iframe_name).src="/bbs_shop/popup/pwd_chk_exec.php?pwd_mode=comment_del&board_code=g1&board_idx=269812&idx="+idx;
+	}
+}
+
+function editComment(idx){
+
+			var w = 400;
+		var h = 280;
+		var window_left = (screen.width-w)/2;
+		var window_top = (screen.height-h)/2;
+		var editComment_win = window.open('../bbs_shop/popup/comment_edit_form.htm?board_code=g1&board_idx=269812&idx='+idx,'editComment_win','top='+window_top+',left='+window_left+',width='+w+',height='+h+',toolbar=no,scrollbars=yes,resizable=yes,status=yes,menubar=no,location=no');
+		editComment_win.focus();
+	}
+
+function replyComment(idx){
+			var w = 400;
+		var h = 380;
+		var window_left = (screen.width-w)/2;
+		var window_top = (screen.height-h)/2;
+		var replyComment_win = window.open('../bbs_shop/popup/comment_reply_form.htm?board_code=g1&board_idx=269812&idx='+idx,'replyComment_win','top='+window_top+',left='+window_left+',width='+w+',height='+h+',toolbar=no,scrollbars=yes,resizable=yes,status=yes,menubar=no,location=no');
+		replyComment_win.focus();
+	}
+
+
+function guest_del(idx){
+			var w = 330;
+		var h = 200;
+		var window_left = (screen.width-w)/2;
+		var window_top = (screen.height-h)/2;
+		var del_win = window.open('../bbs_shop/popup/pwd_chk_form.htm?pwd_mode=comment_del&board_code=g1&board_idx=269812&idx='+idx,'del_win','top='+window_top+',left='+window_left+',width='+w+',height='+h+',toolbar=no,scrollbars=yes,resizable=yes,status=yes,menubar=no,location=no');
+		del_win.focus();
+	}
+
+function guest_edit(idx){
+			var w = 330;
+		var h = 200;
+		var window_left = (screen.width-w)/2;
+		var window_top = (screen.height-h)/2;
+		var edit_win = window.open('../bbs_shop/popup/pwd_chk_form.htm?pwd_mode=comment_edit&board_code=g1&board_idx=269812&idx='+idx,'edit_win','top='+window_top+',left='+window_left+',width='+w+',height='+h+',toolbar=no,scrollbars=yes,resizable=yes,status=yes,menubar=no,location=no');
+		edit_win.focus();
+	}
+
+function submitForm(){
+	var frm = document.frmComment;
+
+			frm.target=create_iframe();
+		frm.method="post";
+		frm.action="../bbs_shop/comment_reg_exec.php";
+
+					if (frm.write_name.value.split(" ").join("") == ""){
+			   alert("작성자 이름을 입력해주세요");
+			   frm.write_name.focus();
+			   return;
+			}
+			if (frm.passwd.value.split(" ").join("") == ""){
+			   alert("암호를 입력해주세요");
+			   frm.passwd.focus();
+			   return;
+			}
+
+			if (frm.content.value.split(" ").join("") == ""){
+			   alert("내용을 입력해주세요");
+			   frm.content.focus();
+			   return;
+			}
+			if (frm.content.value.split(" ").join("").length > 1000){
+			   alert("1000자 이하만 댓글 가능합니다");
+			   frm.content.focus();
+			   return;
+			}
+			frm.submit();
+		
+			
+}
+
+function comment_default_str_chk(){
+	var frm = document.frmComment;
+	if(frm.content.value == ""){
+		frm.content.value = '';
+	}
+
+}
+
+function vicious_chk(idx){
+	if(!idx) return;
+
+			var w = 400;
+		var h = 350;
+		var window_left = (screen.width-w)/2;
+		var window_top = (screen.height-h)/2;
+		var vicious_chk_win = window.open('/bbs_shop/popup/vicious_form.htm?mode=comment&idx='+idx,'vicious_chk','top='+window_top+',left='+window_left+',width='+w+',height='+h+',toolbar=no,scrollbars=yes,resizable=yes,status=yes,menubar=no,location=no');
+		vicious_chk_win.focus();
+	}
+
+function comment_page_block(page){
+	location.href="../bbs_shop/comment_list.htm?page="+page+"";
+	location.href="#comment_top";
+}
+</script>
+<a name="comment_top"></a>
+<div id="scbd_cmtBody" class="scbd cmtBody">
+	<ul class="cmtList">
+					
+							<li style="padding-left:10px;">
+										<div class="cmtbody">
+											천안 두정점 방문~~ 가격대비 가성비 쵝오										</div>
+					<dl>
+						<dt>
+														<span>삼식이 </span>							<span>2018-03-21</span>
+						</dt>
+						<dd>
+																					<a href="javascript:replyComment('6489')">답글</a>							<a href="javascript:guest_edit('6489')">수정</a>							<a href="javascript:guest_del('6489')">삭제</a>													</dd>
+					</dl>
+				</li>
+						</ul>
+
+	<!-- pagenate -->
+		<!-- // pagenate -->
+
+	<!-- comment write -->
+	<form name='frmComment' onSubmit='return false'>
+									<input type='hidden' name='board_code' value='g1'/>
+									<input type='hidden' name='auto_frame' value=''/>
+									<input type='hidden' name='board_idx' value='269812'/>		<fieldset class="cmtWrite">
+			<strong>댓글작성</strong>
+							<label>이름 <span class="ui-input"><input type="text" name="write_name" size="11"></span></label>
+				<label>비밀번호 <span class="ui-input"><input type="password" name="passwd" size="11" maxlength="12"></span></label>
+						<dl>
+				<dt>
+											<span class="ui-input ipt-block">
+							<textarea name="content" onfocus="comment_default_str_chk()" rows="4"></textarea>
+						</span>
+														</dt>
+				<dd><a href="javascript:submitForm();">댓글등록</a></dd>
+			</dl>
+		</fieldset>
+	</form>	<!-- // comment write -->
+</div>
+
+<script>
+if (window.Touch)
+{
+	document.getElementById('scbd_cmtBody').className = 'scbd cmtBody mo';
+}
+</script>
+<script type="text/javascript" src="../js/all_bottom_script.js"></script>
+<script type="text/javascript">
+all_page_script('','','','','','','','','0');
+</script>
+<script type="text/javascript">
+web_resize_iframe("comment_269812");
+//
+setTimeout("web_resize_iframe('comment_269812')",300);
+</script>
+
+		<script type="text/javascript">
+		setTimeout("create_iframe(0,'ok_frame');",100);
+		setTimeout("create_iframe(0,'ok_frame2');",100);
+		</script>
+				<script>
+		// AI-LOG 기본 스크립트
+		var ai_log_user_key = "";  // 최초접속자 설정 키값 (default:null)
+		var ai_log_account_id = "ehompy0118"; // AI-LOG 계정 아이디
+		var ai_log_mem_id = ""; // 고객 아이디
+		var ai_log_mobile_web_yn = "0"; // 모바일웹 이라면 1, 데스크탑 홈페이지라면 0
+		var ai_log_app_conn_yn = "0"; // 하이브리드 앱이라면 1, 아닌경우 0
+		var ai_log_page_title = ""; // 페이지 제목
+		var ai_log_page_url = ""; // 페이지 url, 빈값 입력시 브라우져 url 자동 입력 입니다.
+		var ai_log_event_mode = ""; // board_reg:게시글 작성, mem_reg:회원가입, sale:매출발생  (default:빈칸)
+		var ai_log_event_sale_price = ""; // ai_log_event_mode가 sale 일때  매출 금액
+		</script>
+					<script type="text/javascript" id="ai_log_chk_script"></script>
+			<script type="text/javascript" id="ai_log_default_script" src="https://chk101.ai-log.biz/etc/connect_ai_set.js?ver=1"></script>
+				</body></html>

@@ -1,0 +1,28 @@
+{
+  "groups": [
+    {
+      "name": "yujun",
+      "type": "me.yujun.YujunProperties",
+      "sourceType": "me.yujun.YujunProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "yujun.age",
+      "type": "java.lang.Integer",
+      "sourceType": "me.yujun.YujunProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "yujun.full-name",
+      "type": "java.lang.String",
+      "sourceType": "me.yujun.YujunProperties"
+    },
+    {
+      "name": "yujun.name",
+      "type": "java.lang.String",
+      "sourceType": "me.yujun.YujunProperties"
+    }
+  ],
+  "hints": []
+}

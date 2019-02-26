@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
+<title>popup</title>
+<script type="text/javascript" src="../../img_up/_addon/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../admin/sub_all/admin.js"></script>
+<!--
+	<script type="text/javascript" src="/img_up/shop_pds/ehompy0118/etc/default.js"></script>
+-->
+<script type="text/javascript" src="../../admin/admin_tpl/aram/default.js"></script>
+
+<link rel="stylesheet" href="./style.css" type="text/css"/>
+
+<script type="text/javascript" src="../../img_up/_addon/_plugin/colorPicker/js/colorpicker.js"></script>
+<link rel="stylesheet" href="../../img_up/_addon/_plugin/colorPicker/css/colorpicker.css" type="text/css"/>
+
+
+<script type="text/javascript">
+// 멀티파일 업로드 submit
+function submitForm_multi(){
+	document.getElementById('submit_bt').style.visibility = 'hidden';
+	callSwfUpload('formName');
+}
+
+// 단일파일 업로드 submit
+function submitForm_one() {
+	var frm = document.formName;
+	var str;
+
+			if (!frm.up_file.value) {
+			alert("이미지를 첨부해주세요");
+			frm.up_file.focus();
+			return false;
+		}
+
+		if (!isImageFile(frm.up_file.value)) {
+			alert("이미지파일(.gif, .jpg, .png)만 업로드 가능합니다");
+			return false;
+		}
+
+		if (!isValidFilename(frm.up_file.value)) {
+			alert("파일 이름에 다음 문자가 올 수 없습니다.\n\ \/ : * ? | <");
+			return false;
+		}
+	
+		document.getElementById('submit_bt').style.visibility = 'hidden';
+		frm.action = 'imgup_exec.php';
+	frm.target=create_iframe();
+	frm.submit();
+}
+
+function isImageFile(dirfilename){
+	if (dirfilename.match(/(.jpg|.jpeg|.gif|.png)$/i)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function isValidFilename(dirfilename){
+	var filename = dirfilename.substr(dirfilename.lastIndexOf("\\")+1);
+	if (!filename.match(/[\\\/:\*\?\|<>]/)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+// ---------------------------------------------------------------------
+var
+	gColObj = null,
+	gWndHandle = null,
+	gObjName = null
+;
+
+function OnColorPicker(vObj, vObjName){
+	gColObj = vObj;
+	gObjName = vObjName;
+	if (gWndHandle != null && !gWndHandle.closed) {
+		gWndHandle.close();
+	}
+	gWndHandle = WndCenterOpen('/admin/sub_all/color_table.htm', 'ColorPicker', 470, 300, 'no');
+}
+
+function setColor(vCol){
+	switch(gObjName) {
+		case 'borderColor':
+			gColObj.style.borderColor = vCol;
+			break;
+		case 'FontColor':
+			gColObj.style.color = vCol;
+			break;
+		default:
+			gColObj.style.backgroundColor = vCol;
+			break;
+	}
+	gColObj.value = vCol;
+}
+
+jQuery(document).ready(function(){
+	$('#img_bg_color, #img_font_color').ColorPicker({
+		onSubmit: function(hsb, hex, rgb, el) {
+			if ($(el).attr('id') == 'img_bg_color') {
+				$(el).val('#' + hex).parent().css('background-color', '#' + hex);
+			} else {
+				$(el).val('#' + hex).css('color', '#' + hex);
+			}
+			$(el).ColorPickerHide();
+		}, onBeforeShow: function () {
+			$(this).ColorPickerSetColor(this.value);
+		}
+	}).bind('keyup', function(){
+		$(this).ColorPickerSetColor(this.value);
+	});
+
+	$('input[type=file]').on('change',function(){
+		if(this.value){
+			var file_size = this.files[0].size;
+			var chk_size = 200 * 1000000;
+			if(file_size > chk_size){
+				alert('첨부 파일 용량이 제한 용량을 초과하여 파일을 첨부 할 수 없습니다.');
+				this.value = '';
+			}
+		}
+	});
+});
+</script>
+
+<script type="text/javascript">
+var ios_yn = false;
+var APP_CONN_YN = false;
+var isKitkat = window.navigator.userAgent.search( "AnybuildApp Android 4.4") > -1 ? true : false;
+</script>
+</head>
+
+<body>
+<div id="div_ok_frame" style="display:none;">
+	<iframe src="" width="0" height="0" frameborder="0" name="ok_frame" id="ok_frame"></iframe>
+</div>
+
+
+
+<form name="formName" method="post" enctype="multipart/form-data" target='ok_frame' action="m_imgup_exec.php">
+<input type="hidden" name="tmp_name" value="tmp_val"/>
+<input type="hidden" name="var_name" value="content"/>
+<input type="hidden" name="file_path" value="ENC_ZufCn8exG8Ppsoc9/IXYI2UdqL95j+fo8YiCwjQeb4k="/>
+<input type="hidden" name="img_water_type" value=""/>
+
+<div class="wrap" id="wrap">
+	<div class="imgup container">
+		<h1 class="title" id="h1_title">이미지 파일삽입</h1>
+
+		<fieldset>
+			<legend class="blind">이미지 첨부 폼</legend>
+			<ul id="list" class="list">
+			<li>
+				<div class="dt">이미지 첨부</div>
+				<div class="dd">
+					
+						
+							<!-- file upload(html5) -->
+							<script type="text/javascript" src="../../API/html5_upload/jquery.uploadifive.min.js"></script>
+							<link rel="stylesheet" type="text/css" href="../../API/html5_upload/uploadifive.css">
+							<div class="fileupload">
+								<div id="queue" class="uploadifive-queue">
+								<span class="ment"><img src='../../admin/img/icon_file_add.png' width=21 height=23 align=absmiddle>마우스로 파일을 끌어오세요.</span>
+								</div>
+								<div class="btns clr">
+									<input id="file_upload" name="file_upload" id="file_upload" type="file" multiple="true"/><label for="file_upload"></label>
+								</div>
+							</div>
+							<!-- // file upload(html5) -->
+
+							<script>
+							jQuery(function($){
+																// html5 upload
+								$('#file_upload').uploadifive({
+									'auto' : false
+									,'fileSizeLimit' : '200MB'
+									,'formData' : {
+										'timestamp' : '1525937092'
+										,'token' : 'abd01db22cc63225f7550969728b8ad3'
+									}
+									,'queueID' : 'queue'
+									,'uploadScript' : 'm_imgup_exec_background.php'
+									,width : '100%'
+									,'onUploadComplete' : function(file, data)
+									{
+										console.log(data);
+									}
+									,'onAddQueueItem' : function(file) {
+										$('#queue>span.ment').remove();
+									}
+									,'onQueueComplete' : function(queueData)
+									{
+										var frm = document.formName;
+										frm.action = 'm_imgup_exec.php';
+										frm.target=create_iframe();
+										frm.submit();
+									}
+
+								});
+							});
+							</script>
+						
+						<span class="inf">위 등록된 순서와 상관없이 파일명순으로 정렬되어 첨부 됩니다.</span>
+
+					
+
+
+				</div>
+			</li>
+
+
+							<li>
+					<div class="dt">이미지 크기 수정</div>
+					<div class="dd">
+						<span class="ipt_text_span"><input type="text" name="upimg_thum_w" id="upimg_thum_w" value="0" size="5" maxlength="4"/></span><label for="upimg_thum_w"></label>px
+						*
+						<span class="ipt_text_span"><input type="text" name="upimg_thum_h" id="upimg_thum_h" value="0" size="5" maxlength="4"/></span><label for="upimg_thum_h"></label>px
+						<span class="inf">빈공란 또는 숫자 '0' 입력시 이미지사이즈를 수정 하지 않습니다.</span>
+					</div>
+				</li>
+
+				
+				<!-- 워터마크 -->
+				
+								<!-- // 워터마크 -->
+
+				<li>
+					<div class="dt">풍선말</div>
+					<div class="dd"><span class="ipt_text_span block"><input type="text" name="img_alt" id="img_alt" value=""/></span><label for="img_alt"></label></div>
+				</li>
+
+				<li class="added_comm">
+					<div class="dt">추가설명</div>
+					<div class="dd">
+						<p class="colset">
+							<label for="img_bg_color" class="col col1">배경색 : </label>
+							<span class="ipt_text_span col" style="background-color:#FFFFFF;"><input type="text" name="img_bg_color" id="img_bg_color" value="#FFFFFF" size="10" maxlength="7"/></span><label for="img_bg_color"></label>
+						</p>
+
+						<p class="colset">
+							<label for="img_font_color" class="col col1">글자색 : </label>
+							<span class="ipt_text_span col col2"><input type="text" name="img_font_color" id="img_font_color" value="#0909E3" style="color:#0909E3" size="10" maxlength="7"/></span><label for="img_font_color"></label>
+						</p>
+
+						<p class="colset w100p">
+							<label for="img_content" class="col col1">내용</label>
+							<span class="ipt_text_span block col col2"><input type="text" name="img_content" id="img_content" value=""></span><label for="img_content"></label>
+						</p>
+					</div>
+				</li>
+
+				<li class="alignType">
+					<div class="dt">정렬방식</div>
+					<div class="dd">
+						<label>
+							<img src="../../bbs_mem/board_img/icon_align_middle.gif" alt=""/>
+							맨위							<input type="radio" name="pos" id="pos1" value="top" checked/><label for="pos1"></label>
+						</label>
+						<label>
+							<img src="../../bbs_mem/board_img/icon_align_article.gif" alt=""/>
+							아래							<input type="radio" name="pos" id="pos2" value="bottom" /><label for="pos2"></label>
+						</label>
+						<label>
+							<img src="../../bbs_mem/board_img/icon_align_left.gif" alt=""/>
+							왼쪽							<input type="radio" name="pos" id="pos3" value="left" /><label for="pos3"></label>
+						</label>
+						<label>
+							<img src="../../bbs_mem/board_img/icon_align_right.gif" alt=""/>
+							오른쪽							<input type="radio" name="pos" id="pos4" value="right"  /><label for="pos4"></label>
+						</label>
+						<div class="clear"></div>
+					</div>
+				</li>
+						</ul>
+						
+			<div class="btngroup">
+				<input type='button' id='submit_bt' class='ibtn' name='btn_submit' value='파일 업로드/삽입' onclick="$('#file_upload').uploadifive('upload');"/>			</div>
+		</fieldset>
+
+	</div>
+</div>
+
+</form>
+
+
+<script type="text/javascript">
+window.focus();
+</script>
+</body>
+</html>

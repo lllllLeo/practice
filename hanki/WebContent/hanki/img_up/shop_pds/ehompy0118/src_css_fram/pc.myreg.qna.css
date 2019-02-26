@@ -1,0 +1,13 @@
+
+/* ****************** 이미지 (비율형)  ****************** */
+
+.img_ratio_58224_ {display:inline-block; overflow:hidden; position:relative; width:100%; max-width:100%; vertical-align:top;}
+.img_ratio_58224_ * {box-sizing:border-box;}
+.img_ratio_58224_ a {display:block; text-decoration:none;}
+.img_ratio_58224_ img {width:100%; vertical-align:top;}
+@media (min-width:1024px){
+	.img_ratio_58224_ {width:550px;}
+}
+@media \0screen{
+	.img_ratio_58224_ {width:550px;}
+}

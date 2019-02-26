@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+
+<!-- Mirrored from www.hankikor.com/bbs_shop/inc/viewimage.htm?url= by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 May 2018 10:18:13 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+<meta http-equiv='Content-Type' content='text/html;charset=utf-8' />
+<title>이미지 원본보기</title>
+<script language="javascript">
+function f_resize()
+{
+  var img_width = document.all.mainImg.width;
+  var img_height = document.all.mainImg.height;
+
+  var swidth = screen.width - 30;
+  var sheight = screen.height - 30;
+
+  if (img_height > sheight){
+     img_height = sheight;
+  }
+  if (img_width > swidth){
+     img_width = swidth;
+  }
+
+  img_width = img_width+35;
+  img_height = img_height +80;
+  window.resizeTo(img_width, img_height);
+}
+
+function popup_window_close(){
+	try{
+		parent.x_pop_window.close();
+	}catch(e){
+		top.close();
+	}
+}
+
+</script>
+</head>
+<body oncontextmenu='return false' onselectstart='return false' ondragstart='return false' onLoad="f_resize()" leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0" class="Background">
+<table width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="100%" height="100%" align="left" valign="top"><a href="javascript:popup_window_close()"><img src="#" name="mainImg" border=0 alt="이미지를 클릭하시면 창이 닫힙니다"></a></td>
+  </tr>
+</table>
+</body>
+
+<!-- Mirrored from www.hankikor.com/bbs_shop/inc/viewimage.htm?url= by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 08 May 2018 10:18:13 GMT -->
+</html>
