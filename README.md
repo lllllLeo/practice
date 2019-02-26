@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # portfolio
 
  ## 남은 기능 구현 (계속 추가 예정)
@@ -52,3 +53,7 @@
 - 조회수
 - 에러페이지만들기
 - 로그인하고 뒤로가기하면 로그인페이지가는데 세션이 있으면 못가게하기? 다시 홈으로?=> location.replace('url')
+=======
+# practice
+playground
+>>>>>>> 57a84ad2d5f50de776bad22412ee14b5f0cd735b
