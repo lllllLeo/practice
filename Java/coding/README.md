@@ -1,7 +1,7 @@
  ## CharIOExample
  
  
- 1. BufferedReader 클래스는 한 줄씩 입력 받기 위한 클래스이며 기본 생성자가 존재하지 않고 Reader 타입의 객체가 필요하다. 하지만 Reader 클래스는 추상 클래스이기 때문에 독립적으로 객체를 생성할 수가 없다. 이 경우에는 추상 클래스인 Reader를 상속받는 하위 클래스인 '''InputStreamReader'''를 통해 '''BufferedReader'''의 생성자의 인자로 전달 할 수 있다.
+ 1. BufferedReader 클래스는 한 줄씩 입력 받기 위한 클래스이며 기본 생성자가 존재하지 않고 Reader 타입의 객체가 필요하다. 하지만 Reader 클래스는 추상 클래스이기 때문에 독립적으로 객체를 생성할 수가 없다. 이 경우에는 추상 클래스인 Reader를 상속받는 하위 클래스인 ''' InputStreamReader '''를 통해 ''' BufferedReader '''의 생성자의 인자로 전달 할 수 있다.
   
  1. System.in 은 키보드로 입력한 값에 대한 InputStream 타입의 객체를 얻을 수 있다. BufferedReader 클래스의 생성자에는 InputStream을 입력받는 생성자가 없으므로 InputStreamReader 클래스를 이용해야 한다.
  
