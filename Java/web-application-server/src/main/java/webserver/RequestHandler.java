@@ -3,9 +3,12 @@ package webserver;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.util.Map;
 
+import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import util.HttpRequestUtils;
 
 /* RequestHandler
 *  Thread를 상속하고 있으며 사용자의 요청에 대한 처리와 응답에 대한 처리를 담당하는 가장 중심이 되는 클래스.
@@ -31,22 +34,20 @@ public class RequestHandler extends Thread {
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-
             String line = br.readLine();
-            String[] tokens = line.split(" ");
-            String url = tokens[1];
-
-            if (url.startsWith("/user/create)")) {
+            if (isEmpty(line)) { return;}
+            String url = HttpRequestUtils.getUrl(line);
+            if (url.startsWith("/user/create")) {
                 int index = url.indexOf("?");
-                String queryString = url.substring(index+1);
-                System.out.println(queryString);
-
+                String requestPath = url.substring(0, index);
+                String queryString = url.substring(index + 1);
+                Map<String, String> params = HttpRequestUtils.parseQueryString(queryString);
+                User user = new User(params.get("userId"),params.get("password"), params.get("name"), params.get("email"));
+                log.debug("User : {}", user);
             }
+            url = "/index.html";
 
-            /* line이 null 값인 경우에 대한 예외처리. 안하면 무한 루프에 빠짐. */
-            if (isEmpty(line)) return;
-
-            readLine(br, line);
+//            readLine(br, line);
 
             DataOutputStream dos = new DataOutputStream(out);
             byte[] body = Files.readAllBytes(new File("./webapp" + url).toPath());
@@ -59,8 +60,8 @@ public class RequestHandler extends Thread {
 
     private void readLine(BufferedReader br, String line) throws IOException {
         while(!"".equals(line)){
-            line = br.readLine();
             log.info("header : {}", line);
+            line = br.readLine();
         }
     }
 

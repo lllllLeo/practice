@@ -16,7 +16,16 @@
 
 ### 요구사항 1 - http://localhost:8080/index.html로 접속시 응답
 * index 페이지에 접근하면 '''Unchecked runtime.lastError: The message port closed before a response was received.''' 에러가 뜨는데 찾아보니까 크롬 확장프로그램들을 비활성화하면 된다는데 다 끄기 귀찮아서 그냥 한다.
-
+* Header는 line 단위로 읽는다.
+* 보통 <code>try { }</code> 으로 썼었는데 JDK7 부터는 <code>try (){ }</code>로 쓸 수 있는데 
+  차이점은 일단 여기 코드에서 
+  
+  <pre>
+  try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) { ~ }
+  </pre>
+  안에 있는 <code>InputStream</code>과 <code>OutputStream</code>이 try의 body 절이 끝나면 자동으로 자원을 <code>close()</code> 한다. 
+  이게 가능한 이유는 <code>InputStream</code>과 <code>OutputStream</code>은 <code>Closeable</code>를 Implements를 하고있기 때문이다. 
+  이외에도 이와 같이 자동으로 <code>close()</code>를 하고 싶으면 이 각각의 클래스 파일들이 <code>Closeable</code> 인터페이스를 implements 하고 있을때 이와 동일하게 사용할 수 있다.
 ### 요구사항 2 - get 방식으로 회원가입
 * 
 
