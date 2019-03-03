@@ -30,11 +30,29 @@
 * 
 
 ### 요구사항 3 - post 방식으로 회원가입
-* 
+* QueryString은 HTTP 요청의 본문(body)을 통해 전달된다. POST 방식으로 데이터를 전달하면서 Header에 본문 데이터에 대한 길이가 Content-Length라는 필드 이름으로 전달 된다.
+
+* <code>Header가 Key, Value 형태로 넘어오니까 split()을 한 후 Map에 저장한다. 그리고 IOUtils.readData()를 통해 본문을 읽어온ㄷ나.</code>
 
 ### 요구사항 4 - redirect 방식으로 이동
-* 
+* > HTTP/1.1 302 Found  
+    Location: /index.html 
+* 302 Found 리다이렉트 상태 응답 코드는 클라이언트가 요청한 리소스가 Location 헤더에 주어진 URL에 일시적으로 이동되었음을 가리킨다.
+* 302 Status code를 활용해서 페이지를 이동할 경우 요청과 응답이 한 번이 아니라 두 번 발생한다. 여기서는 
+```
+/user/create 요청 -> 회원가입 처리 -> /index.html로 302 응답
+```
+후
+```
+/index.html 요청 -> /index.html 읽기 -> /index.html 200 응답
+```
+ > 302 Status code는 자바 웹개발에서 reponse.sendRedirect() 를 활용하면 똑같은 방식으로 작용하는데 내부적으로 302 Status code를 활용하는 것이다. (Location : ~~.~ 포함)  
+ 
+ > 다른 웹 애플리케이션로 개발하면서 redirect 방식으로 페이지를 이동한다고 하면 내부적으로 302 Status code를 활용해서 이동하겠구나 하고 생각하면 됨.
 
+
+* <code>FileInputStream, FileOutputStream</code>은 **byte[] 단위의 데이터**만 입/출력을 할 수 있다. (문자나 byte 형식의 문자) 그래서 다른 데이터를 읽어야 할 때 항상 데이터를 변환해줘야 한다. 
+* <code>DataInputStream, DataOutputStream</code>은 자바 기본 자료형(char, int, long 등)으로 데이터를 입력하고 출력할 수 있다. 즉 데이터 입출력시 기본 자료형을 ByteStream으로 변환하여 파일입출력을 수행한다.
 ### 요구사항 5 - cookie
 * 
 
