@@ -3,6 +3,18 @@
   <component name="ChangeListManager">
     <list default="true" id="93e65aa0-e098-431b-84c7-fd8cdb4190cd" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/../coding/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../coding/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/Nb.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../coding/Nb.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/CharIOExample.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/Gugudan.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/Yagu2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/chat/client/ClientBackground.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/chat/client/ClientGui.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/chat/server/ServerBackground.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/chat/server/ServerGui.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../coding/src/main/main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../web-application-server/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../web-application-server/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../spring/TDD_practice/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../spring/TDD_practice/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../spring/TDD_practice/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../spring/TDD_practice/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -60,9 +72,10 @@
     <session id="-567360248">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.3" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.opened" value="2" />
         </counts>
       </usages-collector>
     </session>
@@ -170,7 +183,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -204,7 +217,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -215,7 +228,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551190964848" />
     <property name="extract.method.default.visibility" value="private" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../designpattern" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -356,6 +369,7 @@
       <workItem from="1551174742908" duration="6945000" />
       <workItem from="1551194415541" duration="1213000" />
       <workItem from="1551359557052" duration="26000" />
+      <workItem from="1551750471333" duration="5000" />
     </task>
     <servers />
   </component>
@@ -392,13 +406,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8184000" />
+    <option name="totallyTimeSpent" value="8189000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1928" y="5" width="1936" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15495208" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15654951" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
