@@ -1,4 +1,4 @@
-# 웹 서버 시작 및 테스트
+﻿# 웹 서버 시작 및 테스트
 * WebServer
    * 웹 서버를 시작하고, 사용자의 요청이 있을 때까지 대기 상태에 있다가 사용자의 요청이 있을 경우 받아서 RequestHandler에 작업을 위임하는 클래스이다.
    * ServerSocket에 사용자 요청이 발생하는 순간 클라이언트와 연결을 담당하는 Socket을 RequestHandler에 전달하면서 새로운 스레드를 실행하는 방식으로 멀티스레드 프로그래밍을 지원하고 있다.
@@ -71,6 +71,4 @@
 
 * String 클래스의 <code>trim()</code>은 문자열에 있는 왼쪽, 오른쪽 공백을 다 제거 해준다.
 * <code>parseBoolean()</code> 객체 타입을 String -> Boolean 바꿔주는데 값이 null이 아니고 값이 "true" 인 경우에 boolean 타입으로 <code>true</code> 리턴해줌.(대/소문자 상관X)
-  > 같지 않을 경우 항상 <code>false</code>를 리턴함
-### heroku 서버에 배포 후
-* 
+  > 같지 않을 경우 항상 <code>false</code>를 리턴함 
