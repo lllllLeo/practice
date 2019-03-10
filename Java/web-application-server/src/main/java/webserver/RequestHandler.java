@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import controller.Controller;
@@ -50,6 +51,9 @@ public class RequestHandler extends Thread {
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
 
+            if (getSessionId(request.getHeader("Cookie")) == null){
+                response.addHeader("Set-Cookie", "JSESSIONID=" + UUID.randomUUID());
+            }
             boolean logined = false;
 //            while( !"".equals(line)){
 //                log.debug("header : {}", line);
@@ -70,6 +74,11 @@ public class RequestHandler extends Thread {
         } catch (IOException e) {
             log.error(e.getMessage());
         }
+    }
+
+    private String getSessionId(String cookieValue) {
+        Map<String, String> cookies = HttpRequestUtils.parseCookies(cookieValue);
+        return cookies.get("JSESSIONID");
     }
 
     private String getDefaultPath(String path) {
