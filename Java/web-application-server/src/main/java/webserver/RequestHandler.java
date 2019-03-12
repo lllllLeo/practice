@@ -1,26 +1,16 @@
 package webserver;
 
-import java.io.*;
-import java.net.Socket;
-import java.nio.file.Files;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import controller.Controller;
-import controller.CreateUserController;
-import controller.ListUserController;
-import controller.LoginController;
-import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import util.HttpRequestUtils;
-import util.IOUtils;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.Map;
+import java.util.UUID;
 
 /* RequestHandler
 *  Thread를 상속하고 있으며 사용자의 요청에 대한 처리와 응답에 대한 처리를 담당하는 가장 중심이 되는 클래스.
@@ -51,7 +41,7 @@ public class RequestHandler extends Thread {
             HttpRequest request = new HttpRequest(in);
             HttpResponse response = new HttpResponse(out);
 
-            if (getSessionId(request.getHeader("Cookie")) == null){
+            if (request.getCookies().getCookie("JSESSIONID") == null){
                 response.addHeader("Set-Cookie", "JSESSIONID=" + UUID.randomUUID());
             }
             boolean logined = false;

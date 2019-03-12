@@ -3,13 +3,12 @@ package controller;
 import db.DataBase;
 import http.HttpRequest;
 import http.HttpResponse;
+import http.HttpSession;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.HttpRequestUtils;
 
 import java.util.Collection;
-import java.util.Map;
 
 public class ListUserController extends AbstractController {
 
@@ -17,7 +16,7 @@ public class ListUserController extends AbstractController {
 
     @Override
     public void doGet(HttpRequest request, HttpResponse response) {
-        if(!isLogin(request.getHeader("Cookie"))){
+        if(!isLogined(request.getSession())){
             response.sendRedirect("/user/login.html");
             return;
         }
@@ -35,13 +34,20 @@ public class ListUserController extends AbstractController {
         response.forwardBody(sb.toString());
     }
 
-    private boolean isLogin(String line) {
-        String[] headerTokens = line.split(":");
-        Map<String, String> cookies = HttpRequestUtils.parseCookies(headerTokens[1].trim());
-        String value = cookies.get("logined");
-        if (value == null){
+//    private boolean isLogin(String line) {
+//        String[] headerTokens = line.split(":");
+//        Map<String, String> cookies = HttpRequestUtils.parseCookies(headerTokens[1].trim());
+//        String value = cookies.get("logined");
+//        if (value == null){
+//            return false;
+//        }
+//        return Boolean.parseBoolean(value);
+//    }
+    private static boolean isLogined(HttpSession session) {
+        Object user = session.getAttribute("user");
+        if (user == null){
             return false;
         }
-        return Boolean.parseBoolean(value);
+        return true;
     }
 }
