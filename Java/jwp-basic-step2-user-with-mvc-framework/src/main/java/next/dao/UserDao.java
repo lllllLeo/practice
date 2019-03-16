@@ -15,35 +15,16 @@ import next.support.context.RowMapper;
 
 public class UserDao {
     public void insert(User user) throws SQLException {
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
-            @Override
-            public void setParameters(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, user.getUserId());
-                pstmt.setString(2, user.getPassword());
-                pstmt.setString(3, user.getName());
-                pstmt.setString(4, user.getEmail());
-            }
-        };
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "INSERT INTO USERS VALUES (?, ?, ?, ?)";
-        jdbcTemplate.excuteUpdate(sql, pss);
+        jdbcTemplate.excuteUpdate(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail());
     }
 
 
     public void update(User user) throws SQLException {
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
-            @Override
-            public void setParameters(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, user.getUserId());
-                pstmt.setString(2, user.getPassword());
-                pstmt.setString(3, user.getName());
-                pstmt.setString(4, user.getEmail());
-                pstmt.setString(5, user.getUserId());
-            }
-        };
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "UPDATE USERS SET userId = ?, password = ?, name = ?, email = ? WHERE userId = ?";
-        jdbcTemplate.excuteUpdate(sql, pss);
+        jdbcTemplate.excuteUpdate(sql, user.getUserId(), user.getPassword(), user.getName(), user.getEmail(), user.getUserId());
     }
 
 
@@ -80,12 +61,6 @@ public class UserDao {
     }
 
     public User findByUserId(String userId) throws SQLException {
-        PreparedStatementSetter pss = new PreparedStatementSetter() {
-            @Override
-            public void setParameters(PreparedStatement pstmt) throws SQLException {
-                pstmt.setString(1, userId);
-            }
-        };
         RowMapper<User> rm = new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs) throws SQLException {
@@ -100,7 +75,7 @@ public class UserDao {
         JdbcTemplate JdbcTemplate = new JdbcTemplate();
         String sql = "SELECT * FROM USERS WHERE userId=?";
 
-        return JdbcTemplate.excuteQuery(sql, pss, rm);
+        return JdbcTemplate.excuteQuery(sql, rm, userId);
     }
 
 }

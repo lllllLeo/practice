@@ -31,6 +31,8 @@
  - RowMapper 타입이 Object였는데 이대로 하면 매번 캐스팅해줘야한다. 그래서 Generics로 <T>로 리턴타입을 바꾸고 interface를 구현할 때 원하는 타입으로 구현해주면 됨 `RowMapper<User>` 이런식으로
  
  - `pstmt.setXxxx()` 으로 구현되어있는데 이렇게하면 인자가 많이 필요한 상황이면 계속 `pstmt.setXxxx()`으로 계속 적어줘야한다. 그래서 이 부분을 전달받는 곳에서 인자의 수가 매번 바뀔 수 있으니 **가변인자**로 받을 수 있음. 그리고 타입이 String말고도 int 등 다양한 타입이 올 수 있으니까 지금 `Object`로 받음
+ - **가변인자 (Varargs / variable Arguments)**  
+   - 선언할 때 ...을 붙여주면 컴파일러가 `String... strs` 를 배열형식 `String[] strs`로 바꿈. 그리고 매개변수로 주어지는 가변인수들을 모아서 배열 객체로 만들어버림
    - 가변인자는 맨 마지막에 적어야함.
       
    

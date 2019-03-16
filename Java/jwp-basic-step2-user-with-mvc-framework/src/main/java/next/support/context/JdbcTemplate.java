@@ -30,31 +30,12 @@ public class JdbcTemplate {
     }
 
     public void excuteUpdate(String sql, Object... parameters) throws SQLException {
-        Connection con = null;
-        PreparedStatement pstmt = null;
-        try {
-            con = ConnectionManager.getConnection();
-            pstmt = con.prepareStatement(sql);
-
-            for (int i = 0; i < parameters.length; i++){
-                pstmt.setObject(i+1, parameters[i]);
-            }
-
-            pstmt.executeUpdate();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-
-            if (con != null) {
-                con.close();
-            }
-        }
+        excuteUpdate(sql, createPreparedStatementSetter(parameters));
     }
 
     // 의존관계를 제거해야 User객체 뿐만아니라 다른 객체에서도 재사용이 가능함
 
-    public <T> T excuteQuery(String sql, PreparedStatementSetter pss, RowMapper<T> rm) throws SQLException {
+    public <T> T excuteQuery(String sql, RowMapper<T> rm, PreparedStatementSetter pss) throws SQLException {
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -81,5 +62,20 @@ public class JdbcTemplate {
                 con.close();
             }
         }
+    }
+
+    public <T> T excuteQuery(String sql, RowMapper<T> rm, Object... parameters) throws SQLException {
+        return excuteQuery(sql, rm, createPreparedStatementSetter(parameters));
+    }
+
+    private PreparedStatementSetter createPreparedStatementSetter(Object[] parameters) throws SQLException {
+        return new PreparedStatementSetter() {
+            @Override
+            public void setParameters(PreparedStatement pstmt) throws SQLException {
+                for (int i = 0; i < parameters.length; i++) {
+                    pstmt.setObject(i + 1, parameters[i]);
+                }
+            }
+        };
     }
 }
