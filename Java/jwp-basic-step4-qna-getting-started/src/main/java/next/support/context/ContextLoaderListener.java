@@ -16,7 +16,6 @@ import core.jdbc.ConnectionManager;
 public class ContextLoaderListener implements ServletContextListener {
     private static final Logger logger = LoggerFactory.getLogger(ContextLoaderListener.class);
 
-    /* 초기화와 동시에 실행 */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
@@ -26,7 +25,6 @@ public class ContextLoaderListener implements ServletContextListener {
         logger.info("Completed Load ServletContext!");
     }
 
-    /* Destory와 동시에 실행 */
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
     }
