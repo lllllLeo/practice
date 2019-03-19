@@ -31,25 +31,29 @@ function onSuccess(json, status) {
   $(".qna-comment-slipp-articles").prepend(template);
 }
 
-$(".qna-comment").click(deleteAnswer);
 
-function deleteAnswer() {
-  e.preventDefault();
-  $.ajax({
-      type : 'post',
-      url : '/api/qna/deleteAnswer',
-      data : $("#answerId").val(),
-      dataType : 'json',
-      error : function (xhr, status) {
-        alert("error");
-      },
-      success : function (json, status) {
-        if (json.status) {
+$(".qna-comment").on("click", ".form-delete", deleteAnswer);
 
+function deleteAnswer(e) {
+    e.preventDefault();
+
+    var deleteBtn = $(this);
+    var queryString = deleteBtn.closest("form").serialize();
+
+    $.ajax({
+        type: 'post',
+        url: "/api/qna/deleteAnswer",
+        data: queryString,
+        dataType: 'json',
+        error: function (xhr, status) {
+            alert("error");
+        },
+        success: function (json, status) {
+            if (json.status) {
+                deleteBtn.closest('article').remove();
+            }
         }
-
-      }
-
-  })
+    });
+}
 
 }
