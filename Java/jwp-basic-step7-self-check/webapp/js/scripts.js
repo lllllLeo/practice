@@ -27,19 +27,32 @@ function onError(xhr, status) {
   alert("error");
 }
 
-$(".form-delete input[type=submit]").click(deleteAnswer);
+$(".qna-comment").on("click", ".form-delete", deleteAnswer);
 
 function deleteAnswer(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  var questionId = $("#questionId").val();
+    var deleteBtn = $(this);
+    console.log(deleteBtn);
+    var queryString = deleteBtn.closest("form").serialize();
+    console.log(deleteBtn.closest("form"));
+    console.log("qs : " + queryString);
 
-  $.ajax({
-      type : "post",
-      url : "/api/qna/deleteAnswer",
-      data : questionId,
-      dataType : "json"
-  })
+    $.ajax({
+        type: 'post',
+        url: "/api/qna/deleteAnswer",
+        data: queryString,
+        dataType: 'json',
+        error: function (xhr, status) {
+            alert("error");
+        },
+        success: function (json, status) {
+            var result = json.result;
+            if (result.status) {
+                deleteBtn.closest('article').remove();
+            }
+        }
+    });
 }
 
 String.prototype.format = function() {

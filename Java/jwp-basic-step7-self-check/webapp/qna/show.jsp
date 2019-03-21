@@ -63,7 +63,7 @@
 									</div>
 									<div class="article-header-text">
 										${each.writer}
-										<div class="article-header-time">${each.date}</div>
+										<div class="article-header-time">${each.createdDate}</div>
 									</div>
 								</div>
 								<div class="article-doc comment-doc">

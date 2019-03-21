@@ -30,3 +30,42 @@ private List<Answer> answers;
 - 그래서 사용자 1이 1번 글을 읽어오기 위해 눌렀을때 (1번글 요청) 응답하기 전에 사용자 2가 2번 글을 읽어오기 위해 2번글을 요청하면 사용자1과 사용자2에 1번글 응답을 한다. 필드에 선언되어있는 question과 answer은 공유할 수 있는 공간인 Heap영역에 있으니까 스레드끼리 공유해서 이런 문제가 생긴다.
 - -> 로컬변수로 선언하면 됨 
 
+#### Singleton
+매 요청마다 모든 클래스의 인스턴스를 생성하지 않아도 됨. 이에 해당하는 클래스가 컨트롤러, DAO, JdbcTemplate과 같이 상태 값은 가지지 않으면서 메소드만 가지는 클래스  
+```java
+public class JdbcTemplate {
+
+    private static JdbcTemplate jdbcTemplate;
+
+//  외부에서 인스턴스를 생성할 수 없도록 기본 생성자를 private 접근 제어자로 구현
+    private JdbcTemplate() {} 
+//  인스턴스에 대한 생성은 이 메서드로만 가능하도록 허용
+    public static JdbcTemplate getInstance() {
+        if (jdbcTemplate == null) {
+            jdbcTemplate = new JdbcTemplate();
+        }
+        return jdbcTemplate;
+    }
+}
+//  여러 개의 쓰레드가 동시에 getInstance() 메소드를 호출하는 경우 인스턴스가 하나 이상 생성될 수 있는 문제가 있는 코드
+```
+
+- **인스턴스가 하나만 생성하도록 보장**
+```java
+public class JdbcTemplate {
+    private static JdbcTemplate jdbcTemplate = new JdbcTemplate();
+    
+    private JdbcTemplate() {}
+    
+    public static JdbcTemplate getInstance() {
+        return jdbcTemplate;
+    }
+}
+// Singleton 패턴을 사용해야 하는 경우가 있다면 위와 같이 구현할 것을 추천
+```
+- Contoller의 경우는 이미 인스턴스 하나를 재사용하고 있다. 서블릿 컨테이너가 시작하는 시점에 `DispatcherServlet`이 초기화(init())를 하면서 각 컨트롤러의 인스턴스를 Map에 저장한 후 재사용하는 방식으로 구현되어 있다.
+
+#### QnaService
+- **`deleteQuestion()`는 CannotDeleteException이라는 컴파일타입 Exception을 throw 하고있는데 사용자에게 예외처리를 통해 에러 메시지를 전달하거나, 다른 작업을 하도록 유도할 필요가 있는 경우 런타임 Exception보다는 컴파일 타임 Exception이 적합하다.**  
+  -> 음.. 더 알아보도록 하자
+
