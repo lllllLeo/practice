@@ -11,3 +11,7 @@
 위해 자주 사용되는 방식이기도 하다.   
 -> 알아보기 
 
+
+### localhost 1099 already in use
+- cmd 창에서 `netstat –ano | findstr 1099` 해서 나오는 pid를 가지고 `taskkill /f /pid [pid숫자]` 하면 됨
+
