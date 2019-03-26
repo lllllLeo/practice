@@ -10,8 +10,11 @@
 위임 클래스를 리플렉션을 통해 동적/정적으로 생성하고 교체하는 방식으로 사용된다.  프레임워크에서 유연성이 있는 동작을
 위해 자주 사용되는 방식이기도 하다.   
 -> 알아보기 
+- `getFields()` : public만 뽑아옴
+- `getDeclaredFields()`, `getDeclaredMethods()`, `getDeclaredConstructors()`하면 private, protected 도 뽑아옴
+- `newInstance()` : 기본 생성자를 가지는 경우 인스턴스를 생성할 수 있음. 없으면 `class.newInstance()` 못함
+- 인자가 있는 생성자는 `constructor.newInstance(Object... args)` 로 생성
 
-
-### localhost 1099 already in use
+#### localhost 1099 already in use
 - cmd 창에서 `netstat –ano | findstr 1099` 해서 나오는 pid를 가지고 `taskkill /f /pid [pid숫자]` 하면 됨
 
