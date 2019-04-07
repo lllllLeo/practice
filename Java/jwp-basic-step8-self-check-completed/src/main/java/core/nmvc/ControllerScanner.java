@@ -16,7 +16,7 @@ public class ControllerScanner {
     Reflections reflections;
 
     public ControllerScanner(Object... basePackage) {
-        reflections = new Reflections("my.project");
+        reflections = new Reflections(basePackage);
     }
 
     public Map<Class<?>, Object> getControllers(){
