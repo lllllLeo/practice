@@ -43,17 +43,39 @@ Git 정리
   `git checkout -b photo`
 
 - ### commit 취소
-   - 최종 커밋 취소. 그러나 변경된 파일은 남아있음.  
-     `git reset HEAD^`  
-
-   - 최종 커밋 취소하고 파일 까지 복구한다.    
+  - commit을 취소하고 해당 파일들은 **staged** 상태로 워킹 디렉터리에 보존
+    `git reset --soft HEAD^`
+  - commit을 취소하고 해당 파일들은 **unstaged** 상태로 워킹 디렉터리에 보존
+    `git reset --mixed HEAD^` // default
+    `git reset HEAD^` // 위와 동일
+    `git reset HEAD~2` // 마지막 2개의 commit을 취소
+  - commit을 취소하고 해당 파일들은 **unstaged** 상태로 워킹 디렉터리에서 삭제
     `git reset --hard HEAD^`
+  
+  - **git reset 옵션**
+    – **soft** : index 보존(add한 상태, **staged** 상태), 워킹 디렉터리의 파일 보존. 즉 모두 보존.
+    – **mixed** : index 취소(add하기 전 상태, **unstaged** 상태), 워킹 디렉터리의 파일 **보존** (default))
+    – **hard** : index 취소(add하기 전 상태, **unstaged** 상태), 워킹 디렉터리의 파일 **삭제**. 즉 모두 취소.
 
-   - 마지막 n개의 커밋을 취소 한다. 그러나 변경된 파일은 남아있음. (n: 숫자 )  
-     `git reset HEAD~n`
+- ### commit 메시지 변경
+  `git commit --amend`
 
-   - 마지막 n개의 커밋을 취소. 파일 또한 복구됨.  
-     `git reset --hard HEAD~n`
+- ### 강제 push
+  `git -f push [원격 저장소 이름] [로컬 저장소 이름]`
+  
+- ### ~~~/.git/index.lock': File exists
+  `rm -f ./.git/index.lock` 하고 다시 `git add .` 하면 됨
+  - 보통 최상위경로인 practice에서 git을 쓰는데 git새로운 내용 추가하고 git 폴더에서 git을 썼다가 practice에서 다시 git을 사용하려하는데 저런 에러가 났었음.
+   > fatal: Unable to create '/path/my_proj/.git/index.lock': File exists.
+   > If no other git process is currently running, this probably means a git process crashed in this repository earlier. Make sure no other git process is running and remove the file manually to continue.
+   
+  - https://stackoverflow.com/questions/7860751/git-fatal-unable-to-create-path-my-project-git-index-lock-file-exists
 
+- ### reset했다가 다시 취소 하고 싶을 경우
+  `git reflog`로 내역을 보고 **HEAD@{n}** 을 보고 reset 다시 하면됨
+  `git reset --hard HEAD@{1}` 이런식으로
+  
+  
 ---
+
 `-f` : `--force`
