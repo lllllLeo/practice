@@ -1,5 +1,7 @@
 package programmers;
 
+// 중요한건 Hash문제인데 Hash를 활용안함
+
 public class HashPhoneBook {
     public boolean solution(String[] phone_book) {
         boolean answer = true;
