@@ -1,4 +1,4 @@
-﻿package codeup.onetohundred;
+package codeup.onetohundred;
 
 public class codeup1007 {
     public static void main (String[] args) {
