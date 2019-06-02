@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="92988038-667b-47f5-a642-baa52d5bc6d6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../Java/codeup/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Java/codeup/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Java/codeup/out/production/codeup/codeup/onetohundred/codeup1072.class" beforeDir="false" afterPath="$PROJECT_DIR$/../../Java/codeup/out/production/codeup/codeup/onetohundred/codeup1072.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Java/codeup/src/codeup/onetohundred/codeup1072.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Java/codeup/src/codeup/onetohundred/codeup1072.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/me/yujun/HelloWorld.py" beforeDir="false" afterPath="$PROJECT_DIR$/me/yujun/HelloWorld.py" afterDir="false" />
-    </list>
+    <list default="true" id="92988038-667b-47f5-a642-baa52d5bc6d6" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/me/yujun/HelloWorld.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="10" selection-start-line="10" selection-end-line="10" />
+            <state relative-caret-position="118">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
@@ -152,23 +146,22 @@
       <option name="presentableId" value="Default" />
       <updated>1559212780737</updated>
       <workItem from="1559212783693" duration="2105000" />
-      <workItem from="1559382755703" duration="575000" />
+      <workItem from="1559382755703" duration="1259000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2680000" />
+    <option name="totallyTimeSpent" value="3364000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="848" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14544237" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.33193862" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.33193862" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -198,8 +191,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/me/yujun/HelloWorld.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        <state relative-caret-position="118">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
         </state>
       </provider>
     </entry>
