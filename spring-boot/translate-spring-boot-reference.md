@@ -7,7 +7,7 @@
 dependency manㅗㅎagement를 지원하고 "Maven Central" 저장소에 배포된 아티펙트를 사용할 수 있는 빌드시스템을 강력히 추천한다. Maven이나 Gradle을 선택하는 것을 추천한다. 스프링 부트가 다른 빌드 시스템과 작동하는 것은 가능하지만 특별히 잘 지원되지 않는다.
 
 ## 13.1 Maven
-Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 합리적인 기본값을 얻을 수 있다. 부모 프로젝트는 다음과 같은 특징을 제공합니다:
+Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 실용적인/합리적인 기본값을 얻을 수 있다. 부모 프로젝트는 다음과 같은 특징을 제공합니다:
 - 기본 컴파일러 레벨은 Java 1.8
 - UTF-8 소스 인코딩
 - spring-boot-dependencies pom에서 상속하는 의존성 관리 섹션은, 공통의 의존성 버전을 관리한다. 이 의존성 관리는 pom에서 사용될 때 \<version> 태그를 생략할 수 있다.
@@ -20,7 +20,7 @@ Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 합
 
 ## 13.2.1 스타터 부모 상속
 `spring-boot-stater-parent`로부터 상속받은 프로젝트를 설정하기 위해서, `parent`를 다음과 같이 세팅하세요.
-```java
+```xml
 <!-- Inherit defaults from Spring Boot -->
 <parent>
 	<groupId>org.springframework.boot</groupId>
@@ -30,22 +30,157 @@ Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 합
 ```
   > 이 의존성에는 스프링 부트 버전 숫자를 명시해야한다. 스타터에 추가적으로 임포트하는 것에는 버전 숫자를 빠뜨려도 안전하다.
 
-설정을 할 때, 프로젝트의 속성을 재정의함으로써 각 의존성 또한 재정의할 수 있다. 예를 들어 다른 Spring Data release train으로 업그레이드하려면 `pom.xml`에 밑과 같이 추가하면 된다.
+설정을 할 때, 프로젝트의 속성을 재정의함으로써 각 의존성 또한 재정의할 수 있다. 예를 들어 다른 Spring Data release train으로 업그레이드하려면 `pom.xml`에 다음과 같이 추가하면 된다.
 
-```java
+```xml
 <properties>
 	<spring-data-releasetrain.version>Fowler-SR2</spring-data-releasetrain.version>
 </properties>
 ```
 
 ## 13.2.2 부모 POM없이 스프링부트 사용하기
+모두가 `spring-boot-starter-parent` POM에서 상속하는것을 좋아하는것은 아니다. 아마도 사용할 필요가 있거나 모든 Maven 설정에서 명확하게 선언하는 것을 선호하는 공동의 기준이 있을 것이다.
+
+`spring-boot-starter-parent`를 사용하고 싶지 않으면, 다음과 같이 `scope=import` 의존성을 사용함에 따라 의존성 관리의 이점을 계속 사용/유지할 수 있다.
+
+```xml
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<!-- Import dependency management from Spring Boot -->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-dependencies</artifactId>
+			<version>2.1.5.RELEASE</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+```
+
+앞선 설치 예시에서 위의 설명대로 속성을 사용하여 개별적으로 의존성을 재정의할 수 없다. 같은 결과를 얻으려면 `spring-boot-dependencies`항목이 들어가기 전에 `dependencyManagement`에 항목을 추가해야 한다. 예를 들면, Spring Data release train을 업그레이드하려면 다음과 같이 `pom.xml`에 요소를 추가할 수 있다.
+
+```xml
+<dependencyManagement>
+	<dependencies>
+		<!-- Override Spring Data release train provided by Spring Boot -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-releasetrain</artifactId>
+			<version>Fowler-SR2</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-dependencies</artifactId>
+			<version>2.1.5.RELEASE</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+```
+
+## 13.2.3 스프링 부트 메이븐 플러그인 사용하기
+스프링 부트는 실행가능한 jar 파일로 패키징이 가능한 Maven 플러그인이 포함되어 있다. 다음으로 보여지는 예와 같이 플러그인을 사용하고 싶으면를 `<plugins>` 부분에 플러그인을 추가하면 된다.
+
+```xml
+<build>
+	<plugins>
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+		</plugin>
+	</plugins>
+</build>
+```
+
+## 13.3 Gradle
+Gradle을 사용한 스프링 부트를 사용하는 것을 배우고 싶으면, 스프링 부트의 Gradle 플러그인 공식문서를 참조해라.
+- Reference ([HTML](https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/gradle-plugin/reference/html/) and [PDF](https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/gradle-plugin/reference/pdf/spring-boot-gradle-plugin-reference.pdf))
+- [API](https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/gradle-plugin/api/)
+
+## 13.4 Ant
+## 13.5 Starters
+
+스타터는 어플리케이션에 포함할 수 있는 편리한 의존성 기술자 세트/집합이다. 스프링의 모든 것들과 이것들과 관련된 기술을 예제 코드와 의존성 기술자의 복사-붙여넣기할 필요가 없이 한 번에 얻을 수 있다. 예를 들어, 스프링과 데이터베이스 접근을 위한 JPA를 사용해서 프로젝트를 시작하고 싶으면, 프로젝트에 `spring-boot-starter-data-jpa` 의존성을 포함하면 된다.
+
+스타터에는 의존성들을 관리하는 집합들이 지원되고 있고 프로젝트를 실행하고 일관성있고 빠르게 실행할 필요가 있는 여러가지 많은 의존성들이 포함되어 있다. 
+
+다음과 같은 어플리케이션 스타터는 스프링 부트의 `org.springframework.boot` 그룹에서 제공된다.
+
+/ 표 /
+
+## 14. 코드 구조화하기
+스프링 부트는 작동하기위한 특정 코드 레이아웃이 필요는 없지만 작동에 도움되는 좋은 방법이 있다.
+
+## 14.1 default 패키지 사용하기
+클래스에 `package`선언이 포함되어 있지 않을때, default package가 된다. default package의 사용은 일반적으로 금지되고 피해야 한다. 모든 jar파일로부터 모든 클래스를 읽기 떄문에 `@ComponentScan`, `@EntityScan`, 또는 `@SpringBootApplication` 어노테이션을 사용하는 스프링 부트 어플리케이션에서 특정한 문제를 일으킬 수 있다.
+> Java의 패키지 네이밍 컨벤션과 도메인 네임을 거꾸로되게 사용하는 것을 추천합니다.(예를 들어서, `com.example.project`)
+
+## 14.메인 어플리케이션 클래스 위치 지정하기
+일반적으로 다른 클래스들의 위에 있는 루트 패키지에 메인 어플리케이션을 위치시키는 것을 추천한다. `@SpringBootApplication` 어노테이션은 종종 메인 클래스에 놓인다. 그리고 특정 항목들에 대한 search package로 암묵적으로 정의된다. 예로, JPA 어플리케이션을 작성하는경우에 `@SpringBootApplication` 어노테이션이 작성된 클래스의 패키지가 `@Entity` 항목에 대한것을 검색하는데 사용된다. 루트 패키지를 사용 하는것은 프로젝트에서만 지원하는 component scan을 허용한다.
+> 마지막 뭔가 이상하네
+
+> `@SpringBootApplication`을 사용하고 싶지 않으면, `@EnableAutoConfiguration`와 `@ComponentScan` 어노테이션을 선언하면 `@SpringBootApplication` 대신에 똑같은 동작할 수 있다.
+
+다음은 일반적인 레이아웃을 보여준다.
+```
+com
+ +- example
+     +- myapplication
+         +- Application.java
+         |
+         +- customer
+         |   +- Customer.java
+         |   +- CustomerController.java
+         |   +- CustomerService.java
+         |   +- CustomerRepository.java
+         |
+         +- order
+             +- Order.java
+             +- OrderController.java
+             +- OrderService.java
+             +- OrderRepository.java
+```			 
+다음과 같이, `Application.java`파일은 기존 `@SpringBootApplication`에 따라 `main`메소드가 선언된다.
+
+```java
+package com.example.myapplication;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+}
+```
+
+15. 클래스 설정
+
 
 ---
-go into detail : 상세히 설명하다.
-particularly : 특히, 특별히
-?when followed : 따라서
-start out : 시작하다
-omit : 빠뜨리다, 생략하다, 누락시키다.
-execution : 실행, 수행
-Sensible : 합리적인, 실용적인
-Note that : 참고로
+go into detail : 상세히 설명하다.  
+particularly : 특히, 특별히  
+?when followed : 따라서  
+start out : 시작하다  
+omit : 빠뜨리다, 생략하다, 누락시키다.  
+execution : 실행, 수행  
+Sensible : 합리적인, 실용적인  
+Note that : 참고로  
+preceding : 이전의, 앞선  
+executable : 실행 가능한  
+explicitly : 분명하게, 명쾌하게, 명백하게  
+a set of + N : N 세트  
+one-stop : 한 곳에서, 다 할 수 있는  
+hunt : 찾다, 뒤지다  
+consistent : 한결같은, 일관된, 변함없는  
+reversed : 거꾸로 된, 반대의, 뒤집은  
+be placed on : ~에 놓이다
+implicitly : 암암리에, 무조건, 절대적으로, 넌지시
+certain items : 특정 항목들
