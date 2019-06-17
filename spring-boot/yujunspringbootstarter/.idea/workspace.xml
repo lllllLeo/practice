@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bb05ef91-c6f4-4695-9726-7f5e86e14e90" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../Java/codeup/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Java/codeup/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../springboot0306/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0306/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../springboot0306/springboot0306.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -64,7 +60,7 @@
     <session id="269673451">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.opened" value="2" />
@@ -268,16 +264,15 @@
       <workItem from="1542735293737" duration="1861000" />
       <workItem from="1542763392116" duration="1506000" />
       <workItem from="1560667416708" duration="613000" />
-      <workItem from="1560670426654" duration="1487000" />
+      <workItem from="1560670426654" duration="2083000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9773000" />
+    <option name="totallyTimeSpent" value="10369000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="761" y="0" width="782" height="840" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25482094" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
