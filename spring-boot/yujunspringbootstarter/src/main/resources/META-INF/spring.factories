@@ -1,2 +1,2 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-        me.yujun.HolomanConfiguration
+holoman.name = yujun
+holoman.how-long = 8

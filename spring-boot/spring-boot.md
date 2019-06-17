@@ -197,9 +197,107 @@ public class YujunConfiguration {
 
  그런데 직접 프로젝트에서 같은 이름의 Bean을 직접 만들면 `@EnableAutoConfiguration`로 가져온 Bean을 사용을 한다.  
  왜냐하면  
- Bean 등록하는 방법이 `@ComponentScan`과 `@EnableAutoConfiguration` 두 가지가 있었는데 `@ComponentScan`으로 Bean으로 등록하는게 먼저 실행된다. 그래서 직접 다시 만든 Bean을 등록한 후 `@EnableAutoConfiguration`이 다시 다른 프로젝트에서 가져온 Bean을 등록을 하면서 처음 직접 만든 Bean을 등록한 것을 덮어씌우고 가져온 Bean을 사용한다.
+ Bean 등록하는 방법이 `@ComponentScan`과 `@EnableAutoConfiguration` 두 가지가 있었는데 `@ComponentScan`으로 Bean으로 등록하는게 먼저 실행된다. 그래서 직접 다시 만든 Bean을 등록한 후 `@EnableAutoConfiguration`이 다시 다른 프로젝트에서 가져온 Bean을 등록을 하면서 처음 직접 만든 Bean을 등록한 것을 덮어씌워서 **결국, `@EnableAutoConfiguration`로 가져온 Bean을 사용한다.**
  
+
+
+# 3-5 자동 설정 만들기 2부: @ConfigurationProperties
+> yujunspringbootstarter
+
+`@ConditionalOnMissingBean`  (새로운 Bean으로 덮어쓰기 방지하기 위해)  
+Bean으로 등록되지 않도록 조건을 걸어준다. 해당 타입의 Bean이 없을 때만 Bean으로 등록해준다. (`@EnableAutoConfiguration`로 가져오는 Bean에 붙이면 됨)   
+
+즉, 이 프로젝트에서 component scan으로 직접 만든 Bean을 등록을 하고 `@EnableAutoConfiguration`으로 Bean을 재등록 할 때 `@ConditionalOnMissingBean` Annotation으로 인해 자동설정으로 가져오는 Bean을 등록을 안함.
+
+Bean이 없기 때문에 자동설정에 있는 Bean을 사용하게 될 것이고 사용하게 될 때 `HolomanProperties`를 읽어오게 되는데 이 `HolomanProperties`에 해당하는 것은 위 애노테이션에 있는 "holoman" Properties를 사용하게 된다. application.properties를 실행해서 여기에 있는 name, how-long 값들을 읽어서 사용하게 되는 것이다.
+> 자동설정 빈을 만드는 프로젝트에서 `spring.factories`에는 왜 적어놓는거지 그러면 어처피 다른 프로젝트에서 자동설정 빈을 사용할때 `application.properties`에 있는 값을 사용하는데?
+ spring.factories랑 application.properties 차이점 봐야겠네
+
+자동설정이 어디에 있으며, 어떻게 찾아보는거고, 어떻게 적용되고있는지 읽을 수 있을 것이다. 물로 @Conditional~가 되게 많다. AutoConfiguration 프로퍼티스 보면 어떻게 활용할 수 있을지 알 수 있을 것이다.
+
+---
+- properties에서 자동완성 하기 위해서 필요한 의존성 xml코드
+```xml
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-configuration-processor</artifactId>
+        <optional>true</optional>
+    </dependency>
+```        
+
+# 3-6 내장 웹 서버 이해
+스프링 부트는 웹서버가 아니다. 툴이다. 내장 서블릿 컨테이너를 쉽게 사용해줄수 있게 해주는 툴이다. 서버는 톰캣, Netty 등.
+스프링 부트 애플리케이션을 만들었으면 의존성에는 tomcat이 들어와있다. 자바코드로 톰캣을 만들 수 있다.
+
+
+
+`spring.factories`에 있는 AutoConfiguration에서 `DispatcherServletAutoConfiguration` 클래스에서 `DispatherServlet`을 생성한다. 이 생성한거를 계속 쓴다?
+
 ---
 
-`@ConditionalOnMissingBean`
-- Bean으로 등록되지 않도록 조건을 걸어준다. 해당 타입의 Bean이 없을 때만 Bean으로 등록해줌
+Tomcat 코드에서 `A child container failed during start` 에러가 났는데 
+Windows에서는 docBase에 해당하는 디렉토리를 생성해주면 문제 없이 실행할 수 있다.  
+Windows에서는 `String docBase = Files.createTempDirectory("tomcat-basedir").toString();`을 추가해야지 에러가 안남.
+
+Servlet 만들 때 파라미터를 `HttpServletResponse`로 만드니까 @Override 부분에 빨간줄 떴음. 그래서 `request` 먼저 해주니까 오류 없어짐
+
+
+# 3-7 내장 웹 서버 응용 1부 : 컨테이너와 포트
+
+기본적으로 의존성(자동설정)으로 Tomcat이 들어와있어서 Tomcat을 사용하게된다. `ConditionalOnClass`에 의해서 Tomcat용 자동 설정 파일이 읽혀지고 만들어지고 사용하게된다. 항상 Tomcat만 가져오니까 tomcat만 빼면 됨. 빼기만하고 아무것도 추가안하면 웹 애플리케이션이 안뜨고 그냥 애플리케이션만 뜨고 끝이 난다.
+다른 웹 서버를 사용하려면 `spring-boot-starter-web`에서 tomcat을 빼야한다.
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+        <exclusions>
+            <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            </exclusion>
+        </exclusions>
+</dependency>
+```
+빼고 사용하고 싶은 것을 넣으면 됨
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jetty</artifactId>
+</dependency>
+```
+
+기본적으로 의존성에 웹관련 기술(Jetty)을 넣으면 웹 애플리케이션으로 만들려고 시도를 한다. 그래서 코딩으로 `WebApplicationType`을 `NONE`으로 바꿔주는 방법을 썼다.  
+근데 다른 방법이 있는데 `properties`를 이용해서 바꾸는 방법이 있다.
+
+**방법 1 (기존 코딩 방식)**  
+```java
+SpringApplication application = new SpringApplication(Application.class);
+application.setWebApplicationType(WebApplicationType.NONE);
+```
+
+**방법 2**  
+```xml
+spring.main.web-application-type=none
+```
+로 주면 의존성이 있더라도 무시하고 이 `properties`를 읽어서 **none application**이 실행됨
+
+
+**포트 변경**  
+`properties`  
+```java
+server.port=7070
+```
+
+**Random port 사용하기**   
+```java
+server.port=0
+```
+그러면 랜덤으로 사용할 수 있는 port를 찾아서 띄워준다.
+
+마지막으로 위에 작업한 것들을 application에서 적용하는 방법을 해보자   
+> (springboot0306 프로젝트에 있음 참고하기)
+
+---
+- Enable HTTP Response Compression 알아보기
