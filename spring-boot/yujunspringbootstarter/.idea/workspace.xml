@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bb05ef91-c6f4-4695-9726-7f5e86e14e90" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../react/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../react/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../spring-boot.md" beforeDir="false" afterPath="$PROJECT_DIR$/../spring-boot.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/target/classes/me/yujun/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/target/classes/me/yujun/Application.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/target/spring-boot-getting-started-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/target/spring-boot-getting-started-1.0-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/target/spring-boot-getting-started-1.0-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/target/spring-boot-getting-started-1.0-SNAPSHOT.jar.original" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/spring.factories" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/spring.factories" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -69,7 +61,7 @@
     <session id="269673451">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.17" value="1" />
           <entry key="project.open.time.5" value="1" />
@@ -196,7 +188,7 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="x" value="132" />
     <option name="y" value="237" />
     <option name="width" value="1264" />
@@ -267,7 +259,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560781337888" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1560783011643" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../springbootgettingstarted" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -308,7 +300,7 @@
     <option name="totallyTimeSpent" value="12576000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="106" y="190" width="1011" height="596" extended-state="0" />
+    <frame x="106" y="190" width="1011" height="596" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19895288" />
