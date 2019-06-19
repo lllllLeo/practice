@@ -301,3 +301,116 @@ server.port=0
 
 ---
 - Enable HTTP Response Compression 알아보기
+
+# 4-2 SpringApplication 1부
+
+#### DEBUG 레벨  
+아무런 옵션을 안 주고 실행하면 기본적으로 Log 레벨은 `INFO` 이다.
+Run Configurations에서 Application일 경우 VM options에 `–Ddebug` 나 Program arguments에 `—debug` 적어주면 Log 레벨이 `DEBUG`가 된다.
+`DEBUG` 레벨로 찍을 때 어떠한 자동 설정이 적용이 됐는지 / 안됐는지 로그를 볼 수 있다. 그래서 궁금할 때 `DEBUG` 모드로 띄워보면 쉽게 알 수 있다.
+
+#### FailureAnalyzer
+에러가 떴을 때 예쁘게 출력해줌
+
+#### Banner
+1. Application을 실행할 때 console 창에 보이는 SPRING 그림이다. 이것을 바꾸고 싶으면 `src/main/resource/banner.txt`에 넣어주면 된다
+2. `${spring-boot.version}` 변수 넣으면 Spring version이 출력됨
+3. `${application.version}`, `${application.formatted-version}`은 MANIFEST.MF 파일이 있어야만 사용할 수 있다. 없으면 에러는 안뜨고 아예 안찍힌다.
+4. Banner를 gif 움직이는 배너, 이미지로 만들 수도 있음.
+5. banner.txt를 `resources/`에 안놔두고 다른곳에 놔두고 싶으면 `resources/application.properties`에서 `spring.banner.location=classpath:directory-name/banner.txt`로 정의해주면됨.
+6. `application.properties`에서 image 배너도 설정이 가능하다. 
+7. 기본 Encoding은 `UTF-8`이다. 하지만 `application.properties`가 UTF-8이어도 console이 UTF-8이 아니면 이상하게 뜨겠지. 그래서 console Encoding도 확인해야함.
+8. Banner를 끄고싶으면 main에서 아래와 같이 하면 된다.  
+    ```java
+    app.setBannerMode(Banner.Mode.OFF);
+    ``` 
+9. Banner를 conding으로 구현하고 싶으면 main에서
+    ```java 
+    SpringApplication app = new SpringApplication(SpringinitApplication.class);
+    app.setBanner(
+        new Banner() {
+        @Override
+        public void printBanner(Environment environment, Class<?> sourceClass, Print~){
+          out.println("=============");
+          out.println("yujun");
+        }
+이런식으로 구현하면 됨.
+coding과 banner.txt에 둘 다 설정하면 <u>banner.txt로 설정한 banner가 출력된다.</u>
+
+`SpringApplicationBuilder`
+`SpringApplicationBuilder`로도 `SpringApplicaion`을 실행이 가능하다.
+
+```java
+new SpringApplicationBuilder().sources(SpringinitApplication.class).run(args);
+```
+
+스프링 부트에서 Terminal에서 mvn package를 하면 jar파일 하나에 모든 의존성을 포함한 것을 만들어준다. 그래서 이 jar파일을 실행하면 실행이 된다.   
+`$ java –jar target/springinit ~.jar`
+
+
+# 4-3 SpringApplication 2부
+
+#### Application Events
+`ApplicationListener <ApplicationStartingEvent>` 이 타입은 `application-context`가 만들어지기 이전에 발생하는 이벤트이다. 그래서 `application-context`는 얘가 있는지 모른다. 그래서 Bean으로 등록을 한다고 Listener가 동작을 안함.
+그래서 main에서 `addListenenr(~.class)` 해줘야함.
+Application Events 중 다른 것들은 Bean으로 등록하면 됨. 다 뜨고 찍힘.
+
+
+#### Application Type
+
+Spring MVC가 있으면 기본적으로 
+```java
+app.setWebApplicationType(WebApplicationType.SERVLET)
+``` 
+타입으로 돌아간다.
+
+Spring webFlux 면 
+```java
+app.setWebApplicationType(WebApplicationType.REACTIVE)
+``` 
+
+SERVLET이 없고 REACTIVE 가 있으면 REACTIVE
+SERVLET이 있으면 무조건 SERVLET으로 동작하는거
+둘 다 없으면 NONE로 동작
+
+둘 다 있으면 SERVLET이 돌아가는데 / REACTIVE 하고 싶으면 type에 적어주면 됨  
+첫 번째 조건 SERVLET 유무
+
+# 4-4 외부설정 1부
+
+#### properties 
+`application.properties` 파일은 스프링 부트가 애플리케이션을 구동할 때 자동으로 로딩하는 규약, 컨벤션이다.
+여기에 정의되어있는 **Key**, **Value** 값을 사용할 수 있다. 
+- application.properties
+```
+yujun.name=유준
+```
+위처럼 선언 후 
+- ~.java
+```java
+@Value("yujun.name") String name;
+```
+으로 받아서 사용 가능하다
+
+- properties 우선 순위
+> 1. 유저 홈 디렉토리에 있는 spring-boot-dev-tools.properties
+> 2. 테스트에 있는 @TestPropertySource
+> 3. @SpringBootTest 애노테이션의 properties 애트리뷰트
+> 4. CommandLine Arguments
+> 5. SPRING_APPLICATION_JSON (환경 변수 또는 시스템 프로티) 에 들어있는 프로퍼티
+> 6. ServletConfig 파라미터
+> 7. ServletContext 파라미터
+> 8. java:comp/env JNDI 애트리뷰트
+> 9. System.getProperties() 자바 시스템 프로퍼티
+> 10. OS 환경 변수
+> 11. RandomValuePropertySource
+> 12. JAR 밖에 있는 특정 프로파일용 application properties
+> 13. JAR 안에 있는 특정 프로파일용 application properties
+> 14. JAR 밖에 있는 application properties
+> 15. JAR 안에 있는 application properties -> resources/application.properties 에 정의한거
+> 16. @PropertySource
+> 17. 기본 프로퍼티 (SpringApplication.setDefaultProperties)
+
+
+`application.properties` 우선 순위가 높은것이 낮은것을 덮어 쓴다.
+
