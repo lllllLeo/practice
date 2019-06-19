@@ -182,7 +182,7 @@ XML 기반 설정을 무조건 사용해야 한다면, `@Configuration` 클래�
 
 자동 설정이 현재 지원되고 있는지, 그리고 또 왜 그런지 알고 싶으면, `--debug` 를 사용하여 어플리케이션을 시작해라. 이렇게하면 코어 로거 부분에 대한 디버그 로깅과 콘솔에 상태를 로깅한다.
 
-16.2 특정 자동설정 비활성화
+## 16.2 특정 자동설정 비활성화
 지원되길 원하지 않는 자동 설정 특정 클래스를 찾는다면, 다음 보여지는 예와 같이 비활성화 하기 위해 `@EnableAutoConfiguration`의 exclude 속성을 사용할 수 있다.
 
 ```java
@@ -202,9 +202,105 @@ public class MyConfiguration {
 
 ## 17. 스프링 빈과 의존성 주입
 
-의존성 주입과 빈을 정의하기 위해 표준 스프링 프레임워크 기술을 사용하는 것은 자유다. 간단히 말하자면,  `@ComponentScan`(빈을 찾기 위해서)과 `@Autowired`(생성자 주입하기 위해서)을 사용하는 것을 종종 볼수 있다.
+의존성 주입과 빈을 정의하기 위해 표준 스프링 프레임워크 기술을 사용하는 것은 자유다. 간단히 말하자면,  `@ComponentScan`(빈을 찾기 위해서)과 `@Autowired`(생성자 주입하기 위해서)을 사용하는 것을 종종 볼수 있다.  
 
+위에서 제안한 대로 코드를 구조화하면 
+(루트 패키지에 어플리케이션 클래스 배치), 다른 매개변수 없이 `@ComponentScan`을 추가할 수 있다. 모든 어플리케이션 컴포넌트(`@Component`, `@Service`, `@Repository`, `@Controller` 등)이 스프링 빈으로서 자동적으로 등록 된다.
 
+다음 예는 `@Service` 빈이 필요한 `RiskAssessor`빈 얻기 위해 생성자 주입을 사용하는 것을 보여준다.
+
+```java
+package com.example.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DatabaseAccountService implements AccountService {
+
+	private final RiskAssessor riskAssessor;
+
+	@Autowired
+	public DatabaseAccountService(RiskAssessor riskAssessor) {
+		this.riskAssessor = riskAssessor;
+	}
+
+	// ...
+
+}
+```
+
+다음 예와같이, 만약 빈이 생성자를 하나만 가지고 있으면, `@Autowired`를 생략할 수 있다. 
+
+```java
+@Service
+public class DatabaseAccountService implements AccountService {
+
+	private final RiskAssessor riskAssessor;
+
+	public DatabaseAccountService(RiskAssessor riskAssessor) {
+		this.riskAssessor = riskAssessor;
+	}
+
+	// ...
+
+}
+```
+
+> 생성자 주입을 사용하면 `final`로 표시된 `riskAssessor`이 나중에 변경될 수 없다는 것에 주목하자
+
+## 18. `@SpringBootApplicaion` 어노테이션 사용하기
+
+많은 스프링 부트 개발자는 "application class"에서 자동 설정, 컴포넌트 스캔과 그 이외의 설정을 자신의 앱에서 사용하는 것을 좋아한다. `@SpringBootApplication` 어노테이션 하나로 3가지 특징을 사용할 수 있다.
+
+- `@EnableAutoConfiguration` : [스프링 부트 자동 설정 메커니즘](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-auto-configuration) 활성화
+- `@ComponentScan` : 어플리케이션이 위치하고 있는 패키지에서 `@Component` 스캔 활성화 ([좋은 예제](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-structuring-your-code))
+- `@Configuration` : 컨텍스트에서 이외의 빈을 등록하거나 추가적인 설정 클래스들을 불러오는 것을 허용
+
+다음 예와 같이, `@SpringBootApplication` 어노테이션은 `@Configuration`, `@EnableAutoConfiguration`, 그리고 `@ComponentScan`의 기본 속성을 가지고 사용하는 것과 같다. 
+
+```java
+package com.example.myapplication;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication // @Configuration @EnableAutoConfiguration @ComponentScan와 같다.
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+}
+```
+
+> `@SpringBootApplication`은 `@EnableAutoConfiguration`와 `@ComponentScan`의 별칭을 커스텀하는 속성도 제공한다.
+
+> 이러한 기능은 필수사항이 아니고 어떤 기능들을 활성화하는 하나의 어노테이션으로 대체할 것을 선택할 것이다. 예를 들어, 어플리케이션에서 컴포넌트 스캔을 사용하고 싶지 않으면
+
+```java
+package com.example.myapplication;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+@Configuration
+@EnableAutoConfiguration
+@Import({ MyConfig.class, MyAnotherConfig.class })
+public class Application {
+
+	public static void main(String[] args) {
+			SpringApplication.run(Application.class, args);
+	}
+
+}
+```
+> 이 예제에서, `Application`은 사용자가 정의한 빈들을 명확하게 불러오고(`@Import`) 자동적으로 `@Component` 어노테이션이 있는 클래스를 감지하지 못하는 것을 제외한 그저 다른 스프링 부트 어플리케이션과 같다.
+
+## 19. 어플리케이션 실행하기
 
 ---
 go into detail : 상세히 설명하다.  
@@ -233,3 +329,8 @@ Gradually : 서서히, 점진적으로
 At any point : 어떠한 관점에서, 어느 지점  
 back away : 사라지다, 손을 떼다, 후퇴하다, 물러서다  
 Disabling : 무력화, 비활성화  
+For simplicity : 간단히 말해서, 간단히 말하자면, 정리하면  
+be marked as : ~로 표시된  
+subsequently : 그 뒤에, 나중에  
+equivalent : 동등한, 맞먹는  
+mandatory : 정해진, 의무적인
