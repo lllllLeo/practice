@@ -412,5 +412,30 @@ yujun.name=유준
 > 17. 기본 프로퍼티 (SpringApplication.setDefaultProperties)
 
 
-`application.properties` 우선 순위가 높은것이 낮은것을 덮어 쓴다.
 
+`application.properties` 우선 순위 (높은것이 낮은것을 덮어 쓴다.)
+1. file:./config/
+2. file:./
+3. classpath:/config/
+4. classpath:/
+> 같은 디렉토리 위치에 안놔두고 다른 위치에 놓으면 Override안함. 그리고 다른곳에 놓을 수 있음. 여기 4곳에서 properties를 찾는다.
+
+- `src`를 먼저 읽어서 `java디렉토리`부터 `resources 디렉토리`를 컴파일해서 `classpath`에 추가한다. 그리고 똑같이 `test 디렉토리`를 컴파일해서 `classpath`에 추가해서 `test`에 있는 `application.properties`가 최근에 추가되었으니 여기에 있는 값을 읽는다.
+`src properties`에는 값이 있고 `test properties`에는 값이 없으면 에러가 뜬다. `test가 뒤에 실행되니까 `Override`하니까. 그래서 `test properties`에도 `src properties`에 있는 값을 적어야한다. 
+아니면 `test properties`를 지우면 됨
+
+- `application.properties`에 `${random.int}` 사용. 이걸로 `server.port`에 주면 안됨. `server.port = 0` 해야함. 이거는 <u>가용가능한</u> port number를 주는거임.
+
+- Random Value
+```
+${random.*}
+```
+
+- Place Holder
+```
+yujun.name = yujun  
+fullName = ${yujun.name} Kim 
+```
+
+# 4-6 외부설정 2부(2) 	
+- `${random.int(0,100)}` 할 때 0, 100 이렇게 공백이 있으면 에러뜸
