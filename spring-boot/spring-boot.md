@@ -438,4 +438,62 @@ fullName = ${yujun.name} Kim
 ```
 
 # 4-6 외부설정 2부(2) 	
-- `${random.int(0,100)}` 할 때 0, 100 이렇게 공백이 있으면 에러뜸
+- `${random.int(0,100)}` 할 때 0, 100 이렇게 공백이 있으면 에러뜸 
+
+**융통성 있는 바인딩**
+- context-path (케밥)
+- context_path (언드스코어)
+- contextPath (케멀)
+- CONTEXTPATH
+케멀케이스나 언드스코어로 해도 매핑을 해준다.
+
+**properties type conversion (타입 개조, 타입 전환)**  
+`properties`에서는 type이 없다. 다 문자이다. 스프링이 제공하는 conversion을 통해서 타입 컨버전이 된다. 사용할 `@DurationUnit` 써야함
+
+`properties`에 숫자 + `suffix`
+- `ns` for **nanoseconds**  
+- `ms` for **milliseconds**  
+- `s` for **seconds**  
+- `m` for **minutes**  
+- `h` for **hours**  
+- `d` for **days**  
+
+이렇게 사용하면 굳이 `@DurationUnit` 쓰지 않아도 된다.
+
+하면 타입 컨버젼이 일어난다.
+
+properties에 들어오는 값들을 검증하는 법
+- `@Validated`
+- JSR-303 (`@NotEmpty`, `@Size`, `@Max`, `@Min`, `@Email`, `@creditCardNumber` etc)
+  -  validation api에 대한 구현체는 hibernate validation이라는 구현체를 쓰고 있다. (`org.hibernate.validator:hibernate-validator:6.0.10.Final`)
+  
+    ` | @Notnull | @NotEmpty | @NotBlank
+  --- | --- | --- | ---
+  null | 허용하지 않음 | 허용하지 않음 | 허용하지 않음
+  “” | 허용 | 않음 | 허용하지 않음
+  ” “(space) | 허용 | 허용 | 허용하지 않음
+  > 실제 디비에는 모두 not null로 들어 간다.
+
+
+> `properties`를 사용할때는 `app.~`으로 한번에 다 받아서 각 DTO마다 다른 이름으로 `@ConfiguraionProperties`를 안하고 하나로 받아서 하는게 편하겠지?
+
+> `@Value` 어노테이션을 가급적 안쓰는게 좋다. 그냥 `@ConfigurationProperties("yujun")`을 쓰는게 더 편하고 좋다. 이걸 쓰면 위에서 배운 융통성있는 바인딩도 적용이 된다. 캐멀케이스, 대문자로 써도 된다.  
+`@Value` 어노테이션을 쓰려면 `application.properties`에 정의되어있는 문자 그대로 써야한다. 그리고 이런 META 정보도 제공해주지 않는다. 딱 하나 차이가 있다면 `@Value`에는 **Sp**ring **L**anguage **E**xpression을 사용할 수 있지만 위에 있는 기능들은 전부 사용을 못한다. 
+
+# 4-7 프로파일
+
+`config/`에 2개의 Configuration클래스에 `@Profile("prod")`, `@Profile("test")` 이렇게 각 2개의 Configuration이 있는데 저렇게 써놓고 `spring.profiles.active=test` 라고 적고 실행하면 `@Profile("test")`라고 적혀있는 Configuration이 실행된다.
+
+> `CommanLine Arguments` 우선순위가 `application.properties`에 정의되어있는 arguments 보다 더 높다. Overriding 한다. 
+`java –jar target/springinit-0.0.1 SNAPSHOT.jar —spring.profile.active=prod`
+이 방법은 jar 파일로 하거나 Docker를 사용할 때 사용 
+
+또 다른 방법으로는 profile용 `properties`를 만든다. `application-prod.properties` 파일을 만든다.
+
+Profile로 관련된 `properties` 우선순위가 기본인 `application.properties`보다 높다.  
+`java –jar target/springinit-0.0.1 SNAPSHOT.jar —spring.profile.active=prod` 하면 `application.properties` 에 있는 값을 `application-prod.properties` 값이 Overriding 한다.
+
+properties에서 `spring.profiles.include = prod` 이런식으로 해서 다른 `properties`를 활성화 할 수 있다.
+
+Edit Configurations에서 `Program arguments`에서 값을 줘도 됨. 
+> `spring.profiles.active=prod` 이 방법은 주로 개발을 할 때 profiles 값을 setting 하고싶을 때 사용
