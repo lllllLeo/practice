@@ -326,14 +326,102 @@ $ java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
 ```
 
 ## 19.3 메이븐 플러그인 사용하기
-스프링 부트 메이븐 플러그인은 어플리케이션을 실행하고 빠르게 컴파일하여 사용할 수 있게 되는 `run` 목표를 가지고 있다. 어플리케이션은 IDE. 스프링 부트 다음 예는 어플리케이션을 실행하기 위한 대표적인 메이븐 커맨드를 보여준다.
+스프링 부트 메이븐 플러그인은 어플리케이션을 실행하고 빠르게 컴파일하여 사용할 수 있게 되는 `run` 목표를 가지고 있다. 어플리케이션은 IDE에서 메이븐은 분리된 형태로 실행된다. 다음 예는 스프링 부트 어플리케이션을 실행하기 위한 대표적인 메이븐 명령어를 보여준다.
 ```
 $ mvn spring-boot:run
 ```
 
+운영체제 환경 변수 `MAVEN_OPTS`를 사용하기를 원할 수도 있다. 다음의 예를 보자
+
 ```
 $ export MAVEN_OPTS=-Xmx1024m
 ```
+
+## 19.4 Gradle 플러그인 사용하기
+스프링 부트 Gradle 플러그인 또한 분해된 상태에서 어플리케이션을 실행할 수 있는 `bootRun` 작업을 포함하고 있다. 다음 보여지는 예와 같이 `bootRun` 작업은 `org.springframework.boot`과 `java`을 지원할 때 추가된다.
+
+```
+$ gradle bootRun
+```
+
+다음 예와 같이  운영체제 환경변수 `JAVA_OPTS`를 사용하는 것을 원할 수도 있다.
+
+```
+$ export JAVA_OPTS=-Xmx1024m
+```
+
+
+## 19.5 핫 스와핑
+스프링부트는 보통의 자바 어플리케이션이기 때문에, JVM 핫 스와핑은 즉시 사용가능 하다. JVM 핫 스와핑은 교체 가능한 바이트코드로 이루어져 어느 정도 한계가 있다. 좀 더 완벽한 솔루션을 위해, [JRebel](https://zeroturnaround.com/software/jrebel/)을 사용할 수 있다.
+
+`spring-boot-devtools` 모듈은 어플리케이션을 빠르게 재시작을 위한 지원도 포함하고 있다. 이 챕터 뒤의 [챕터20](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools), [Developer Tools](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools) 와 [Hot swapping "How-to"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools)의 상세정보를 보자.
+
+
+## 20 개발자 툴
+스프링 부트는 쾌적한 개발 경험을 [만들 수 있는/만들어 주는] 추가적인 툴 세트를 포함하고 있다. `spring-boot-devtools` 모듈은 어떤 프로젝트에 추가적인 개발 시간 특성을 제공하는 것을 포함한다. devtools 지원을 포함하기 위해서, 다음에 보여지는 메이븐과 Gradle에 대한 것들을 참조해서 빌드에 모듈 의존성을 추가하세요.
+
+```xml
+<dependencies>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-devtools</artifactId>
+		<optional>true</optional>
+	</dependency>
+</dependencies>
+```
+
+```ruby
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+dependencies {
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+}
+```
+
+> Developer tools는 완전히 패키지된 어플리케이션을 실행할 떄 자동적으로 비활성화 된다. `java -jar`으로 실행된 어플리케이션이거나 특별한 클래스로더로 실행 되었으면, "제품 어플리케이션"으로 간주된다. 이것들이 적용되지 않는다면 devtools를 제외하는것을 고려해보거나 시스템 속성을 `-Dspring.devtools.restart.enabled=false` 로 설정해라.
+
+> Flagging the dependency as optional in Maven or using a custom`developmentOnly` configuration in Gradle (as shown above) is a best practice that prevents devtools from being transitively applied to other modules that use your project.
+
+> 리패키지된 아카이브는 기본적으로 devtools를 포함하지 않는다. [원격 devtools 특성을 포함](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-remote)하여 사용하고 싶다면, 이를 포함한 빌드 속성 `excludeDevtools`를 비활성화 해야한다. 이 속성은 메이븐, Gradle 플러그인 둘다 지원된다.
+
+
+## 20.1 기본 속성
+
+스프링 부트가 지원하는 몇몇의 라이브러리는 성능 향상을 위해 캐시를 사용한다. 예를 들어, [템플릿 엔진](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-template-engines)은 템플릿 파일이 다시 파싱되는것을 [막기/피하기] 위해서 컴파일된 템플릿을 저장한다. 또한, 스프링 MVC는 정적 자원들을 제공할 때 응답하기 위해서 HTTP 캐싱 헤더를 추가할 수 있다.
+
+개발하는 동안에는 캐싱은 많은 도움이 되지만 개발중에는 역효과를 낳을 수 있고, 어플리케이션에서 방금 만든 변경내역을 볼 수 없다. 이러한 이유로, spring-boot-devtools는 기본적으로 캐싱 옵션을 비활성화로 설정되어있다.
+
+캐시 옵션은 보통 `application.properties` 파일에서 설정한다. 예를 들어, Thymeleaf는 `spring.thymeleaf.cache` 속성을 제공한다. 이러한 속성들을 수동적으로 세팅할 필요보다는 합리적인 개발 시간 구성을 자동적으로 지원하는 `spring-boot-devtools` 모듈을 사용하자.
+
+왜냐하면 스프링 MVC와 스프링 WebFlux 어플리케이션을 개발하는 동안에 웹 요청 관련 정보들이 더 필요하기 때문에, 개발자 도구는 `web` 로깅 그룹에 대한 `DEBUG` 레벨의 로깅을 할 수 있다. 이는 들어오는 요청에 대한 자세한 정보(어떤 핸들러가 처리하고 있는지, 응답의 결과 등)들을 줄 것이다. 만약 모든 요청을 자세하게 로그하고 싶다면(잠재적인 중요한 정보들을 포함), 설정 속성인 `spring.http.log-request-details`을 적용할 수 있다.
+
+> `application.properties`에서 지원받고 있는 기본 속성을 사용하고 싶지 않다면 `spring.devtools.add-properties`를 `false`로 설정할 수 있다.
+
+> devtools가 적용되고 있는 속성의 전체 목록을 참조하려면 [DevToolsPropertyDefaultsPostProcessor](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot-devtools/src/main/java/org/springframework/boot/devtools/env/DevToolsPropertyDefaultsPostProcessor.java)
+
+## 20.2 자동 재시작
+`spring-boot-devtools`를 사용하는 어플리케이션은 클래스패스에서 파일이 변경될 떄마다 자동으로 재시작한다. IDE에서 작업할 때 코드 변경에 대한 매우 빠른 피드백 루프를 줌으로써 유용한 기능이 될 수 있다. 기본적으로, 폴더를 가리키는 클래스패스에 있는 항목들은 변경사항에 대해 모니터링된다. 정적 항목과 뷰 템플릿과 같은 특정 항목들은 어플리케이션 [재시작을 할 필요가 없다는 것](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-restart-exclude)을 주목하세요.
+
+```
+재시작 트리거
+
+클래스패스 자원을 모니터링하는 DevTools로서 트리거를 하는 유일한 방법은 클래스패스를 업데이트 하는 것이다. 방법은 클래스패스가 업데이트되는 방법은 사용하고 있는 IDE에 달려있다. IntelliJ IDEA에서는 프로젝트 빌드하기(`Build -> Build Project`)는 같은 효과를 갖는다.
+```
+
+>
+>
+>
+>
+>
+```
+재시작vs재배치
+```
+
+## 20.2.1 조건 평가에서 변경사항 로깅하기
 
 ---
 go into detail : 상세히 설명하다.  
@@ -371,3 +459,17 @@ vary : (상황에 따라)다르다, 달라지다
 generate : 발생시키다, 만들어 내다, 생기게 하다  
 accidentally : 우연히, 뜻하지 않게, 잘못하여  
 attach : 첨부하다, 부여하다, 붙이다, 추가하다, 첨가하다, 덧붙이다.  
+Exploded form : 분해된 형태, 분리된 형태  
+work out of the box : 즉시 사용 가능  
+somewhat : 어느 정도, 약간, 다소  
+be considered : ~로 간주되다  
+If that does not apply to you : 당신에게 적용되지 않는다면  
+prevent from : ~할 수 없도록 만들다. ~을 막다ㅡ ~할 수 없다  
+rather than : ~보다는, ~대신에, ...하지말고  
+outcome : 결과  
+are applied by : 적용될  
+For a complete + N, visit/see: N의 전체 목록은 (보려면) , 참조하세요/방문하세요
+whenever : ~할 때마다(매번), ~할 때는 언제든지  
+by default : 자동적으로, 자연스럽게, 기본적으로  
+Note that S + V : S가 V하다는 걸 알아라, 주목해라, 주의해라  
+depend on : ~에 달려 있다, 좌우되다, ~나름이다
