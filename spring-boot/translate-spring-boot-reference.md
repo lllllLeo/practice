@@ -412,18 +412,68 @@ dependencies {
 클래스패스 자원을 모니터링하는 DevTools로서 트리거를 하는 유일한 방법은 클래스패스를 업데이트 하는 것이다. 방법은 클래스패스가 업데이트되는 방법은 사용하고 있는 IDE에 달려있다. IntelliJ IDEA에서는 프로젝트 빌드하기(`Build -> Build Project`)는 같은 효과를 갖는다.
 ```
 
->
->
->
->
->
+> 포크가 활성화가 되는 한 DevTools은 제대로 작동하는 독립된 어플리케이션 클래스 로더가 필요하기 때문에 지원되고있는 빌드 플러그인(메이븐, Gradle)을 사용함으로써 어플리케이션을 시작할 수도 있다.
+
+> 자동 재시작은 LiveReload와 함께 사용될때 잘 작동한다. 자세한 사항은 [LiveReload 파트](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-livereload)를 보자. JRebel을 사용한다면, 동적 클래스를 리로딩에 유리한 자동 재시작이 비활성화 된다. 다른 devtools 기능(LiveReload, 속성 재정의와 같은)들은 계속 사용된다.
+
+> DevTools는 재시작을 하는 동안에 어플리케이션을 종료하기 위해서 어플리케이션 컨텍스트의 셧다운 훅에 의존하고 있다. 셧다운 훅을 비활성화를 하면 제대로 작동하지 않는다.  
+(`SpringApplication.setRegisterShutdownHook(false)`)
+
+> 클래스패스에 있는 항목이 변경될 때 트리거를 재시작해야하는지 결정할 떄 DevTools는 자동으로 `spring-boot`, `spring-boot-devtools`, `spring-boot-autoconfigure`, `spring-boot-actuator`, `spring-boot-starter` 라는 이름의 프로젝트를 무시한다.
+
+> DevTools는  `ApplicationContext`가 사용하는  `ResourceLoader`를 사용자 정의해야한다. 
+
+
 ```
 재시작vs재배치
+
+The restart technology provided by Spring Boot works by using two classloaders. Classes that do not change (for example, those from third-party jars) are loaded into a base classloader. Classes that you are actively developing are loaded into a restart classloader. When the application is restarted, the restart classloader is thrown away and a new one is created. This approach means that application restarts are typically much faster than “cold starts”, since the base classloader is already available and populated.
+
+If you find that restarts are not quick enough for your applications or you encounter classloading issues, you could consider reloading technologies such as JRebel from ZeroTurnaround. These work by rewriting classes as they are loaded to make them more amenable to reloading.
 ```
 
-## 20.2.1 조건 평가에서 변경사항 로깅하기
+## 20.2.1 상태 평가에서 변경사항 로깅하기
+기본적으로 어플리케이션을 재시작할 때 마다, 조건 평가 델타 를 보여주는 보고서를 기록한다. 이 보고서는 빈 추가나 제거, 설정 속성 설정과 같은 변경을 수행할 떄 어플리케이션의 자동 설정의 변경사항을 보여준다.
 
----
+보고서의 로깅을 비활성화하려면, 다음 속성을 설정해라
+`spring.devtools.restart.log-condition-evaluation-delta=false`
+
+## 20.2.2 리소스 제외하기
+
+변경사항이 생겨도 특정 리소스를 트리거 반드시 재시작을 할 필요는 없다. 예를들어서, 타임리프 템플릿은 그 자리에서 편집할 수 있다. 기본적으로,  `/META-INF/maven`, `/META-INF/resources`, `/resources`, `/static`, `/public`, `/templates`에서 리소스 변경은 트리거로 재시작하지 않고 [live reload](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-livereload)로 발생한다. 만약 이런 제외 항목들을 사용자 정의하고 싶다면, `spring.devtools.restart.exclude` 속성을 사용할 수 있다. 예를 들어서, `/static`과 `/public`만 제외하고 싶다면, 다음의 속성을 설정하세요.
+
+`spring.devtools.restart.exclude=static/**,public/**`
+
+> 이러한 기본적인 것들을 놔두고 추가적으로 제외할 항목을 추가하고 싶다면, `spring.devtools.restart.additional-exclude` 속성을 대신 사용해라.
+
+
+## 20.2.3 추가 경로 보기
+아마 클래스패스에 없는 파일을 변경할 때 어플리케이션에서 재시작되거나, 리로드되는것을 원할 것이다. 그러길 원하면, `spring.devtools.restart.additional-paths` 속성을 사용해서 변경사항을 지겨보기 위한 추가적인 경로를 설정해라. 이전에 설명한 `spring.devtools.restart.exclude` 속성을 사용해서 추가적인 경로 아래에서 전체 재시작이나 live reload로 [변경가능한지 아닌지/변경여부]를 제어할 수 있다.
+
+## 20.2.4 재시작 비활성화하기
+
+재시작 기능을 사용하고 싶지 않으면 `spring.devtools.restart.enabled` 속성을 사용하여 비활성화 할 수 있다. 대부분, `application.properties` 속성에서 설정할 수 있다. (그렇게 하면 재시작 클래스로더 기존 설정으로 하지만 파일 변경에 대한 것을 지켜보지 않는다.)
+
+완전히 재시작 지원을 비활성화 해야하면 (예를 들면, 특정 라이브러리에서 작동하지 않기 때문에), 다음으로 보여지는 예와 같이 `SpringApplication.run(...)`이 실행되기 전에 `System` 속성의 `spring.devtools.restart.enabled`을 `false`로 설정해야한다. 
+
+```java
+public static void main(String[] args) {
+	System.setProperty("spring.devtools.restart.enabled", "false");
+	SpringApplication.run(MyApp.class, args);
+}
+```
+
+## 20.2.5 트리거 파일 사용하기
+IDE를 사용하여 변경된 파일을 계속 컴파일한다면, 특정 시간에만 재시작하는 편이 더 나을 수 있다. 그러기 위해서, 실제로 재시작 체크를 원할때 반드시 수정해야 하는 특정파일인 "트리거 파일"을 사용해라. 파일을 변경할때만 검사를 촉발하고 Devtools가 무엇인가 어떤 행동을 한것을 [알아챌/감지될]때만 재시작이 된다. 트리거 파일은 IDE의 플러그인을 사용하거나 수동적으로 업데이트할 수 있다.
+
+트리거 파일을 사용하기 위해서, `spring.devtools.restart.trigger-file` 속성을 트리거 파일의 경로를 설정해라.
+
+> 모든 프로젝트를 같은 방식으로 동작하도록 `spring.devtools.restart.trigger-file`을 글로벌 세팅으로 설정하는 것이 좋을 것이다. / 해야할 것이다.
+
+## 20.2.6 재시작 클래스로더 사용자 정의하기
+
+
+--- 단어 최신을 맨위로 바꾸기
 go into detail : 상세히 설명하다.  
 particularly : 특히, 특별히  
 ?when followed : 따라서  
@@ -442,7 +492,7 @@ consistent : 한결같은, 일관된, 변함없는
 reversed : 거꾸로 된, 반대의, 뒤집은    
 be placed on : ~에 놓이다  
 implicitly : 암암리에, 무조건, 절대적으로, 넌지시  
-certain items : 특정 항목들 
+certain items : 특정 항목들  
 equivalent : 상응하는, 동등한, 맞먹는  
 Alternatively : 그 대신에, 그렇지 않으면  
 by ~ing : ~함으로써  
@@ -472,4 +522,11 @@ For a complete + N, visit/see: N의 전체 목록은 (보려면) , 참조하세�
 whenever : ~할 때마다(매번), ~할 때는 언제든지  
 by default : 자동적으로, 자연스럽게, 기본적으로  
 Note that S + V : S가 V하다는 걸 알아라, 주목해라, 주의해라  
-depend on : ~에 달려 있다, 좌우되다, ~나름이다
+depend on : ~에 달려 있다, 좌우되다, ~나름이다  
+be in favor of : ~에 유리한, ~에 우호적이다  
+rely on : ~에 의지[의존]하다, ~을 필요로 하다  
+necessarily : 필연적으로, 어쩔 수 없이
+Do not necessarily : 반드시 ~할 필요 없다.
+in place : 제자리에  
+so that : ~하도록  
+You might want to ~ : ~하는게 좋을 것이다, ~해야할 것이다.
