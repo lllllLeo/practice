@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5731639e-2d44-4e82-842b-a223265647b6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/me/yujun/leo/LeoApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demo-spring-mvc/src/main/java/me/yujun/demospringmvc/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../demo-spring-mvc/src/main/java/me/yujun/demospringmvc/EventController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../demospringhateoas/src/main/java/me/yujun/demospringhateoas/SampleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../demospringhateoas/src/main/java/me/yujun/demospringhateoas/SampleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0306/src/main/java/me/yujun/PortListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0306/src/main/java/me/yujun/PortListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0308/src/main/java/me/yujun/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0308/src/main/java/me/yujun/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0308/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0308/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0308/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0308/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0402/src/main/java/me/yujun/SampleListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0402/src/main/java/me/yujun/SampleListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0402/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0402/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0402/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0402/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/src/main/java/me/yujun/YujunProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/src/main/java/me/yujun/YujunProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/src/main/java/me/yujun/config/BaseConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/src/main/java/me/yujun/config/BaseConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/src/main/java/me/yujun/config/TestConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/src/main/java/me/yujun/config/TestConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/src/main/resources/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/src/main/resources/application-prod.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/src/main/resources/application-proddb" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/src/main/resources/application-proddb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/target/classes/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/target/classes/application-prod.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/target/classes/application-proddb" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/target/classes/application-proddb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springboot0404/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../springboot0404/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootexception/src/main/java/me/yujun/springbootexception/SampleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootexception/src/main/java/me/yujun/springbootexception/SampleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/src/main/java/me/yujun/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/src/main/java/me/yujun/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootgettingstarted/src/main/java/me/yujun/HolomanRunner.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootgettingstarted/src/main/java/me/yujun/HolomanRunner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootjdbc/src/main/java/me/yujun/springbootjdbc/H2Runner.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootjdbc/src/main/java/me/yujun/springbootjdbc/H2Runner.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootmvc/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootmvc/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootmvc/src/main/java/me/yujun/springbootmvc/SampleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootmvc/src/main/java/me/yujun/springbootmvc/SampleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springbootmvc/src/test/java/me/yujun/springbootmvc/SampleControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springbootmvc/src/test/java/me/yujun/springbootmvc/SampleControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springcorsclient/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../springcorsclient/src/main/resources/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springcorsserver/src/main/java/me/yujun/springcorsserver/SpringcorsserverApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springcorsserver/src/main/java/me/yujun/springcorsserver/SpringcorsserverApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springtestdemo/src/main/java/me/yujun/springtestdemo/sample/SampleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springtestdemo/src/main/java/me/yujun/springtestdemo/sample/SampleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../springtestdemo/src/test/java/me/yujun/springtestdemo/sample/SampleControllerTest2.java" beforeDir="false" afterPath="$PROJECT_DIR$/../springtestdemo/src/test/java/me/yujun/springtestdemo/sample/SampleControllerTest2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../translate-spring-boot-reference.md" beforeDir="false" afterPath="$PROJECT_DIR$/../translate-spring-boot-reference.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../yujunspringbootstarter/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../yujunspringbootstarter/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../yujunspringbootstarter/src/main/java/me/yujun/HolomanConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../yujunspringbootstarter/src/main/java/me/yujun/HolomanConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../yujunspringbootstarter/src/main/java/me/yujun/HolomanProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/../yujunspringbootstarter/src/main/java/me/yujun/HolomanProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../yujunspringbootstarter/src/main/resources/META-INF/spring.factories" beforeDir="false" afterPath="$PROJECT_DIR$/../yujunspringbootstarter/src/main/resources/META-INF/spring.factories" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <ignored path="$PROJECT_DIR$/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CheckStyle-IDEA-workspace">
+    <option name="configuration">
+      <map>
+        <entry key="last-active-plugin-version" value="5.22.1" />
+      </map>
+    </option>
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-608648040">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.5" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="java" value="59" />
+          <entry key="xml" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="59" />
+          <entry key="XML" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="495">
+              <caret line="33" column="12" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/me/yujun/leo/LeoApplication.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="39" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#241#242#0" expanded="true" />
+                <element signature="e#305#306#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/LeoApplication.java" />
+        <option value="$PROJECT_DIR$/src/main/java/me/yujun/leo/LeoApplication.java" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="952" />
+    <option name="width" value="977" />
+    <option name="height" value="1050" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="leo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leo" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leo" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leo" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="leo" type="b2602c69:ProjectViewProjectNode" />
+              <item name="leo" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="leo" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1561196945100" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="preferences.general" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="leo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="me.yujun.leo.LeoApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5731639e-2d44-4e82-842b-a223265647b6" name="Default Changelist" comment="" />
+      <created>1561196470924</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1561196470924</updated>
+      <workItem from="1561196475567" duration="472000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="472000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="762" y="0" width="781" height="840" extended-state="0" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Designer" />
+      <window_info id="Image Layers" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info id="Capture Tool" />
+      <window_info id="Web" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24965517" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="FindBugs-IDEA" />
+      <window_info anchor="bottom" id="Messages" />
+      <window_info anchor="bottom" id="Spring" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="CheckStyle" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Java Enterprise" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Tail" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32911393" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Maven Projects" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Bean Validation" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="12" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/me/yujun/leo/LeoApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="39" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#241#242#0" expanded="true" />
+            <element signature="e#305#306#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Spring</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>leo</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: ch.qos.logback:logback-classic:1.2.3</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

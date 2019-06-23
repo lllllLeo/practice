@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HolomanRunner implements ApplicationRunner {
 
-//    이 프로젝트에서 Holoman을 빈으로 등록하지 않았지만 이처럼 사용할 수 있다.
+    //    이 프로젝트에서 Holoman을 빈으로 등록하지 않았지만 이처럼 사용할 수 있다.
     @Autowired
     Holoman holoman;
 

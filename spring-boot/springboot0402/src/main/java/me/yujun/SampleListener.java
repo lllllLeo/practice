@@ -16,14 +16,28 @@ import java.util.Arrays;
  * 만들어진 다음 발생하는 이벤트는 Bean을 실행할 수 있는데 그 이벤트 들의 리스너가 Bean이면
  * 알아서 호출이 된다.
  * 문제는 이전에 발생하는 이벤트는
- *
- *
+ * <p>
+ * <p>
  * ApplicationStartingEvent 는 application-context가 만들어지기 이전에 발생하는 이벤트이다.
  * application 맨 처음에 발생하는 이벤트이다. 이 이벤트가 발생한 시점에는 application-context가
  * 만들어지지 않았다. 그래서 Bean으로 등록을 한다고 하더라도 Listener가 동작을 안한다.
- *
+ * <p>
  * 그래서 이런 경우에는 따로 main에서 등록을 해줘야함. 그래서 Bean으로 등록할 필요가 없다 @Component 지우자 슥
- *
+ * <p>
+ * <p>
+ * ApplicationArguments 사용하기
+ * <p>
+ * VM options 에서 -D로 들어오는것은 VM option으로 치고 (JVM option은 application arguments가 아니다.)
+ * Program arguments로 -- 들어오는것만 arguments로 사용한다. (오로치 -- 로 주는애들이 application arguments이다.)
+ * arguments.에 유용한 메서드 많으니까 필요에 따라 써보셈
+ * <p>
+ * ApplicationRunner (추천)
+ * <p>
+ * 좀 더 고급진 api를 통해 사용할 수 있다.
+ * <p>
+ * ApplicationRunner들이 여러개이면 @Order(1) 해서 순서를 정해줄 수 있다. (숫자가 낮은게 먼저)
+ * <p>
+ * CommandLineRunner
  */
 /*
 @Component

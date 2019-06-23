@@ -15,7 +15,7 @@ public class EventController {
 
 
     @GetMapping("/events")
-    public String events(Model model){
+    public String events(Model model) {
 //        model.addAttribute("events", eventService.getEvents());
         return "events";
     }

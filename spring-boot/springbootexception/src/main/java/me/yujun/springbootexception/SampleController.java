@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SampleController {
 
     @GetMapping("/hello")
-    public String hello(){
+    public String hello() {
         throw new SampleException();
     }
 
@@ -25,7 +25,8 @@ public class SampleController {
     샘플 익셉션을 처리하는 메서드가 동작을 하게 된다.
     */
     @ExceptionHandler(SampleException.class)
-    public @ResponseBody AppError sampleError(SampleException e){
+    public @ResponseBody
+    AppError sampleError(SampleException e) {
         AppError appError = new AppError();
         appError.setMessage("error.app.key");
         appError.setReason("IDK IDK IDK");

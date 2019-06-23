@@ -16,7 +16,7 @@ public class SampleController {
     ObjectMapper objectMapper;
 
     @GetMapping("/hello")
-    public Resource<Hello> hello(){
+    public Resource<Hello> hello() {
         Hello hello = new Hello();
         hello.setPrefix("Hey!");
         hello.setName("yujun");

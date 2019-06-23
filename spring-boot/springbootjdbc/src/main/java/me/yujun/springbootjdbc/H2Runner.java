@@ -17,7 +17,7 @@ public class H2Runner implements ApplicationRunner {
 
     private Logger logger = LoggerFactory.getLogger(H2Runner.class);
 
-//    기본적으로 DataSource가 빈으로 등록되어있으니까 주입받아서 사용가능
+    //    기본적으로 DataSource가 빈으로 등록되어있으니까 주입받아서 사용가능
 //    어디서 빈으로 등록된거지
     @Autowired
     DataSource dataSource;
@@ -28,7 +28,7 @@ public class H2Runner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
 //        connection.setAutoCommit(false);  // 해서 트랜잭션 적용
             logger.info(connection.getMetaData().getURL());
             logger.info(connection.getMetaData().getUserName());

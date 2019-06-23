@@ -12,7 +12,7 @@ public class SpringcorsserverApplication {
 
     @CrossOrigin(origins = "http://localhost:18080") //scheme + hostname + port 다 origin에 해당하는 것이다.
     @GetMapping("/hello")
-    public String hello(){
+    public String hello() {
         return "hello";
     }
 

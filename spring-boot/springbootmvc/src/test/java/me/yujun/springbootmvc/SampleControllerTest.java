@@ -24,10 +24,11 @@ public class SampleControllerTest {
 
     @Autowired
     WebClient webClient;    //htmlUnit에 있음
-//  html에 특화된 테스트를 작성할 수 있음
+
+    //  html에 특화된 테스트를 작성할 수 있음
 //  여기서 MockMvc도 사용할 수 있다. 해도됨
     @Test
-    public void hello() throws Exception{
+    public void hello() throws Exception {
         HtmlPage page = webClient.getPage("/hello");
         HtmlHeading1 h1 = page.getFirstByXPath("//h1");
         assertThat(h1.getTextContent()).isEqualToIgnoringCase("yujun");
