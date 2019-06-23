@@ -6,7 +6,7 @@
 ## 13. 빌드 시스템
 dependency management를 지원하고 "Maven Central" 저장소에 배포된 아티펙트를 사용할 수 있는 빌드시스템을 강력히 추천한다. Maven이나 Gradle을 선택하는 것을 추천한다. 스프링 부트가 다른 빌드 시스템과 작동하는 것은 가능하지만 특별히 잘 지원되지 않는다.
 
-## 13.1 Maven
+### 13.1 Maven
 Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 실용적인/합리적인 기본값을 얻을 수 있다. 부모 프로젝트는 다음과 같은 특징을 제공합니다:
 - 기본 컴파일러 레벨은 Java 1.8
 - UTF-8 소스 인코딩
@@ -18,7 +18,7 @@ Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 실
 
 참고로, `application.properties` and `application.yml` 파일은 스프링 스타일 플레이스홀더인 `${...}`을 허용하기때문에, Maven 필터링은 `@..@` 플레이스홀더를 사용하는것으로 바뀌었다. (`resource.delimiter`로 불리는 Maven 프로퍼티 설정으로 재정의 할 수 있다.)
 
-## 13.2.1 스타터 부모 상속
+### 13.2.1 스타터 부모 상속
 `spring-boot-stater-parent`로부터 상속받은 프로젝트를 설정하기 위해서, `parent`를 다음과 같이 세팅하세요.
 ```xml
 <!-- Inherit defaults from Spring Boot -->
@@ -38,7 +38,7 @@ Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 실
 </properties>
 ```
 
-## 13.2.2 부모 POM없이 스프링부트 사용하기
+### 13.2.2 부모 POM없이 스프링부트 사용하기
 모두가 `spring-boot-starter-parent` POM에서 상속하는것을 좋아하는것은 아니다. 아마도 사용할 필요가 있거나 모든 Maven 설정에서 명확하게 선언하는 것을 선호하는 공동의 기준이 있을 것이다.
 
 `spring-boot-starter-parent`를 사용하고 싶지 않으면, 다음과 같이 `scope=import` 의존성을 사용함에 따라 의존성 관리의 이점을 계속 사용/유지할 수 있다.
@@ -82,7 +82,7 @@ Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 실
 </dependencyManagement>
 ```
 
-## 13.2.3 스프링 부트 메이븐 플러그인 사용하기
+### 13.2.3 스프링 부트 메이븐 플러그인 사용하기
 스프링 부트는 실행가능한 jar 파일로 패키징이 가능한 Maven 플러그인이 포함되어 있다. 다음으로 보여지는 예와 같이 플러그인을 사용하고 싶으면를 `<plugins>` 부분에 플러그인을 추가하면 된다.
 
 ```xml
@@ -96,13 +96,13 @@ Maven 유저는 `spring-boot-starter-parent` 프로젝트에서 상속하여 실
 </build>
 ```
 
-## 13.3 Gradle
+### 13.3 Gradle
 Gradle을 사용한 스프링 부트를 사용하는 것을 배우고 싶으면, 스프링 부트의 Gradle 플러그인 공식문서를 참조해라.
 - Reference ([HTML](https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/gradle-plugin/reference/html/) and [PDF](https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/gradle-plugin/reference/pdf/spring-boot-gradle-plugin-reference.pdf))
 - [API](https://docs.spring.io/spring-boot/docs/2.1.5.RELEASE/gradle-plugin/api/)
 
-## 13.4 Ant
-## 13.5 Starters
+### 13.4 Ant
+### 13.5 Starters
 
 스타터는 어플리케이션에 포함할 수 있는 편리한 의존성 기술자 세트/집합이다. 스프링의 모든 것들과 이것들과 관련된 기술을 예제 코드와 의존성 기술자의 복사-붙여넣기할 필요가 없이 한 번에 얻을 수 있다. 예를 들어, 스프링과 데이터베이스 접근을 위한 JPA를 사용해서 프로젝트를 시작하고 싶으면, 프로젝트에 `spring-boot-starter-data-jpa` 의존성을 포함하면 된다.
 
@@ -115,11 +115,11 @@ Gradle을 사용한 스프링 부트를 사용하는 것을 배우고 싶으면,
 ## 14. 코드 구조화하기
 스프링 부트는 작동하기위한 특정 코드 레이아웃이 필요는 없지만 작동에 도움되는 좋은 방법이 있다.
 
-## 14.1 default 패키지 사용하기
+### 14.1 default 패키지 사용하기
 클래스에 `package`선언이 포함되어 있지 않을때, default package가 된다. default package의 사용은 일반적으로 금지되고 피해야 한다. 모든 jar파일로부터 모든 클래스를 읽기 떄문에 `@ComponentScan`, `@EntityScan`, 또는 `@SpringBootApplication` 어노테이션을 사용하는 스프링 부트 어플리케이션에서 특정한 문제를 일으킬 수 있다.
 > Java의 패키지 네이밍 컨벤션과 도메인 네임을 거꾸로되게 사용하는 것을 추천합니다.(예를 들어서, `com.example.project`)
 
-## 14.메인 어플리케이션 클래스 위치 지정하기
+### 14.2메인 어플리케이션 클래스 위치 지정하기
 일반적으로 다른 클래스들의 위에 있는 루트 패키지에 메인 어플리케이션을 위치시키는 것을 추천한다. `@SpringBootApplication` 어노테이션은 종종 메인 클래스에 놓인다. 그리고 특정 항목들에 대한 search package로 암묵적으로 정의된다. 예로, JPA 어플리케이션을 작성하는경우에 `@SpringBootApplication` 어노테이션이 작성된 클래스의 패키지가 `@Entity` 항목에 대한것을 검색하는데 사용된다. 루트 패키지를 사용 하는것은 프로젝트에서만 지원하는 component scan을 허용한다.
 > 마지막 뭔가 이상하네
 
@@ -164,10 +164,10 @@ public class Application {
 ## 15. 클래스 설정
 스프링부트는 Java 기반 설정을 선호한다. 비록 XML 소스를 사용하는 `SpringApplication` 을 사용하는 것이 가능할지라도 일반적으로 당신의 주요 소스가 `@Configuration` 단일 클래스인 것을 추천한다. 보통 `main` 메소드를 정의한 클래스는 주요 `@Configuration`로서 좋은 후보가 된다.
 
-## 15.1 추가 설정 클래스 불러오기
+### 15.1 추가 설정 클래스 불러오기
 `@Configuration` 클래스 하나에 모든걸 넣을 필요 없다. `@Import` 어노테이션은 추가적으로 설정 클래스를 사용할 수 있게 해준다. 그 대신에, `@ComponentScan` 사용해서 `@Configuration` 클래스들을 포함한 모든 스프링 컴포넌트들을 자동적으로 가져올 수 있다.
 
-## 15.2 XML 설정 불러오기
+### 15.2 XML 설정 불러오기
 XML 기반 설정을 무조건 사용해야 한다면, `@Configuration` 클래스를 사용하여 시작하는 것을 추천한다. 그러면 XML 설정 파일을 로드하는 `@ImportResource` 어노테이션을 사용할 수 있다.
 
 ## 16. 자동 설정
@@ -177,12 +177,12 @@ XML 기반 설정을 무조건 사용해야 한다면, `@Configuration` 클래�
 
 > 항상 `@SpringBootApplication`이나 `@EnableAutoConfiguration` 어노테이션 중 하나만 추가해야 한다. We generally recommend that you add one or the other to your primary `@Configuration` class only.
 
-## 16.1 점진적으로 자동 설정 대체하기
+### 16.1 점진적으로 자동 설정 대체하기
 자동 설정은 비침습적이다. 어느 지점에서, 자동 설정의 특정 부분을 대신해서 자신만의 설정으로 정의하여 시작할 수 있다. 예를 들어서,  `DataSource` 빈을 추가하면 기본 임베디드 데이터베이스 지원이 사라진다.
 
 자동 설정이 현재 지원되고 있는지, 그리고 또 왜 그런지 알고 싶으면, `--debug` 를 사용하여 어플리케이션을 시작해라. 이렇게하면 코어 로거 부분에 대한 디버그 로깅과 콘솔에 상태를 로깅한다.
 
-## 16.2 특정 자동설정 비활성화
+### 16.2 특정 자동설정 비활성화
 지원되길 원하지 않는 자동 설정 특정 클래스를 찾는다면, 다음 보여지는 예와 같이 비활성화 하기 위해 `@EnableAutoConfiguration`의 exclude 속성을 사용할 수 있다.
 
 ```java
@@ -306,7 +306,7 @@ public class Application {
 
 > 이 부분은 오직 jar 기반 패키징만 다룬다. war 파일로 어플리케이션을 패키징하려면, 서버와 IDE 공식문서를 참조해야한다.
 
-## 19.1 IDE에서 실행하기
+### 19.1 IDE에서 실행하기
 
 간단한 자바 어플리케이션으로서 IDE로부터 스프링 부트 어플리케이션을 실행할 수 있다. 그러나, 가장 먼저 프로젝트를 불러와야한다. 불러오는 과정은 IDE와 빌드 시스템에 의존하는것에 따라 다르다. 대부분의 IDE는 직접 메이븐 프로젝트를 불러올 수 있다. 예를 들어서, Eclipse 사용자는 `File`메뉴에서 `Import` -> `Existing Maven Projects` 를 선택할 수 있다.
 
@@ -314,7 +314,7 @@ IDE에서 프로젝트를 직접적으로 불러낼 수 없는 경우에는, 빌
 
 > 뜻하지않게 웹 어플리케이션을 두번 실행한다면, "포트가 이미 사용중이다."라는 에러를 볼 것입니다. STS 사용자는 `Relaunch` 버튼 대신에 어떤 존재하고 있는 인스턴스를 닫혀있는것을 보장하는 `Run` 버튼을 사용할 수 있다.
 
-## 19.2 패키지된 어플리케이션으로 실행하기
+### 19.2 패키지된 어플리케이션으로 실행하기
 
 다음 보이는 예와 같이, 스프링 부트 메이븐이나 Gradle 플러그인으로 실행 가능한 jar 파일을 만들면, `java -jar`로 어플리케이션을 실행할 수 있다.
 `$ java -jar target/myapplication-0.0.1-SNAPSHOT.jar`
@@ -325,7 +325,7 @@ $ java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n \
        -jar target/myapplication-0.0.1-SNAPSHOT.jar
 ```
 
-## 19.3 메이븐 플러그인 사용하기
+### 19.3 메이븐 플러그인 사용하기
 스프링 부트 메이븐 플러그인은 어플리케이션을 실행하고 빠르게 컴파일하여 사용할 수 있게 되는 `run` 목표를 가지고 있다. 어플리케이션은 IDE에서 메이븐은 분리된 형태로 실행된다. 다음 예는 스프링 부트 어플리케이션을 실행하기 위한 대표적인 메이븐 명령어를 보여준다.
 ```
 $ mvn spring-boot:run
@@ -337,7 +337,7 @@ $ mvn spring-boot:run
 $ export MAVEN_OPTS=-Xmx1024m
 ```
 
-## 19.4 Gradle 플러그인 사용하기
+### 19.4 Gradle 플러그인 사용하기
 스프링 부트 Gradle 플러그인 또한 분해된 상태에서 어플리케이션을 실행할 수 있는 `bootRun` 작업을 포함하고 있다. 다음 보여지는 예와 같이 `bootRun` 작업은 `org.springframework.boot`과 `java`을 지원할 때 추가된다.
 
 ```
@@ -351,7 +351,7 @@ $ export JAVA_OPTS=-Xmx1024m
 ```
 
 
-## 19.5 핫 스와핑
+### 19.5 핫 스와핑
 스프링부트는 보통의 자바 어플리케이션이기 때문에, JVM 핫 스와핑은 즉시 사용가능 하다. JVM 핫 스와핑은 교체 가능한 바이트코드로 이루어져 어느 정도 한계가 있다. 좀 더 완벽한 솔루션을 위해, [JRebel](https://zeroturnaround.com/software/jrebel/)을 사용할 수 있다.
 
 `spring-boot-devtools` 모듈은 어플리케이션을 빠르게 재시작을 위한 지원도 포함하고 있다. 이 챕터 뒤의 [챕터20](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools), [Developer Tools](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools) 와 [Hot swapping "How-to"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools)의 상세정보를 보자.
@@ -389,7 +389,7 @@ dependencies {
 > 리패키지된 아카이브는 기본적으로 devtools를 포함하지 않는다. [원격 devtools 특성을 포함](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-remote)하여 사용하고 싶다면, 이를 포함한 빌드 속성 `excludeDevtools`를 비활성화 해야한다. 이 속성은 메이븐, Gradle 플러그인 둘다 지원된다.
 
 
-## 20.1 기본 속성
+### 20.1 기본 속성
 
 스프링 부트가 지원하는 몇몇의 라이브러리는 성능 향상을 위해 캐시를 사용한다. 예를 들어, [템플릿 엔진](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-template-engines)은 템플릿 파일이 다시 파싱되는것을 [막기/피하기] 위해서 컴파일된 템플릿을 저장한다. 또한, 스프링 MVC는 정적 자원들을 제공할 때 응답하기 위해서 HTTP 캐싱 헤더를 추가할 수 있다.
 
@@ -403,7 +403,7 @@ dependencies {
 
 > devtools가 적용되고 있는 속성의 전체 목록을 참조하려면 [DevToolsPropertyDefaultsPostProcessor](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot-devtools/src/main/java/org/springframework/boot/devtools/env/DevToolsPropertyDefaultsPostProcessor.java)
 
-## 20.2 자동 재시작
+### 20.2 자동 재시작
 `spring-boot-devtools`를 사용하는 어플리케이션은 클래스패스에서 파일이 변경될 떄마다 자동으로 재시작한다. IDE에서 작업할 때 코드 변경에 대한 매우 빠른 피드백 루프를 줌으로써 유용한 기능이 될 수 있다. 기본적으로, 폴더를 가리키는 클래스패스에 있는 항목들은 변경사항에 대해 모니터링된다. 정적 항목과 뷰 템플릿과 같은 특정 항목들은 어플리케이션 [재시작을 할 필요가 없다는 것](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-restart-exclude)을 주목하세요.
 
 ```
@@ -432,13 +432,13 @@ The restart technology provided by Spring Boot works by using two classloaders. 
 If you find that restarts are not quick enough for your applications or you encounter classloading issues, you could consider reloading technologies such as JRebel from ZeroTurnaround. These work by rewriting classes as they are loaded to make them more amenable to reloading.
 ```
 
-## 20.2.1 상태 평가에서 변경사항 로깅하기
+### 20.2.1 상태 평가에서 변경사항 로깅하기
 기본적으로 어플리케이션을 재시작할 때 마다, 조건 평가 델타 를 보여주는 보고서를 기록한다. 이 보고서는 빈 추가나 제거, 설정 속성 설정과 같은 변경을 수행할 떄 어플리케이션의 자동 설정의 변경사항을 보여준다.
 
 보고서의 로깅을 비활성화하려면, 다음 속성을 설정해라
 `spring.devtools.restart.log-condition-evaluation-delta=false`
 
-## 20.2.2 리소스 제외하기
+### 20.2.2 리소스 제외하기
 
 변경사항이 생겨도 특정 리소스를 트리거 반드시 재시작을 할 필요는 없다. 예를들어서, 타임리프 템플릿은 그 자리에서 편집할 수 있다. 기본적으로,  `/META-INF/maven`, `/META-INF/resources`, `/resources`, `/static`, `/public`, `/templates`에서 리소스 변경은 트리거로 재시작하지 않고 [live reload](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-livereload)로 발생한다. 만약 이런 제외 항목들을 사용자 정의하고 싶다면, `spring.devtools.restart.exclude` 속성을 사용할 수 있다. 예를 들어서, `/static`과 `/public`만 제외하고 싶다면, 다음의 속성을 설정하세요.
 
@@ -447,10 +447,10 @@ If you find that restarts are not quick enough for your applications or you enco
 > 이러한 기본적인 것들을 놔두고 추가적으로 제외할 항목을 추가하고 싶다면, `spring.devtools.restart.additional-exclude` 속성을 대신 사용해라.
 
 
-## 20.2.3 추가 경로 보기
+### 20.2.3 추가 경로 보기
 아마 클래스패스에 없는 파일을 변경할 때 어플리케이션에서 재시작되거나, 리로드되는것을 원할 것이다. 그러길 원하면, `spring.devtools.restart.additional-paths` 속성을 사용해서 변경사항을 지겨보기 위한 추가적인 경로를 설정해라. 이전에 설명한 `spring.devtools.restart.exclude` 속성을 사용해서 추가적인 경로 아래에서 전체 재시작이나 live reload로 [변경가능한지 아닌지/변경여부]를 제어할 수 있다.
 
-## 20.2.4 재시작 비활성화하기
+### 20.2.4 재시작 비활성화하기
 
 재시작 기능을 사용하고 싶지 않으면 `spring.devtools.restart.enabled` 속성을 사용하여 비활성화 할 수 있다. 대부분, `application.properties` 속성에서 설정할 수 있다. (그렇게 하면 재시작 클래스로더 기존 설정으로 하지만 파일 변경에 대한 것을 지켜보지 않는다.)
 
@@ -463,15 +463,118 @@ public static void main(String[] args) {
 }
 ```
 
-## 20.2.5 트리거 파일 사용하기
+### 20.2.5 트리거 파일 사용하기
 IDE를 사용하여 변경된 파일을 계속 컴파일한다면, 특정 시간에만 재시작하는 편이 더 나을 수 있다. 그러기 위해서, 실제로 재시작 체크를 원할때 반드시 수정해야 하는 특정파일인 "트리거 파일"을 사용해라. 파일을 변경할때만 검사를 촉발하고 Devtools가 무엇인가 어떤 행동을 한것을 [알아챌/감지될]때만 재시작이 된다. 트리거 파일은 IDE의 플러그인을 사용하거나 수동적으로 업데이트할 수 있다.
 
 트리거 파일을 사용하기 위해서, `spring.devtools.restart.trigger-file` 속성을 트리거 파일의 경로를 설정해라.
 
 > 모든 프로젝트를 같은 방식으로 동작하도록 `spring.devtools.restart.trigger-file`을 글로벌 세팅으로 설정하는 것이 좋을 것이다. / 해야할 것이다.
 
-## 20.2.6 재시작 클래스로더 사용자 정의하기
+### 20.2.6 재시작 클래스로더 사용자 정의하기
 
+이전에 설명한 재시작vs리로드 부분에서, 재시작 기능은 2개의 클래스로드를 사용함으로써 구현된다. 대부분의 어플리케이션에 이 처리방법은 잘 작동한다. 그런데, 가끔 클래스로딩 이슈가 생길 수 있다. 
+
+기본적으로, IDE에서 연 프로젝트는 "재시작" 클래스로더가 로드되고, 어떤 규칙적인 `.jar` 파일은 "기본" 클래스로더가 로드된다. 만약 멀티 모듈 프로젝트에서 작업을 하고 있고, IDE에 모든 모듈이 불러오지 않으면 그것들을 커스텀마이즈 해야 할 것이다. 그러기 위해서, `META-INF/spring-devtools.properties` 파일을 생성해라.
+
+`spring-devtools.properties`파일은 `restart.exclude`와 `restart.include`를 접두사로해서 속성을 포함할 수 있다.  ---
+
+### 20.2.7 Known Limitations
+### 20.3 LiveReload
+### 20.4 글로벌 설정
+### 20.5 원격 어플리케이션
+### 20.5.1 원격 클라이언트 어플리케이션 실행하기
+### 20.5.2 원격 업데이트
+## 21. 제품으로 어플리케이션 패키징하기
+## 22. 다음에 읽을 내용
+
+# Part IV. 스프링 부트 기능
+이번 섹션에서는 스프링 부트의 상세한 것들을 볼 것이다. 여기서 키의 특징에 대해서 사용하고 싶거나 사용자 정의하고 싶어하는 것들을 배울 수 있다. 아직 하지 않았다면, 기초지식을 가질 수 있는 "파트2, "시작하기""와 "파트3, "스프링 부트 사용하기"" 섹션을 읽자.
+
+## 23. SpringApplication
+`SpringApplication` 클래스는 `main()` 메소드로에서 시작되는 스프링 어플리케이션을 부트스트랩 하기위한 편리한 방법을 제공한다. 다음 예제와 같이, 많은 상황에서 `SpringApplication.run`메소드에 위임할 수 있다.
+```java
+public static void main(String[] args) {
+	SpringApplication.run(MySpringConfiguration.class, args);
+}
+```
+
+어플리케이션을 실행할 떄, 다음과 비슷한 출력을 볼 수 있다.
+
+```java
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::   v2.1.6.RELEASE
+
+2013-07-31 00:08:16.117  INFO 56603 --- [           main] o.s.b.s.app.SampleApplication            : Starting SampleApplication v0.1.0 on mycomputer with PID 56603 (/apps/myapp.jar started by pwebb)
+2013-07-31 00:08:16.166  INFO 56603 --- [           main] ationConfigServletWebServerApplicationContext : Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@6e5a8246: startup date [Wed Jul 31 00:08:16 PDT 2013]; root of context hierarchy
+2014-03-04 13:09:54.912  INFO 41370 --- [           main] .t.TomcatServletWebServerFactory : Server initialized with port: 8080
+2014-03-04 13:09:56.501  INFO 41370 --- [           main] o.s.b.s.app.SampleApplication            : Started SampleApplication in 2.992 seconds (JVM running for 3.658)
+```
+
+기본적으로, 어플리케이션을 실행한 사용자와 같은 시작과 관련된 상세한 상세한 정보들을 포함한 `INFO` 레벨의 로깅 메시지를 보여준다. `INFO` 레벨 대신 다른 레벨의 로그가 필요하다면, [26.4 "로그 레벨"]()에 설명되어있는 것을 보고 설정할 수 있다.
+
+### 23.1 시작 실패
+
+어플리케이션 실행하는것을 실패했으면, 등록된 `FailureAnalyzers`로 문제를 고치기 위한 구체적인 행동과 에러 메시지 용도로 제공할 기회다. 예로, 포트 `8080`에서 웹 어플리케이션을 실행 했으면 그 포트는 이미 사용중이라서, 다음과 같은 비슷한 메시지를 봐야한다.
+
+```
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Embedded servlet container failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+```
+
+> 스프링 부트는 많은 `FailureAnalyzer` 구현체들을 제공하고 자신의 것을 추가할 수 있다.
+
+예외를 처리할 수 있는 failure anayzers가 없는 경우에, 무엇이 잘못되었는지 이해하기 쉬운 자세한 조건의 보고서를 계속 보여줄 수 있다. 그러기 위해서, `org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener`에 대해서 `debug` 속성을 활성화 하거나 `DEBUG` 로깅을 활성화 해야한다.
+
+예를 들어서, `java -jar`를 사용하여 어플리케이션을 실행하기 위해서, 다음과 같이 `debug` 속성을 활성화 할 수 있다.
+
+`$ java -jar myproject-0.0.1-SNAPSHOT.jar --debug`
+
+
+### 23.2 배너 사용자 정의하기
+
+배너는 `banner.txt` 파일을 클래스패스에 추가하거나 파일과 관련된 위치에 있는 `spring.banner.location` 속성을 세팅함으로써 실행할 때 바꿔서 출력할 수 있다. 파일이 UTF-8대신 아른 것으로 인코딩 되어있다면, `spring.banner.charset`을 설정해야 한다. 게다가 텍스트 파일에, `spring.banner.image.location` 속성을 설정을 하거나 `banner.gif`, `banner.jpg`, 또는 `banner.png` 이미지 파일을 클래스 패스에 추가할 수 있다. 이미지는 ASCII art로 묘사해서 변환되고 텍스트 배너위에 출력된다.
+
+`banner.txt` 파일 안에, 다음과 같은 플레이스홀더를 사용할 수 있다.
+
+ #### Table 23.1. Banner variables
+
+Variable |	Description
+--- | ---
+`${application.version}` | The version number of your application, as declared in `MANIFEST.MF`. For example, `Implementation-Version: 1.0` is printed as `1.0`.
+`${application.formatted-version}` | The version number of your application, as declared in `MANIFEST.MF` and formatted for display (surrounded with brackets and prefixed with `v`). For example `(v1.0)`.
+`${spring-boot.version}` | The Spring Boot version that you are using. For example `2.1.6.RELEASE`.
+`${spring-boot.formatted-version}` | The Spring Boot version that you are using, formatted for display (surrounded with brackets and prefixed with `v`). For example `(v2.1.6.RELEASE)`.
+`${Ansi.NAME}` (or `${AnsiColor.NAME}`, `${AnsiBackground.NAME}`, `${AnsiStyle.NAME}`) | Where `NAME` is the name of an ANSI escape code. See `AnsiPropertySource` for details.
+`${application.title}` | The title of your application, as declared in `MANIFEST.MF`. For example `Implementation-Title: MyApp` is printed as `MyApp`.
+
+> `SpringApplication.setBanner(...)` 메소드는 프로그래밍 방식으로 배너를 생성할 수 있다. `org.springframework.boot.Banner`를 사용하고 `printBanner()` 메소드를 구현해라.
+
+배너가 `System.out`(`console`)로 출력되거나, 설정된 로그로 보내거나(`log`)거나 생산되지 않도록(`off`)하기 위해 `spring.main.banner-mode` 속성을 사용할 수도 있다.
+
+출력된 배너는 다음과 같은 이름의 싱글톤 빈으로 등록된다
+`springBootBanner`.
+
+> YAML는 `off`를 `false`로 매핑하니까, 다음처럼 보여지는 예와 같이 어플리케이션에서 배너를 비활성화를 하고 싶다면 따옴표를 추가해라.
+```java
+spring:
+	main:
+		banner-mode: "off"
+```
+### 23.3 SpringApplication 사용자 정의하기
 
 --- 단어 최신을 맨위로 바꾸기
 go into detail : 상세히 설명하다.  
@@ -529,4 +632,7 @@ necessarily : 필연적으로, 어쩔 수 없이
 Do not necessarily : 반드시 ~할 필요 없다.
 in place : 제자리에  
 so that : ~하도록  
-You might want to ~ : ~하는게 좋을 것이다, ~해야할 것이다.
+You might want to ~ : ~하는게 좋을 것이다, ~해야할 것이다.  
+delegate : 위임하다.  
+concrete : 구체적인, 사실에 의거한  
+be sure to do sth : 반드시 ~을 해라
