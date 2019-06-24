@@ -575,64 +575,127 @@ spring:
 		banner-mode: "off"
 ```
 ### 23.3 SpringApplication 사용자 정의하기
+기존의 `SpringApplication`이 마음에 들지 않으면, 대신에 로컬 인스턴스를 만들거나 그것을 사용자 정의할 수 있다. 예를 들어서, 배너를 끄려면, 다음과 같이 쓸 수 있다.
 
---- 단어 최신을 맨위로 바꾸기
-go into detail : 상세히 설명하다.  
-particularly : 특히, 특별히  
-?when followed : 따라서  
-start out : 시작하다  
-omit : 빠뜨리다, 생략하다, 누락시키다.  
-execution : 실행, 수행  
-Sensible : 합리적인, 실용적인  
-Note that : 참고로  
-preceding : 이전의, 앞선  
-executable : 실행 가능한  
-explicitly : 분명하게, 명쾌하게, 명백하게  
-a set of + N : N 세트  
-one-stop : 한 곳에서, 다 할 수 있는  
-hunt : 찾다, 뒤지다  
-consistent : 한결같은, 일관된, 변함없는  
-reversed : 거꾸로 된, 반대의, 뒤집은    
-be placed on : ~에 놓이다  
-implicitly : 암암리에, 무조건, 절대적으로, 넌지시  
-certain items : 특정 항목들  
-equivalent : 상응하는, 동등한, 맞먹는  
-Alternatively : 그 대신에, 그렇지 않으면  
-by ~ing : ~함으로써  
-Gradually : 서서히, 점진적으로  
-At any point : 어떠한 관점에서, 어느 지점  
-back away : 사라지다, 손을 떼다, 후퇴하다, 물러서다  
-Disabling : 무력화, 비활성화  
-For simplicity : 간단히 말해서, 간단히 말하자면, 정리하면  
-be marked as : ~로 표시된  
-subsequently : 그 뒤에, 나중에  
-equivalent : 동등한, 맞먹는  
-mandatory : 정해진, 의무적인  
-vary : (상황에 따라)다르다, 달라지다  
-generate : 발생시키다, 만들어 내다, 생기게 하다  
-accidentally : 우연히, 뜻하지 않게, 잘못하여  
-attach : 첨부하다, 부여하다, 붙이다, 추가하다, 첨가하다, 덧붙이다.  
-Exploded form : 분해된 형태, 분리된 형태  
-work out of the box : 즉시 사용 가능  
-somewhat : 어느 정도, 약간, 다소  
-be considered : ~로 간주되다  
-If that does not apply to you : 당신에게 적용되지 않는다면  
-prevent from : ~할 수 없도록 만들다. ~을 막다ㅡ ~할 수 없다  
-rather than : ~보다는, ~대신에, ...하지말고  
-outcome : 결과  
-are applied by : 적용될  
-For a complete + N, visit/see: N의 전체 목록은 (보려면) , 참조하세요/방문하세요
-whenever : ~할 때마다(매번), ~할 때는 언제든지  
-by default : 자동적으로, 자연스럽게, 기본적으로  
-Note that S + V : S가 V하다는 걸 알아라, 주목해라, 주의해라  
-depend on : ~에 달려 있다, 좌우되다, ~나름이다  
-be in favor of : ~에 유리한, ~에 우호적이다  
-rely on : ~에 의지[의존]하다, ~을 필요로 하다  
-necessarily : 필연적으로, 어쩔 수 없이
-Do not necessarily : 반드시 ~할 필요 없다.
-in place : 제자리에  
-so that : ~하도록  
-You might want to ~ : ~하는게 좋을 것이다, ~해야할 것이다.  
-delegate : 위임하다.  
+```java
+public static void main(String[] args) {
+	SpringApplication app = new SpringApplication(MySpringConfiguration.class);
+	app.setBannerMode(Banner.Mode.OFF);
+	app.run(args);
+}
+```
+
+> `SpringApplication`으로 넘어간 생성자 인자는 스프링 빈들에 대한 설정 소스이다. 대부분의 경우, 이것들은 `@Configuration` 클래스를 참조하지만 XML 설정과  스캔해야하는 패키지 또한 참조할 수 있다.
+
+`application.properties`파일을 사용하여 `SpringApplication`을 설정하는 것 또한 가능하다. 자세한 것들은 [챕터24. 외부설정](https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html) 을 보세요
+
+구성 옵션의 전체 목록은 [`SpringApplication` Javadoc](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/SpringApplication.html)을 보세요
+
+## 23.4 Bluent Builder API
+
+만약 `ApplicationContext` 계층 (parent/child 관계를 사용하는 복합적인 구문)을 만들어야하거나 "fluent" 빌더 API를 사용하는것을 선호한다면, `SpringApplicationBuilder`를 사용해라.
+
+다음의 보여지는 예와 같이, `SpringApplicationBuilder`은 다양한 메소드 호출을 함께 묶을 수 있고, 계층을 만들 수 있는 `parent`와 `child` 메소드를 포함한다.
+
+```java
+new SpringApplicationBuilder()
+		.sources(Parent.class)
+		.child(Application.class)
+		.bannerMode(Banner.Mode.OFF)
+		.run(args);
+```
+
+> `ApplicationContext` 계층 구조를 만들 때 몇가지 제한이 있다. 예를 들어서, 웹 컴포넌트는 반드시 child 컨텍스트 안에 포함되어 있어야 하고, 같은 `Environment`은 parent와 child 컨텍스트 양쪽에서 사용 되어야 한다. 더 자세한 것들은 [`SpringApplicationBuilder` Javadoc](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/builder/SpringApplicationBuilder.html)에서 볼 수 있다.
+
+## 23.5 어플리케이션 이벤트와 리스너
+
+보통의 스프링 프레임워크 이벤트들에 더하여, 추가적인 몇몇의 어플리케이션 이벤트인 `ContextRefreshedEvent`, `SpringApplication`를 전송한다.
+
+> 몇몇의 이벤트들은 실제로 `ApplicationContext`가 생성되기 전에 트리거 되므로, 리스너를 `@Bean`으로 등록할 수 없다. `SpringApplication.addListeners(...)` 메소드나 `SpringApplicationBuilder.listeners(...)` 메소드를 사용하여 리스너를 등록할 수 있다.  
+리스너들을 자동으로 등록되기를 원한다면, 어플리케이션이 생성되는 것에 구애받지 않고, 프로젝트에 `META-INF/spring.factories`파일을 추가할 수 있고, 다음에 보이는 예와 같이, `org.springframework.context.ApplicationListener` 키를 사용함으로써 리스너들을 참고할 수 있다.  
+`org.springframework.context.ApplicationListener=com.example.project.MyListener`
+
+어플리케이션 이벤트는 어플리에키션에서 실행될 때, 다음과 같은 순서로 전송된다.
+
+1. `ApplicationStartingEvent`는 실행을 시작했지만 리스너와 이니셜라이저의 등록에 대한것들을 제외하고 진행되기 전에 전송된다.
+2. `ApplicationEnvironmentPreparedEvent`는 컨텍스트에서 사용될 `Environment` 을 알고있지만 컨텍스트가 생성되기 전에 전송된다.
+3. `ApplicationPreparedEvent`는 빈 정의가 로드된 후에 새로고침이 시작하기 전에 전송된다.
+4. `ApplicationStartedEvent`는 컨텍스트가 새로고침 된 후 어플리케이션과 커맨드-라인 실행기로 호출되기 전에 전송된다.
+5. `ApplicationReadyEvent`는 어플리케이션과 커맨드-라인 실행기로 호출된 후에 전송된다. 이는 어플리케이션이 서비스 요청들에 대한 준비가 되었음를 나타낸다.
+6. `ApplicationFailedEvent`는 실행할 때 예외가 있으면 전송된다.
+
+> 자주 어플리케이션 이벤트를 사용할 필요가 없지만 어플리케이션 이벤트가 존재하는 것을 아는 것이 편리할 수 있다. 내부적으로, 스프링 부트는 작업의 여러가지들을 조작하기 위해 이벤트를 사용한다.
+
+## 23.6 웹 환경
+
+
+--- 
+##### 단어  
+
+Internally : 내부로, 내면적으로, 심적으로
+indicate : 나타내다, 보여주다.  
+regardless of : ~에 개의치[상관하지] 않고, 구애받지 않고  
+In addition to : ~에 더하여, ~에 더불어, ~에 덧붙여  
+restriction : 제한, 제약  
+lets you ~ : 할 수 있다.  
+be sure to do sth : 반드시 ~을 해라  
 concrete : 구체적인, 사실에 의거한  
-be sure to do sth : 반드시 ~을 해라
+delegate : 위임하다.  
+You might want to ~ : ~하는게 좋을 것이다, ~해야할 것이다.  
+so that : ~하도록  
+in place : 제자리에  
+Do not necessarily : 반드시 ~할 필요 없다.  
+necessarily : 필연적으로, 어쩔 수 없이  
+rely on : ~에 의지[의존]하다, ~을 필요로 하다  
+be in favor of : ~에 유리한, ~에 우호적이다  
+depend on : ~에 달려 있다, 좌우되다, ~나름이다  
+Note that S + V : S가 V하다는 걸 알아라, 주목해라, 주의해라  
+by default : 자동적으로, 자연스럽게, 기본적으로  
+whenever : ~할 때마다(매번), ~할 때는 언제든지  
+For a complete + N, visit/see: N의 전체 목록은 (보려면) , 참조하세요/방문하세요  
+  - For a complete list of ~ : ~의 전체 속성 리스트는
+
+are applied by : 적용될  
+outcome : 결과  
+rather than : ~보다는, ~대신에, ...하지말고  
+prevent from : ~할 수 없도록 만들다. ~을 막다ㅡ ~할 수 없다  
+If that does not apply to you : 당신에게 적용되지 않는다면  
+be considered : ~로 간주되다  
+somewhat : 어느 정도, 약간, 다소  
+work out of the box : 즉시 사용 가능  
+Exploded form : 분해된 형태, 분리된 형태  
+attach : 첨부하다, 부여하다, 붙이다, 추가하다, 첨가하다, 덧붙이다.  
+accidentally : 우연히, 뜻하지 않게, 잘못하여  
+generate : 발생시키다, 만들어 내다, 생기게 하다  
+vary : (상황에 따라)다르다, 달라지다  
+mandatory : 정해진, 의무적인  
+equivalent : 동등한, 맞먹는  
+subsequently : 그 뒤에, 나중에  
+be marked as : ~로 표시된  
+For simplicity : 간단히 말해서, 간단히 말하자면, 정리하면  
+Disabling : 무력화, 비활성화  
+back away : 사라지다, 손을 떼다, 후퇴하다, 물러서다  
+At any point : 어떠한 관점에서, 어느 지점  
+Gradually : 서서히, 점진적으로  
+by ~ing : ~함으로써  
+Alternatively : 그 대신에, 그렇지 않으면  
+equivalent : 상응하는, 동등한, 맞먹는  
+certain items : 특정 항목들  
+implicitly : 암암리에, 무조건, 절대적으로, 넌지시  
+be placed on : ~에 놓이다  
+reversed : 거꾸로 된, 반대의, 뒤집은    
+consistent : 한결같은, 일관된, 변함없는  
+hunt : 찾다, 뒤지다  
+one-stop : 한 곳에서, 다 할 수 있는  
+a set of + N : N 세트  
+explicitly : 분명하게, 명쾌하게, 명백하게  
+executable : 실행 가능한  
+preceding : 이전의, 앞선  
+Note that : 참고로  
+Sensible : 합리적인, 실용적인  
+execution : 실행, 수행  
+omit : 빠뜨리다, 생략하다, 누락시키다.  
+start out : 시작하다  
+?when followed : 따라서  
+particularly : 특히, 특별히  
+go into detail : 상세히 설명하다.  
