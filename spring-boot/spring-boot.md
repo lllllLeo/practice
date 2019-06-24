@@ -497,3 +497,62 @@ properties에서 `spring.profiles.include = prod` 이런식으로 해서 다른 
 
 Edit Configurations에서 `Program arguments`에서 값을 줘도 됨. 
 > `spring.profiles.active=prod` 이 방법은 주로 개발을 할 때 profiles 값을 setting 하고싶을 때 사용
+
+# 4-9 로깅 1부: 스프링 부트 기본 로거 설정
+
+Spring Boot는 기본적으로 `Commnos Logging`을 사용하는데 `SLF4j`를 쓰자.  
+
+`Commnos Logging`, `SLF4j` 는 실제 Logging을 하는 애들이 아니고 Logger API를 추상화해놓은 Interface들이다. 주로 Framework들은 Logging Parser를 사용한다. Logging Parser 장점은 Logging Parser (`Commons Logging`, `SLF4j`) 아래에 있는 `JUL`(Java Util Logging), `Log4J2`, `Logback` 얘들을 바꿔끼울 수 있다. 그래서 더욱이 Framework에서 코딩을 한다. Framework에서 사용하는 application들이 Logger를 자기들이 원하는 것을 사용하게끔 하기 위해서. Spring Framework에서 core 모듈이 개발되고 있을 때 Logging Parser가 `Commnos Logging` 밖에 없어서 이거를 사용하고 있어서 Spring의 기본 Logging Parser가 `Commons Logging`(런타임 도중에 Logger를 찾는다. classloader를 뒤지면서)이다.  
+
+
+spring-boot 1.0에서는 `Commons Logging` 을 exclusion 하고 해서 `SLF4j` 설정을 했다. 최근에 Spring 5에서 exculsion 쓰지 않아도 안전하게 사용할 수 있도록 Spring 자체 내에서 jcl이라는 모듈을 만들어서 Spring-JCL 코드를 컴파일 시점에 `SLF4j`나 `Log4j2`로 변경할 수 있게 해주는 모듈을 만들었다. 그래서 그냥 Spring-JCL을 써도 된다. 결국에는 Spring-JCL이 개입을 하면서 이 코드가 `SLF4j`나 Log4j2 dependency가 있으면 여기로 쓰게 될 것이고 `SLF4j`는 JUL, Log4J2, Logback 들 중 에 선택을 하게 된다.
+
+Spring-boot는 `Commons Logging`을 쓴다. `Commons Logging`을 써도 `SLF4j`로 가게 되어있고 `SLF4j`는 `Logback`을 사용하게 된다. 최종적으로 `Logback`을 사용하게 된다. 우리가 지금 껏 본 log는 `Logback`이 찍은 것이다.  
+`Commons Logging -> SLF4j -> logback`
+
+Dependency를 보면 starter-logging에서 하위에 `Logback`과 log4j-to-slf4j, jul-to-slf4j가 있는데 ‘log4j나 jul을 slf4j로 보내라' 그리고 `slf4j`를 구현한게 `logback`이니까 최종적으로 `logback`을 사용하게 되는 것이다.
+
+Edit Configuration에서  
+VM options : `-Ddebug`  
+Program arguments : `--debug`  
+해서 DEBUG 모드로 출력할 수 있다. 둘중에 하나만 하면 됨.  
+DEBUG 모드는 모두 다 찍어주는게 아님. embedded container, Hibernate, Spring Boot 만 찍어준다. -> 음 뭐야
+
+`—trace` : 모든 메시지를 DEBUG로 찍고 싶을 때  
+`application.properties`에서 설정함  
+컬러 출력 : `spring.output.ansi.enabled`	 spring.output.ansi.enabled=속성)  
+파일 출력 : `logging.file` (log file을 설정) 또는 `logging.path` (directory를 설정하는것임. 설정하면 spring.log 라는 파일이 생성되고 쓰임)  
+이 file은 10mb마다 rolling이 되고 나머지는 archiving이 됨(설정 가능)  
+(default는 console에만 출력하고 있다.)  
+로그 레벨 조정 : logging.lebel.패키지경로 = 로그 레벨
+
+
+# 4-13 Spring-Boot-Devtools
+
+Spring Boot가 제공하는 optional한 tool이다. 반드시 써야하는 것도 아니고 부트가 기본적으로 적용하는것도 아니고
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+</dependency>
+```
+
+하면 여러 설정들이 바뀜. (주로 cache를 끔)
+
+- cache 설정을 개발 환경에 맞게 변경.
+- classpath에 있는 파일이 변경 될 때마다 자동으로 서버재시작. (코드를 바꾸면 자동으로 restart해줌. 우리가 톰캣을 껏다가 재실행 해주는 속도 보다 빠르다. 왜냐하면 Spring Boot는 클래스로더를 2개를 사용한다. 
+  - base classloader  
+    - Library들, 우리가 바꾸지 않는, 의존성을 읽어들이는 classloader
+  - restart classloader
+    - 우리 application을 읽어들이는 classloader. code 수정 후 Build Project (Ctrl + F9) 를 하고 새로고침.
+
+- live reload – restart 했을 때 서버 재시작, 브라우저 auto refresh 해주는 기능 (원래 front-end에 있던 기능)
+- browser plugin 설치해야 함
+- live reload 서버 끄려면 `spring.devtools.liveload.enabled = false`
+
+- 글로벌 설정 (`properties` 우선순위 1순위 but, 의존성에 있으면)
+  - `~/.spring-boot-devtools.properties`
+
+- Remote Applications  
+원격에 applications 띄워놓고 local에서 작업. 운영할 때 쓰면 안됨. 
