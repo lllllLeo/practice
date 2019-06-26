@@ -626,13 +626,81 @@ new SpringApplicationBuilder()
 
 > 자주 어플리케이션 이벤트를 사용할 필요가 없지만 어플리케이션 이벤트가 존재하는 것을 아는 것이 편리할 수 있다. 내부적으로, 스프링 부트는 작업의 여러가지들을 조작하기 위해 이벤트를 사용한다.
 
+어플리케이션 이벤트는 스프링 프레임워크의 이벤트 퍼블리싱 메커니즘을 사용하여 전송된다. 이 매커니즘은 자식 컨텍스트의 리스너들에게 발생한 이벤트는 조상 컨텍스트의 리스너들에게도 발생하는것을 보장한다. 이것의 결과로, 어플리케이션에 `SpringApplication` 객체의 계층구조를 사용하면, 리스너는 같은 타입의 어플리케이션 이벤트의 여러개의 객체를 받을 것이다.
+
+To allow your listener to distinguish between an event for its context and an event for a descendant context, it should request that its application context is injected and then compare the injected context with the context of the event. The context can be injected by implementing ApplicationContextAware or, if the listener is a bean, by using @Autowired.
+
 ## 23.6 웹 환경
+`SpringApplication`는 사용자 대신 `ApplicationContext`의 올바른 타입을 생성하려고 시도한다.  `WebApplicationType`을 알아내기 위해 사용되는 알고리즘은 꽤 간단하다.
+
+- 스프링 MVC가 있는 경우, `AnnotationConfigServletWebServerApplicationContext`가 사용된다.
+- 스프링 MVC가 있지 않은 경우와 스프링 웹 플럭스가 있는 경우, `AnnotationConfigReactiveWebServerApplicationContext`가 사용된다.
+- 그 외에는, `AnnotationConfigApplicationContext`가 사용 된다.
+
+같은 어플리케이션에서 스프링 MVC와 스프링 웹플럭스의 새로운 `WebClient`를 사용하면, 스프링 MVC는 기본적으로 사용[된다는/될] 것을 의미한다. `setWebApplicationType(WebApplicationType)`를 호출하면 쉽게 재정의할 수 있다.
+
+`setApplicationContextClass(…​)`을 호출하여 사용하는 `ApplicationContext` 타입을 완전히 제어도 가능하다.
+
+> 이는 `SpringApplication` JUnit 테스트와 함께 사용할 떄 `setWebApplicationType(WebApplicationType.NONE)` 를 자주 호출하는 것이 바람직하다.
+
+## 23.7 어플리케이션 인자에 접근하기
+`SpringApplication.run(...)`에 전달했던 어플리케이션 인자들에 접근해야 하면 `org.springframework.boot.ApplicationArguments` 빈을 주입해라. 다음 보여지는 예와 같이, 원시 `String[]`뿐만 아니라 파싱된 `option`와 `non-option`인자 둘 다 `ApplicationArguments` 인터페이스에 접근하는  권한을 제공한다.
+
+```java
+import org.springframework.boot.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
+
+@Component
+public class MyBean {
+
+	@Autowired
+	public MyBean(ApplicationArguments args) {
+		boolean debug = args.containsOption("debug");
+		List<String> files = args.getNonOptionArgs();
+		// if run with "--debug logfile.txt" debug=true, files=["logfile.txt"]
+	}
+
+}
+```
+
+> 스프링 부트는 또한 스프링 `Environment`에서 `CommandLinePropertySource` 또한 등록한다. 이것은 `@Value` 어노테이션을 사용함으로써 하나의 어플리케이션 인자를 주입하는것도 가능하다.
+
+## 23.8 어플리케이션 실행기나 커맨드라인 실행기 사용하기
+
+`SpringApplication`이 시작되고 언젠가 특정한 코드를 실행하려면, `ApplicationRunner`나 `CommandLineRunner` 인터페이스를 구현해라. 두개의 인터페이스는 같은 방식으로 작동하고 하나의 `run` 메소드를 제공한다. 이것은 `SpringApplication.run(...)`이 완료되기 바로 직전에 호출된다.
+
+`CommandLineRunner` 인터페이스는 간단한 문자 배열로서 어플리케이션 인자에 접근하는 방법을 제공한다. 반면에, `ApplicationRunner`는 앞에서 논의한 `ApplicationArguments` 인터페이스 사용한다. 다음 예는 `run`메소드를 사용한 `CommandLineRunner` 를 보여준다.
+
+```java
+import org.springframework.boot.*;
+import org.springframework.stereotype.*;
+
+@Component
+public class MyBean implements CommandLineRunner {
+
+	public void run(String... args) {
+		// Do something...
+	}
+
+}
+```
+특정한 순서로 호출되어야 하는 몇몇의 `CommandLineRunner`이나 `ApplicationRunner` 빈들이 정의된 경우에 `org.springframework.core.Ordered` 인터페이스나 `org.springframework.core.annotation.Order` 어노테이션을 사용하여 추가적으로 구현할 수 있다.
+
+## 23.9 어플리케이션 끄기
 
 
 --- 
 ##### 단어  
 
-Internally : 내부로, 내면적으로, 심적으로
+discussed earlier : 앞에서 논의한/설명한/언급한
+whereas : 반면[에], 그렇지만  
+take complete control : 완전히 제어하다.  
+otherwise : 그렇지 않으면, 그 외에는  
+determine : 알아내다, 밝히다, 결정하다
+fairly : 꽤, 상당히
+on your behalf : (사용자) ~대신  
+Internally : 내부로, 내면적으로, 심적으로  
 indicate : 나타내다, 보여주다.  
 regardless of : ~에 개의치[상관하지] 않고, 구애받지 않고  
 In addition to : ~에 더하여, ~에 더불어, ~에 덧붙여  
