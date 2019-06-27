@@ -591,7 +591,7 @@ public static void main(String[] args) {
 
 구성 옵션의 전체 목록은 [`SpringApplication` Javadoc](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/SpringApplication.html)을 보세요
 
-## 23.4 Bluent Builder API
+## 23.4 Fluent Builder API
 
 만약 `ApplicationContext` 계층 (parent/child 관계를 사용하는 복합적인 구문)을 만들어야하거나 "fluent" 빌더 API를 사용하는것을 선호한다면, `SpringApplicationBuilder`를 사용해라.
 
@@ -688,12 +688,91 @@ public class MyBean implements CommandLineRunner {
 특정한 순서로 호출되어야 하는 몇몇의 `CommandLineRunner`이나 `ApplicationRunner` 빈들이 정의된 경우에 `org.springframework.core.Ordered` 인터페이스나 `org.springframework.core.annotation.Order` 어노테이션을 사용하여 추가적으로 구현할 수 있다.
 
 ## 23.9 어플리케이션 끄기
+각각의 `SpringApplication`은 종료시에 `ApplicationContext`가 정상적이게 닫히는 것을 보장하는 JVM을 사용하여 셧다운 훅을 등록한다. 모든 표준 스프링 생명주기는 콜백(`DisposableBean` 인터페이스나  `@PreDestory`어노테이션과 같은)이 사용할 수 있다. 
+
+게다가, 만약 `SpringApplication.exit()`가 호출될때 특정 종료 코드를 리턴 받길 원한다면 빈들은 `org.springframework.boot.ExitCodeGenerator` 인터페이스를 구현해야 한다. 다음에 보여지는 예제에서 이 종료 코드는 상태 코드같은 것을 반환받기 위해서`System.exit()`에 전달할수 있다.
+
+```java
+@SpringBootApplication
+public class ExitCodeApplication {
+
+	@Bean
+	public ExitCodeGenerator exitCodeGenerator() {
+		return () -> 42;
+	}
+
+	public static void main(String[] args) {
+		System.exit(SpringApplication.exit(SpringApplication.run(ExitCodeApplication.class, args)));
+	}
+
+}
+```
+
+또한,`ExitCodeGenerator`인터페이스는 예외에 의해서 구현될 수도 있을 것이다. 예외와 맞닥뜨릴때, 스프링 부트는 구현된 `getExitCode()`로 제공된 종료 코드를 반환한다.
+
+## 23.10 관리자 특징
+`spring.application.admin.enabled` 속성에 명시하면 어플리케이션에 대한 관리와 관련된 기능을 활성화하는것이 가능하다. 이는 `MBeanServer` 플랫폼에 `SpringApplicationAdminMXBean`을 드러낸다. 이 기능으로 스프링 부트 어플리케이션을 원격으로 관리할 수 있다. 이 기능은 다른 서비스 랩퍼 구현에 대한 것에도 유용할 수 있다.
+
+> 어플리케이션을 실행하는데 어떤 HTTP 포트를 사용하는지 알고 싶으면, `local.server.port`의 키를 사용하여 속성을 얻을 수 있다.
+
+  > **주의**
+    이 기능을 활성화할 때 어플리케이션을 끄기 위한 메소드인 MBean을 노출하므로 주의해라.
 
 
+## 24. 외부 설정
+
+스프링 부트는 다른 환경에서 같은 코드로 작동할 수 있도록 설정을 외부에서 할 수 있다. 외부에서 설정하기 위해 properties 파일, YAML 파일, 환경 변수 그리고 커맨드-라인 인자를 사용할 수 있다. 속성 값은 `@Value` 어노테이션을 사용하면 빈에 직접 주입을 할 수 있고 스프링의 `Environment` 추상(화)을 통해서 접근할 수 있거나 `@ConfigurationProperties`를 통해서 구조화된 객체에 바인딩이 될 수 있다.
+
+스프링 부트는  합리적이게 값의 재정의를 허용하기위해 만들어진 아주 특별한 `PropertySource` 순서로 사용한다. 속성은 다음의 순서에 따라 고려된다.
+
+1. 홈 디렉토리에서의 [Devtools 글로벌 설정 속성](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#using-boot-devtools-globalsettings)(~/.spring-boot-devtools.properties Devtools가 켜있을 때).
+2. 테스트에서의 [@TestPropertySource](https://docs.spring.io/spring/docs/5.1.8.RELEASE/javadoc-api/org/springframework/test/context/TestPropertySource.html) 어노테이션
+3. 테스트에서 `properties` 속성. [`@SpringBootTest`](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/test/context/SpringBootTest.html)와 [어플리케이션의 특정한 부분 테스트에 대한 테스트 어노테이션](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-testing-spring-boot-applications-testing-autoconfigured-tests)
+4. 커맨드-라인 인수
+5. `SPRING_APPLICATION_JSON`에서의 속성 (시스템 속성이나 환경 변수에 내장된 인라인(직렬의?) JSON).
+6. `ServletConfig` 초기 파라미터.
+7. `ServletContext` 초기 파라미터.
+8. `java:comp/env`에서의 JNDI 속성
+9. 자바 시스템 속성 (`System.getProperties()`).
+10. OS 환경변수.
+11. `random.*` 속성만 가지고 있는 `RandomValuePropertySource`.
+12. jar로 패키징된 외부의 프로필 관련 어플리케이션 속성(`application-{profile}.properties` and YAML variants).
+13. jar로 패키징된 내부의 프로필 관련 어플리케이션 속성 (`application-{profile}.properties` and YAML variants).
+14. jar로 패키징된 외부의 어플리케이션 속성 (`application.properties` and YAML variants).
+15. jar로 패키징된 내부의 프로필 관련 어플리케이션 속성(`application.properties` and YAML variants).
+16. `@Configuration` 클래스에 있는 `@PropertySource`어노테이션
+17. 기본 속성 (`SpringApplication.setDefaultProperties`설정으로 명시된 ).
+
+구체적인 예를 제공하기위해 다음으로 보여지는 예와 같이 `name`속성을 사용하는 `@Component`개발한다고 가정한다
+
+```java
+import org.springframework.stereotype.*;
+import org.springframework.beans.factory.annotation.*;
+
+@Component
+public class MyBean {
+
+    @Value("${name}")
+    private String name;
+
+    // ...
+
+}
+```
+어플리케이션 클래스패스에서(예를들면, jar의 내부) `name`에 대한 합리적인 기본 속성을 제공하는 `application.properties` 파일을 가질 수 있다. 새로운 환경에서 실행될 떄, `name`을 재정의한 `application.properties`파일은 jar의 외부에 제공할 수 있다. 일회성 테스트를 위해, 특정 커맨드-라인 스위치를 사용하여 실행할 수 있다.(예를 들어, `java -jar app.jar --name="Spring"`)
+
+> 
+
+## 24.1 랜덤 값 설정하기
 --- 
 ##### 단어  
 
-discussed earlier : 앞에서 논의한/설명한/언급한
+abstraction : 관념
+externalized : 외부  
+may be implemented : 구현 될 수 있다.  
+be passed by : 전달하다, 전달되다  
+can be used :  사용할 수 있다.  
+discussed earlier : 앞에서 논의한/설명한/언급한  
 whereas : 반면[에], 그렇지만  
 take complete control : 완전히 제어하다.  
 otherwise : 그렇지 않으면, 그 외에는  
