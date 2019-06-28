@@ -526,6 +526,49 @@ DEBUG 모드는 모두 다 찍어주는게 아님. embedded container, Hibernate
 (default는 console에만 출력하고 있다.)  
 로그 레벨 조정 : logging.lebel.패키지경로 = 로그 레벨
 
+# 4-10 로깅 2부: 커스터마이징
+
+logging.level.org.springframework = debug 하면 다 찍힘. 기본적으로 info로 찍히니까 내 패키지만 debug로 바꾸기
+
+커스텀 로그 설정 파일 사용하기
+- logging 관련설정을 내가 다 커스터마이징 하고 싶으면 
+- Logback (추천) : logback-spring.xml (추천)/ logback.xml도 있음(너무 일찍 loading이 됨)
+Logback extension (확장기능을 제공해줌) 
+- 프로파일 <springProfile name="프로파일">
+- Environment 프로퍼티 <springProperty>
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+    <configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="me.yujun" level="DEBUG"/>
+</configuration>
+```
+
+logging pattern들 설정은 사내에 적합한 패턴을 설정하면 됨
+- Log4J2 : log4j2-spring.xml (여기서도 커스터마이징 가능)
+- JUL (비추) : logging.properties
+
+Logger를 Log4j2로 변경하기 (기본적으로는 logback을 쓴다)
+```xml
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <exclusions>
+            <exclusion>
+                <groupId>org.springwork.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
+            </exclusion>
+        </exclusions>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-log4j2</artifactId>
+</dependency>
+```
+
 
 # 4-13 Spring-Boot-Devtools
 
