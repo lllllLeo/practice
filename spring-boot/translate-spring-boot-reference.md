@@ -764,10 +764,89 @@ public class MyBean {
 > 
 
 ## 24.1 랜덤 값 설정하기
+
+`RandomValuePropertySource`는 랜덤 값을 주입하는것에 유용하다. (예를 들어서, 테스트 케이스나 암호) 다음과 같이 Integer, long, uuid 또는 문자열을 만들 수 있다.
+
+```xml
+my.secret=${random.value}
+my.number=${random.int}
+my.bignumber=${random.long}
+my.uuid=${random.uuid}
+my.number.less.than.ten=${random.int(10)}
+my.number.in.range=${random.int[1024,65536]}
+```
+
+`random.int*`구문은 `OPEN value (,max) CLOSE`이다. 여기서 `OPEN,CLOSE`은 문자이고 `value,max`은 정수다. 만약 `max`가 제공된다면, `value` 최소값이고 `max`는 최대값이다.
+
+## 24.2 커맨드-라인 속성 접근하기
+
+기본적으로, `SpringApplication`은 커맨드-라인 옵션 인자(인자를 시작할 떄 사용하는 `--`, `--server.port=9000`)를 `property`로 변환한다. 그리고 이것들을 스프링 `Environment`에 추가한다. 이전에 언급한것처럼, 커맨드-라인 속성은 다른 속성 코드보다 항상 우선시 된다.
+
+만약 `Environment`에 추가되는 커맨드-라인 속성을 사용하길 원하지 않으면, `SpringApplication.setAddCommandLineProperties(false)`를 사용하여 비활성화 할 수 있다.
+
+## 24.3 어플리케이션 속성 파일
+
+다음의 위치에서 `application.properties`파일에서 `SpringApplication`은 속성을 불러오고 스프링 `Environment`에 추가한다.
+
+1. 현재 디렉토리의 하위 디렉토리인 `/config`
+2. 현재 디렉토리
+3. 클래스패스 `/config` 패키지
+4. 최상위 클래스패스
+
+우선 순위에 따른 순서이다. (속성은 높은 위치에서 정의된것이 낮은 위치에 정의된 것을 재정의한다.)
+
+> '.properties'의 대안으로서 YAML('.yml') 파일을 사용할 수도 있다.
+
+만약 설정 파일 이름으로 `application.properties`이 마음에 들지 않는다면, `spring.config.name` 환경 속성으로 지정해서 다른 파일 이름으로 바꿀 수 있다. 또한 `spring.config.location` 환경 속성을 사용하여 명확한 위치를 참조할 수도 있다.(디렉토리 위치의 콤마로 분리된 순서나 파일 경로) 다음은 다른 파일 이름으로 지정하는법의 예를 보여준다.
+
+`$ java -jar myproject.jar --spring.config.name=myproject`
+
+다음은 두개의 위치를 지정하는 법을 보여준다.
+
+`$ java -jar myproject.jar --spring.config.location=classpath:/default.properties,classpath:/override.properties`
+
+> `spring.config.name`과 `spring.config.location`은 불러해야하는 파일을 알아내기위해 아주 빨리 사용되어서 환경 속성으로서 정의되어야 한다(일반적으로 OS 환경 변수, 시스템 속성 또는 커맨드-라인 인자).
+
+만약 `spring.config.location`가 디렉토리를 포함하면, `/`로 끝나야 한다(그리고, 구동되기전에 프로파일-specific 파일을 포함한 `spring.config.name`에서 생성된 이름이 추가된다). 파일은 `spring.config.location`에 명시된 파일은 프로파일-specific 변형을 지원하지 않고 어느 프로파일-specific 속성으로서 재정의된다.
+
+설정 위치는 역순으로 찾는다. 기본적으로 설정 위치는 `classpath:/,classpath:/config/,file:./,file:./config/` 이다. 검색 순서 결과는 다음과 같다.
+
+1. `file:./config/`
+2. `file:./`
+3. `classpath:/config/`
+4. `classpath:/`
+
+커스텀 설정 위치가 `spring.config.location`을 사용하여 설정되었을 때, 기본의 위치를 대체한다. 예를 들어서, `spring.config.location`이 값이 `classpath:/custom-config/,file:./custom-config/`를 사용하여 설정되었으면, 다음과 같은 검색 순서가 된다.
+
+1. `file:./custom-config/`
+2. `classpath:custom-config/`
+
+대신에, `spring.config.additional-location`을 사용하여 설정한 커스텀 설정 위치일때, 기본 위치에 더하여 사용한다. 추가된 위치는 기본 위치 전에 검색된다. 예를 들어서, 만약 `classpath:/custom-config/,file:./custom-config/`에 추가 위치가 설정된 경우에는, 다음과 같은 검색 순서가 된다.
+
+1. `file:./custom-config/`
+2. `classpath:custom-config/`
+3. `file:./config/`
+4. `file:./`
+5. `classpath:/config/`
+6. `classpath:/`
+
+이 검색 순서는 하나의 설정 파일에서 기본 값으로 지정과 다른 설정 파일에서의 값을 선택적으로 재정의할 수 있다. 기본 위치중에서 하나인 `application.properties`(또는 `spring.config.name`을 사용하여 선택한 다른 기본 이름)에서 어플리케이션에 대한 기본 값을 제공할 수 있다. 이 기본 값들은 런타임 때 커스텀 위치중의 하나에서 다른 파일로 위치하고 있는 파일로 재정의할 수 있다.
+
+> 만약 시스템 속성을 사용하는 대신에 환경 변수를 사용한다면, 대부분의 운영체제는 기간 별 키 이름을 허용하지 않지만 대신에 언더스코어`_`를 사용할 수 있다. (예, `spring.config.name` 대신으로 `SPRING_CONFIG_NAME`)
+
+> 컨테이너에서 어플리케이션이 실행된다면, 환경 변수나 시스템 속성대신에 JDNI 속성(`java:comp/env`)이나 서블릿 컨텍스트 초기화 파라미터를 사용할 수 있다.
+
+## 24.4 프로파일 specific 속성
+## Properties 에서의 플레이스홀더
+## Properties 암호화하기
+
 --- 
+
 ##### 단어  
 
-abstraction : 관념
+explicit : 명쾌한, 명확한, 분명한
+by precedence : 우선순위  
+abstraction : 관념  
 externalized : 외부  
 may be implemented : 구현 될 수 있다.  
 be passed by : 전달하다, 전달되다  
