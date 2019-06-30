@@ -837,14 +837,96 @@ my.number.in.range=${random.int[1024,65536]}
 > 컨테이너에서 어플리케이션이 실행된다면, 환경 변수나 시스템 속성대신에 JDNI 속성(`java:comp/env`)이나 서블릿 컨텍스트 초기화 파라미터를 사용할 수 있다.
 
 ## 24.4 프로파일 specific 속성
-## Properties 에서의 플레이스홀더
-## Properties 암호화하기
+
+`application.properties` 파일에 더하여, 프로필 specific 속성은 `application-{profile}.properties`와 같은 네이밍 컨벤션을 사용하여 정의할 수도 있다. `Environment`는 만약 프로파일을 설정하지 않은 경우에는 기본 프로파일의 설정(기본적으로 `[default]`)으로 사용된다. 다시 말해서, 만약 명확하게 설정한 프로파일이 없으면, `application-default.properties`로 부터 속성들을 불러온다.
+
+프로파일-specific 속성들은 표준 `application.properties`로서 같은 위치에서 불러온다. 프로파일 specific 파일은 프로파일-specific 파일은 패키지된 jar파일이 내부나 외부에 있는것에 상관없이 명시가 되지 않은 것을 항상 재정의한다. 
+
+만약 몇몇의 프로파일 명시되면, 마지막으로 이기는 전략을 지원한다. 예를 들어서, `spring.profiles.active` 속성으로 명시된 프로파일은 `SpringApplication` API를 통해서 설정된 후에 추가되고 그러므로 우선시 된다.
+
+> `spring.config.location`에 파일을 명시했으면, 이 파일들의 프로파일-specific 변형은 고려되지 않는다. 프로파일-specific 속성들도 사용하고 싶다면 `spring.config.location`에 디렉토리를 사용해라
+
+## 24.5 Properties 에서의 플레이스홀더
+`application.properties`에 있는 값은 사용할 때 존재하는 `Environment`을 통해서 필터된다. 그래서 이전에 정의한 값들을 참조할 수 있다. (예로, 시스템 속성)
+
+```xml
+app.name=MyApp
+app.description=${app.name} is a Spring Boot application
+```
+> 존재하는 스프링 부트 속성의 "short" 변형을 생성하기 위해서 이 기술을 사용할 수 있다. 자세한 설명은 [77.4, "커맨드 라인 인자에서 'Short' 사용하기"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-use-short-command-line-arguments)을 봐라
+
+
+## 24.6 Properties 암호화하기
+스프링 부트는 속성 값을 암호화 하는것에 대한 지원을 제공해주지 않는다. 하지만, 스프링 `Environment`에 포함된 값을 수정하기 위해서 필요한 훅 포인트를 제공해준다. `EnvironmentPostProcessor`인터페이스는 어플리케이션 실행 전에 `Environment`을 [조작/처리]하는것을 허용한다. 
+
+## 24.7 Properties 대신에 YAML 사용하기
+~
+## 24.8 Properties 타입세이프 설정
+
+properties 설정을 주입하기 위해 `@Value("${property}")` 어노테이션을 사용하는것은 때때로 다루기 힘들다. 특히 만약 여러개의 properties를 사용하거나 작업하거나 데이터가 계층 구조인 경우라면. 다음에 보여지는 예와 같이, 스프링 부트는 어플리케이션의 설정 검증과 강력하게 빈의 타입을 통제할 수 있는 속성을 사용하여 작동하는 대안의 메소드 제공한다. 
+
+```java
+package com.example;
+
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+@ConfigurationProperties("acme")
+public class AcmeProperties {
+
+	private boolean enabled;
+
+	private InetAddress remoteAddress;
+
+	private final Security security = new Security();
+
+	public boolean isEnabled() { ... }
+
+	public void setEnabled(boolean enabled) { ... }
+
+	public InetAddress getRemoteAddress() { ... }
+
+	public void setRemoteAddress(InetAddress remoteAddress) { ... }
+
+	public Security getSecurity() { ... }
+
+	public static class Security {
+
+		private String username;
+
+		private String password;
+
+		private List<String> roles = new ArrayList<>(Collections.singleton("USER"));
+
+		public String getUsername() { ... }
+
+		public void setUsername(String username) { ... }
+
+		public String getPassword() { ... }
+
+		public void setPassword(String password) { ... }
+
+		public List<String> getRoles() { ... }
+
+		public void setRoles(List<String> roles) { ... }
+
+	}
+}
+```
+## 24.8.1 써드파티 설정
+
 
 --- 
 
 ##### 단어  
 
-explicit : 명쾌한, 명확한, 분명한
+whether or not : 여하튼, 어쨌든, 여하간, 반드시, 어떻게 됐든, 어떻든지  
+In other words : 다시 말하면, 다시 말해서, 즉, 다르게 말하면, 바꿔 말하면  
+explicit : 명쾌한, 명확한, 분명한  
 by precedence : 우선순위  
 abstraction : 관념  
 externalized : 외부  
