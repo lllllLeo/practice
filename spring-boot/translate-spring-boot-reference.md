@@ -917,13 +917,157 @@ public class AcmeProperties {
 	}
 }
 ```
+
+이전의 POJO는 다음의 속성을 정의한다.
+
+- `acme.enabled`, 기본적으로 `false` 의 값을 사용한다.
+- `acme.remote-address`, `String`으로 부터 강요받는 타입을 사용한다.
+- `acme.security.username`, 속성의 이름으로 결정되는 중첩된 "security" 객체를 사용한다 . 특히, 반환 타입은 거기서 모두 사용되지 않고 `SecurityProperties` 빈을 가질 수 있다..
+- `acme.security.password`.
+- `acme.security.roles`, `String`의 콜렉션을 사용한다.
+
+> Getters and setters are usually mandatory, since binding is through standard Java Beans property descriptors, just like in Spring MVC. A setter may be omitted in the following cases:
+
+> - Maps, as long as they are initialized, need a getter but not necessarily a setter, since they can be mutated by the binder.
+> - Collections and arrays can be accessed either through an index (typically with YAML) or by using a single comma-separated value (properties). In the latter case, a setter is mandatory. We recommend to always add a setter for such types. If you initialize a collection, make sure it is not immutable (as in the preceding example).
+> - If nested POJO properties are initialized (like the Security field in the preceding example), a setter is not required. If you want the binder to create the instance on the fly by using its default constructor, you need a setter.
+> Some people use Project Lombok to add getters and setters automatically. Make sure that Lombok does not generate any particular constructor for such a type, as it is used automatically by the container to instantiate the object.  
+
+> Finally, only standard Java Bean properties are considered and binding on static properties is not supported.
+
+> [`@Value`와 `@ConfigurationProperties`의 차이점](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-external-config-vs-value)을 봐라
+
+다음으로 보여지는 예와 같이, `@EnableConfigurationProperties` 어노테이션에서 등록하기 위해서 클래스 속성을 나열할 필요가 있다.
+
+```java
+@Configuration
+@EnableConfigurationProperties(AcmeProperties.class)
+public class MyConfiguration {
+}
+```
+
+> When the @ConfigurationProperties bean is registered that way, the bean has a conventional name: <prefix>-<fqn>, where <prefix> is the environment key prefix specified in the @ConfigurationProperties annotation and <fqn> is the fully qualified name of the bean. If the annotation does not provide any prefix, only the fully qualified name of the bean is used.
+
+The bean name in the example above is acme-com.example.AcmeProperties.
+
+The preceding configuration creates a regular bean for AcmeProperties. We recommend that @ConfigurationProperties only deal with the environment and, in particular, does not inject other beans from the context. Keep in mind that the @EnableConfigurationProperties annotation is also automatically applied to your project so that any existing bean annotated with @ConfigurationProperties is configured from the Environment. Instead of annotating MyConfiguration with @EnableConfigurationProperties(AcmeProperties.class), you could make AcmeProperties a bean, as shown in the following example:
+
+```java
+@Component
+@ConfigurationProperties(prefix="acme")
+public class AcmeProperties {
+
+	// ... see the preceding example
+
+}
+```
+This style of configuration works particularly well with the SpringApplication external YAML configuration, as shown in the following example:
+
+```yml
+# application.yml
+
+acme:
+	remote-address: 192.168.1.1
+	security:
+		username: admin
+		roles:
+		  - USER
+		  - ADMIN
+
+# additional configuration as required
+```
+To work with @ConfigurationProperties beans, you can inject them in the same way as any other bean, as shown in the following example:
+
+```java
+@Service
+public class MyService {
+
+	private final AcmeProperties properties;
+
+	@Autowired
+	public MyService(AcmeProperties properties) {
+	    this.properties = properties;
+	}
+
+ 	//...
+
+	@PostConstruct
+	public void openConnection() {
+		Server server = new Server(this.properties.getRemoteAddress());
+		// ...
+	}
+
+}
+```
+> Using @ConfigurationProperties also lets you generate metadata files that can be used by IDEs to offer auto-completion for your own keys. See the Appendix B, Configuration Metadata appendix for details.
+
 ## 24.8.1 써드파티 설정
 
+클래스에 어노테이트를 하기 위해 `@ConfigurationProperties`를 사용하는 것 뿐만아니라, 퍼블릭 `@Bean` 메소드에서도 사용할 수 있다. 이렇게 하면 제어의 외부인 써드파티 컴포넌트에 속성을 바인딩하는 것을 원할 떄 특히 유용할 수 있다.
+
+다음과 같이, `Environment` 속성에서 빈을 설정하려면, 빈을 등록하는 곳에 `@ConfigurationProperties`를 추가해라.
+
+```java
+@ConfigurationProperties(prefix = "another")
+@Bean
+public AnotherComponent anotherComponent() {
+	...
+}
+```
+
+`another` 접두어를 사용하여 정의된 속성은 이전의 `AcmeProperties` 예제와 [유사한/비슷한] 방식으로 `AnotherComponent` 빈에 매핑된다.
+
+## 24.8.2 유연한 바인딩
+
+스프링부트는 `@ConfigurationProperties`빈에서 `Environment` 바인딩에 대한 유연한 규칙을 사용한다. 그래서 `Environment` 속성 이름과 빈 속성 이름이 정확하게 일치할 필요가 없다. 유용한 공통의 예는 대시(`-`)로 구분된 환경 속성(예, `context-path`는 `contextPath`에 바인드한다.) 과 대문자로 쓰는 환경 속성(예, `PORT`가 `port`에 바인드)을 포함한다. 
+
+예를 들어서, 다음의 `@ConfigurationProperties` 클래스를 고려해라.
+
+```java
+@ConfigurationProperties(prefix="acme.my-project.person")
+public class OwnerProperties {
+
+	private String firstName;
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+}
+```
+
+앞선 예에서, 다음의 속성 이름은 모두 사용할 수 있다.
+
+
+  ##### 테이블 24.1 유연한 바인딩
+  속성 | 뜻
+  --- | ---
+  `acme.my-project.person.first-name` | Kebab case, `.properties`와 `.yml`파일에서 사용하는 것을 추천한다.
+  `acme.myProject.person.firstName` | 표준 camel 케이스 구문
+  `acme.my_project.person.first_name` | 밑줄 표기법, `.properties`와 `.yml`파일에서 사용하는 대안의 포맷
+  `ACME_MYPROJECT_PERSON_FIRSTNAME` | 대문자 형식, 시스템 변수에서 사용할 때 추천.
+
+  > 어노테이션에 대한 `prefix` 값은 kebab case이여야 한다.(`acme.my-project.person`처럼 소문자형식과 `-`로 분리된.)
+
+  ##### 테이블 24.2 속성 소스에 대한 유연한 바인딩 규칙 
 
 --- 
 
 ##### 단어  
 
+per : ~에 대하여, 각, 마다, 당
+Underscore notation : 밑줄 표기법  
+capitalized : 대문자로 시작하다, 대문자로 쓰다.  
+As well as -ing : ~하는 것 뿐만 아니라  
+In particular : 특히, 특별히, 특별한  
+be coerced from : ~로 부터 강요받다  
+  - coerce : 강압하다, 강제하다, 강요하다  
+
+cumbersome : 다루기 힘든, 복잡하고 느린, 번거로운, 길고 복잡한  
 whether or not : 여하튼, 어쨌든, 여하간, 반드시, 어떻게 됐든, 어떻든지  
 In other words : 다시 말하면, 다시 말해서, 즉, 다르게 말하면, 바꿔 말하면  
 explicit : 명쾌한, 명확한, 분명한  
