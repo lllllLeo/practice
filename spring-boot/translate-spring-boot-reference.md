@@ -1054,12 +1054,49 @@ public class OwnerProperties {
   > 어노테이션에 대한 `prefix` 값은 kebab case이여야 한다.(`acme.my-project.person`처럼 소문자형식과 `-`로 분리된.)
 
   ##### 테이블 24.2 속성 소스에 대한 유연한 바인딩 규칙 
+  속성 소스 | Simple | List
+  --- | --- | ---
+  Properties 파일 | Camel case, kebab case, 또는 underscore 표기법 | `[ ]`를 사용한 표준 목록 구문이나 콤마로 나눠진 값
+  YAML 파일 | Camel case, kebab case, or underscore 표기법 | 표준 YAML 나열 구문이나 콤마로 나눠진 값
+  환경 변수 | 구분자로서 밑줄과 사용한 Upper case. `_`는 속성 이름에서 사용하면 안된다.| `MY_ACME_1_OTHER = my.acme[1].other` 같은 밑줄로 둘러쌓인 숫자 값, 
+  시스템 속성 | Camel case, kebab case, or underscore 표기법 | 표준 목록 구문을 사용한 `[ ]` 또는 콤마로 나눠진 값
+
+  > 가능하면, 속성은 lower-case kebab 포맷으로 저장하는 것을 추천한다. `my.property-name=acme`처럼.
+
+`Map` 속성에 바인딩할 때, 만약 `key`를 글자와 숫자를 lowercase로 적거나 `-`를 [포함한다면/포함되어있는경우], 원래의 값을 보존하도록 하려면 괄호 표기법을 사용해라. key가 `[]`로 둘러쌓여 있지 않다면, 글자와 숫자가 아닌 문자나 `-`가 제거된다. 예를들어서, `Map`에 다음의 속성을 바인딩하는것을 고려해라.
+
+```
+acme:
+  map:
+    "[/key1]": value1
+    "[/key2]": value2
+    /key3: value3
+```
+
+위의 속성은 `Map`에 map에 key들로 `/key1`, `/key2`와 `key3`가 바인딩 될 것이다.
+
+## 24.8.3 복잡한 타입 합치기 (YAML)
+## 24.8.4 속성 변환
+
+스프링 부트는 `@ConfigurationProperties` 빈들에 바인드 될 때 외부 어플리케이션 속성을 올바른 타입으로 강요하도록 시도한다. 만약 사용자 정의 타입 변형이 필요하면, `ConversionService` 빈(`conversionService`의 이름으로 된 빈)을 제공하거나, 속성 편집(`CustomEditorConfigurer`빈을 통해서)을 커스텀하거나 `Converters`(`@ConfigurationPropertiesBinding`같이 어노테이트 된 빈 정의)를 커스텀을 할 수 있다.
+
+> As this bean is requested very early during the application lifecycle, make sure to limit the dependencies that your ConversionService is using. Typically, any dependency that you require may not be fully initialized at creation time. You may want to rename your custom ConversionService if it is not required for configuration keys coercion and only rely on custom converters qualified with @ConfigurationPropertiesBinding. 
+
+### 지속기간 변환하기
+스프링 부트는 지속기간 표현에 대한 헌신적인 지원을 한다. 만약 `java.time.Duration`속성을 드러내면, 어플리케이션 속성에 있는 다음의 포맷이 사용가능하다.
 
 --- 
 
 ##### 단어  
 
-per : ~에 대하여, 각, 마다, 당
+ so that : ~하도록 하다
+preserved : 보존된  
+bracket : 괄호  
+alpha-numeric : 글자와 숫자를 쓴  
+when possible : 가능하면, 가능하다면, 가능한  
+delimiter : 구분자  
+Numeric : 수  
+per : ~에 대하여, 각, 마다, 당  
 Underscore notation : 밑줄 표기법  
 capitalized : 대문자로 시작하다, 대문자로 쓰다.  
 As well as -ing : ~하는 것 뿐만 아니라  
