@@ -1085,11 +1085,175 @@ acme:
 ### 지속기간 변환하기
 스프링 부트는 지속기간 표현에 대한 헌신적인 지원을 한다. 만약 `java.time.Duration`속성을 드러내면, 어플리케이션 속성에 있는 다음의 포맷이 사용가능하다.
 
+- `long`(밀리세컨즈 `@DurationUnit`가 지정되지 않은 경우에 기본 단위로 밀리초를 사용한다.)
+- `java.time.Duration`이 사용된 표준 ISO-8601 포맷
+- 값과 단위로 연결된 더 읽기 쉬운 포맷 (`10s`는 10초라는 뜻)
+
+다음의 예를 고려해봐라
+```java
+@ConfigurationProperties("app.system")
+public class AppSystemProperties {
+
+	@DurationUnit(ChronoUnit.SECONDS)
+	private Duration sessionTimeout = Duration.ofSeconds(30);
+
+	private Duration readTimeout = Duration.ofMillis(1000);
+
+	public Duration getSessionTimeout() {
+		return this.sessionTimeout;
+	}
+
+	public void setSessionTimeout(Duration sessionTimeout) {
+		this.sessionTimeout = sessionTimeout;
+	}
+
+	public Duration getReadTimeout() {
+		return this.readTimeout;
+	}
+
+	public void setReadTimeout(Duration readTimeout) {
+		this.readTimeout = readTimeout;
+	}
+
+}
+```
+30초의 세션 타임아웃을 정하기 위해서, `30`, `PT30S` 그리고 `30s`는 모두 [똑같다./동등하다.] 다음 형식: `500`, `PT0.5S`그리고 `500ms`으로 500ms의 읽기 타임아웃을 지정할 수 있다.
+
+지원되는 단위의 모든것들을 사용할 수 있다.
+
+- `ns` for nanoseconds
+- `us` for microseconds
+- `ms` for milliseconds
+- `s` for seconds
+- `m` for minutes
+- `h` for hours
+- `d` for days
+
+기본 단위는 밀리초와 위의 샘플에 나와있는 것처럼 `@DurationUnit`을 사용해서 재정의할 수 있다.
+
+> 지속기간을 표현하기위해 `Long` 간단히 사용하는 이전의 버전에서 업그레이드를 하는 경우, `Duration`으로 전환할 때 밀리초가 아닌 경우에는 반드시 단위를 정의해라.(`@DurationUnit`을 사용해서) . 이렇게 하면 많은 풍부한 포맷을 지원하는 동안에 투명한 업그레이드 경로를 얻는다.
+
+### 데이터 사이즈 변환하기
+
+스프링 프레임워크는 바이트로 사이즈를 표현하는것을 허용하는 `DataSize` 값 타입을 가지고 있다. `DataSize` 속성을 드러내면, 다음의 어플리케이션 속성에 있는 포맷은 사용가능하다.:
+
+- 규칙적인 `long` 표현(`@DataSizeUnit`으로 지정되어 있지않는 한 기본적으로 bytes를 사용한다.)
+- 값과 단위로 연결된 더 읽기 쉬운 포맷(예,`10MB`는 10megabytes라는 뜻)
+
+다음의 예를 고려해봐라
+
+```java
+@ConfigurationProperties("app.io")
+public class AppIoProperties {
+
+	@DataSizeUnit(DataUnit.MEGABYTES)
+	private DataSize bufferSize = DataSize.ofMegabytes(2);
+
+	private DataSize sizeThreshold = DataSize.ofBytes(512);
+
+	public DataSize getBufferSize() {
+		return this.bufferSize;
+	}
+
+	public void setBufferSize(DataSize bufferSize) {
+		this.bufferSize = bufferSize;
+	}
+
+	public DataSize getSizeThreshold() {
+		return this.sizeThreshold;
+	}
+
+	public void setSizeThreshold(DataSize sizeThreshold) {
+		this.sizeThreshold = sizeThreshold;
+	}
+
+}
+```
+
+10메가바이트의 버퍼사이즈를 명시하려면, `10` 과 `10MB`과 동일하게 하면 된다. 256바이트의 한계 사이즈는 `256`, `256B`처럼 지정할 수 있다.
+
+단위를 지원하는 모든 것을 사용할 수도 있다. 
+- `B` for bytes
+- `KB` for kilobytes
+- `MB` for megabytes
+- `GB` for gigabytes
+- `TB` for terabytes
+
+기본 단위는 바이트이고 위의 예제에 삽입된 것처럼 `@DataSizeUnit`를 사용하여 재정의할 수 있다.
+
+> `Long`을 사용하여 간단하게 사이즈를 표현하는 이전의 버전에서 업그레이드를 하는경우, `DataSize`로 전환할 때 바이트가 아닌 경우에는 반드시 단위를 사용해라. (`@DataSizeUnit`을 사용) 이렇게하면 풍부한 포맷을 지원하는동안 에 투명한 업그레이드 경로를 얻는다.
+
+## 24.8.5 @ConfigurationProperties 검증
+
+스프링 부트는 스프링의 `@Validated` 어노테이션이을 사용할 때 `@ConfigurationProperties` 클래스를 검증하는것을 시도한다. 구성 클래스에 제한 어노테이션인 JSR-303 `javax.validation`을 직접적으로 사용할 수 있다. 그렇게 하기 위해서, 다음에 보여지는 예제와 같이 JSR-303에 부응하는 구현체가 클래스패스에 있는지 확인하고 그러고나서 제약 어노테이션을 필드에 추가해야한다.    
+
+```java
+@ConfigurationProperties(prefix="acme")
+@Validated
+public class AcmeProperties {
+
+	@NotNull
+	private InetAddress remoteAddress;
+
+	// ... getters and setters
+
+}
+```
+
+> `@Validated`를 사용하여 설정 속성을 생성하는 `@Bean`메소드를 사용하여 검증을 트리거할 수도 있다. 중첩된 속성도 바운드 될 때 검증되지만 `@Valid`처럼 관련 필드를 어노테이트하는것도 좋은 방법이다. 중첩된 속성을 찾지 못하더라도 검증이 트리거되는것을 보장한다. 다음의 예제는 이전의 `AcmeProperties`예제를 기반으로 한다.
+
+```java
+@ConfigurationProperties(prefix="acme")
+@Validated
+public class AcmeProperties {
+
+	@NotNull
+	private InetAddress remoteAddress;
+
+	@Valid
+	private final Security security = new Security();
+
+	// ... getters and setters
+
+	public static class Security {
+
+		@NotEmpty
+		public String username;
+
+		// ... getters and setters
+
+	}
+
+}
+```
+
+`configurationPropertiesValidator`를 호출한 빈 정의를 생성하여 사용자정의 스프링 `Validator`를 추가할 수도 있다. `@Bean` 메소드는 `static`으로 선언되어야 한다. 설정 파일 검증자는 어플리케이션의 생명주기에서 가장 빨리 생성되고 static같이 `@Bean` 메소드를 선언한다. static으로 `@Bean`메소드를 선언하면 빈이 `@Configuration`클래스를 인스턴스화 할 필요없이 빈이 생성된다. 이렇게 하면 초기 인스턴스로 발생할 수 있는 문제들을 피할 수 있다. 이 [속성 검증 예제](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-samples/spring-boot-sample-property-validation)는 설정 방법을 보여준다.
+
+> `spring-boot-actuator` 모듈은 모든 `@ConfigurationProperties` 빈을 드러내는 끝점을 포함한다. 웹브라우저에 `/actuator/configprops`를 하거나 동일한 JMX 끝점을 사용해라. 자세한 사항들은 ["생산 준비 기능"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints) 에서 봐라. 
+
+
+## 24.8.6 @ConfigurationProperties vs. @Value
+
+
 --- 
 
 ##### 단어  
 
- so that : ~하도록 하다
+set things up : 세팅하다, 세팅하자
+instantiate : (학설 등을) 예를 들어 설명하다, 예시하다
+build on sth : sth을 기반으로 하다
+even if : ~에도 불구하고[~이긴 하지만], ...라 하더라도  
+it’s good practice to ~ : ~하는것은 좋은 방법이다. ~하는 것이 좋다.  
+compliant : 순응하는, 따르는, 준수하는, 부응하는  
+illustrated : 삽화된  
+threshold : 한계점  
+representation : 묘사  
+richer : 풍부한  
+Doing so ~ : 이렇게 하면, 그렇게 하면  
+alongside : ~옆에, 나란히, ~화 함께, ~와 동시에  
+make sure ~ : 반드시 (~하도록) 하다  
+equivalent : 동등한, 맞먹는  
+so that : ~하도록 하다  
 preserved : 보존된  
 bracket : 괄호  
 alpha-numeric : 글자와 숫자를 쓴  
