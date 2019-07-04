@@ -569,6 +569,39 @@ Logger를 Log4j2로 변경하기 (기본적으로는 logback을 쓴다)
 </dependency>
 ```
 
+# 4-11 테스트 (springtestdemo)
+
+pom.xml에 spring-boot-starter-test 가 있어야함.
+
+@RunWith(SpringRunner.class)랑 같이 써야 함.  
+```java
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
+```
+=> Servlet 컨테이너를 테스트용으로 띄우지않고 MOCKUP을 한.. Servlet을 mocking을 한게 뜬다. DispacherServlet이 만들어지긴 하는데 MOCKUP이 되어서 DispacherServlet에 요청을 보내는 것처럼 비슷하게 실행을 할 수 있는데 이때 MOCKUP이된 Servlet에 interaction을 하려면 MOCK MVC라는 클라이언트를 사용해야한다. => `@AutoConfigureMockMvc`
+
+Bean 설정 파일은 설정을 안해주나? 알아서 찾습니다. (`@SpringBootApplication`)
+webEnvironment
+- MOCK : mock servlet environment : 내장 톰캣 구동 안 함.
+- RANDOM_PORT, DEFINED_PORT : 내장 톰캣 사용 함. (DEFINED는 정의된 포트 사용, RANDOM_PORT 추천)
+- NONE : 서블릿 환경 제공 안 함.
+
+> 서블릿기반 스프링 mvc는 쓰지만 REST call 할 게 많으면 실제로 Asynchronous가 이득되는게 많으니까 쓰는게 좋다.
+
+`@SpringBootTest`는 `@SpringBootApplication`(main application)을 찾아서 여기서부터 시작하는 모든 bean스캔을 시작한다. 모든 것을 Test용 application-context를 만들면서 모든 Bean들을 등록한다. 그 다음에 MockBean을 찾아서 Mock으로 교체를 해주고 그리고 이 MockBean으로 교체된 MockBean은 test마다 reset된다.
+
+나는 수많은 Bean들이 등록되는게 싫다 나는 테스트하고싶은것만 등록을 하고싶다 
+=> 슬라이스 테스트
+- 레이어 별로 잘라서 테스트하고 싶을 때
+- @JsonTest : 우리가 가지고 있는 모델이 JSON으로 나갈 때 어떤 형태로 나갈것인지 test함
+- @WebMvcTest : 
+- @WebFluxTest
+- @DataJpaTest : @Repository만 등록이 됨
+- ...
+--WebMvc는 항상 @MockMvc로 테스트 해야한다. 만들 때 자동완성 안되서 불편함
+
+@SpringBootTest : 모든 Bean 등록하니까 다~~~통합해서 Test함
+슬라이싱 테스트 : 각 레이어 별로 잘라서 테스트하기 때문에 가벼움
+
 
 # 4-13 Spring-Boot-Devtools
 
