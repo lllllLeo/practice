@@ -1234,14 +1234,68 @@ public class AcmeProperties {
 
 ## 24.8.6 @ConfigurationProperties vs. @Value
 
+`@Value` 어노테이션은 코어 컨테이너 특징이다. 그리고 설정 속성 타입세이프로서 동일한 기능을 제공하지 않는다. 다음은 `@ConfigurationProperties`와 `@Value`에 대해서 지원하는 특징을 요약한 테이블이다.
+
+특징 | `@ConfigurationProperties` | `@Value`
+--- | --- | ---
+유연한 바인딩 | O | X
+메타 데이터 지원 | O | X
+`SpEL` 평가 | X | O
+
+컴포넌트에 대해서 설정 키의 구성을 정의한다면, `@ConfigurationProperties`를 사용하여 어노테이트한 POJO에 그룹화 하는 것을 추천한다.
+
+마지막으로, `@Value`안에 `SpEL` 표현식을 사용할 수 있는 동안, 이런 표현식은 [어플리케이션 속성 파일](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-external-config-application-property-files)에서 처리되지 않는다.
+
+## 25. 프로파일
+스프링 프로파일은 어플리케이션 설정의 부분을 분리하는 방법과 확실한 환경에서만 가능하도록 만들어주는 방법을 제공한다. 다음에 보여지는 예제에서, `@Component`나 `@Configuration`은 프로파일을 불러올 때 제한하는 `@Profile`를 사용하여 표시할 수 있다.
+
+```java
+@Configuration
+@Profile("production")
+public class ProductionConfiguration {
+
+	// ...
+
+}
+```
+프로파일을 실행하는 것을 지정하기 위해서 `spring.profiles.active` `Environment` 속성을 사용할 수 있다. 이 챕터에 앞서 설명한 방법들에서 속성을 지정할 수 있다. 예를 들어, 다음에 보여지는 예와 같이, `application.properties`에 속성을 포함할 수 있다.
+
+```
+spring.profiles.active=dev,hsqldb
+```
+
+다음의 스위치를 사용해서 커맨드 라인에서도 속성을 지정할 수 있다.: `--spring.profiles.active=dev,hsqldb.`
+
+## 25.1 활성 프로파일 추가하기
+`spring.profiles.active` 속성은 다른 속성들로서 동일한 순서의 규칙을 따른다: 가장 높은 `PropertySource`가 우선이다.(가장 높은 우선순위이다.) `application.properties`에 활성 프로파일을 정의할 수 있고, 커맨드 라인 스위치를 사용해서 이것들을 대체할 수 있다는 뜻이다. 
+
+때때로, 활성 프로파일을 이것을 대체하는것 보다는 프로파일-specific 속성에 활성 프로파일을 추가하는 것이 유용하다. `spring.profiles.include` 속성은 활성 프로파일을 추가하는것을 무조건 사용할 수 있다.    `SpringApplication` 진입점 또한 추가적인 프로파일 설정에 대한 Java API를 갖고 있다. [SpringApplication](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/SpringApplication.html)안에 있는 `setAdditionalProfiles()` 메소드를 참고해라.
+
+예를 들어서, 스위치를 사용함으로써 다음의 속성을 사용하여 어플리케이션을 실행할 때, `--spring.profiles.active=prod`, `proddb`와 `prodmq` 프로파일도 실행된다.
+
+```
+---
+my.property: fromyamlfile
+---
+spring.profiles: prod
+spring.profiles.include:
+  - proddb
+  - prodmq
+```
+
+> `spring.profiles` 속성은 YAML 문서에 정의되어 특정한 문서가 언제 설정에 포함되었는지를 확인할 수 있음을 기억해라. 자세한 사항들은 [77.7 "환경에 의존하고있는 설정 바꾸기"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-change-configuration-depending-on-the-environment)을 참고해라.
 
 --- 
 
 ##### 단어  
 
-set things up : 세팅하다, 세팅하자
-instantiate : (학설 등을) 예를 들어 설명하다, 예시하다
-build on sth : sth을 기반으로 하다
+that is : 즉, 말하자면
+entry point : 진입점  
+unconditionally : 무조건적으로, 절대적으로  
+segregate : 분리하다, 구분하다, 떼어놓다.  
+set things up : 세팅하다, 세팅하자  
+instantiate : (학설 등을) 예를 들어 설명하다, 예시하다  
+build on sth : sth을 기반으로 하다  
 even if : ~에도 불구하고[~이긴 하지만], ...라 하더라도  
 it’s good practice to ~ : ~하는것은 좋은 방법이다. ~하는 것이 좋다.  
 compliant : 순응하는, 따르는, 준수하는, 부응하는  
