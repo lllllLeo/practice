@@ -1285,11 +1285,80 @@ spring.profiles.include:
 
 > `spring.profiles` 속성은 YAML 문서에 정의되어 특정한 문서가 언제 설정에 포함되었는지를 확인할 수 있음을 기억해라. 자세한 사항들은 [77.7 "환경에 의존하고있는 설정 바꾸기"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-change-configuration-depending-on-the-environment)을 참고해라.
 
+## 25.2 프로그래밍방식으로 프로파일 세팅하기
+
+어플리케이션을 구동하기 전에 `SpringApplication.setAdditionalProfiles(...)`를 호출하여 프로그래밍 방식으로 실행 프로파일을 설정할 수 있다. 스프링의 `ConfigurableEnvironment` 인터페이스를 사용함으로써 프로파일을 실행하는것 또한 가능하다.
+
+## 25.3 프로파일-specific 구성 파일
+
+`application.properties`(또는 `application.yml`)와 참조된 파일 두 개 모두의 프로파일-specific 변형은 `@ConfigurationProperties`를 통해서 파일로 [고려되고/간주되고] 불러와진다. 자세한 사항은 [24.4 "프로파일-specific 속성"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-external-config-profile-specific-properties)을 참조해라. 
+
+## 26. 로깅
+
+스프링 부트는 모든 내부 로깅에 대해 Commons Logging을 사용하지만 기본 로그 구현은 그대로 둔다. 기본 설정에 Java Util Logging, Log4J2 그리고 Logback이 제공된다. 각각의 경우에, 로거는 선택적인 파일을 사용한 콘솔 출력을 사용하기 위해 미리 설정도 가능하다.
+
+기본적으로, "스타터"를 사용하는 경우에는 logging에 대해서 Logback 이 사용된다. Java Util Logging, Commons Logging, Log4J 또는 SLF4J를 사용하는 의존 라이브러리가 모두 올바르게 작동하도록 하는 적절한 Logback 라우팅도 포함한다.
+
+> Java에 대해 사용가능한 많은 로깅 프레임워크가 있다. 위의 목록이 혼란스러울 것 같아도 걱정하지마라. 일반적으로, 로깅 의존성을 바꿀 필요는 없고 스프링 부트의 기본값으로 잘 작동한다.
+
+## 26.1 로그 포맷
+
+다음의 예제는 스프링부트에서의 기본 로그 출력과 유사하다.
+
+```
+2014-03-05 10:57:51.112  INFO 45469 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/7.0.52
+2014-03-05 10:57:51.253  INFO 45469 --- [ost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2014-03-05 10:57:51.253  INFO 45469 --- [ost-startStop-1] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1358 ms
+2014-03-05 10:57:51.698  INFO 45469 --- [ost-startStop-1] o.s.b.c.e.ServletRegistrationBean        : Mapping servlet: 'dispatcherServlet' to [/]
+2014-03-05 10:57:51.702  INFO 45469 --- [ost-startStop-1] o.s.b.c.embedded.FilterRegistrationBean  : Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+```
+
+다음의 아이템이 출력된다:
+- 날짜와 시간 : 정밀한 밀리세컨드와 쉽게 분류할 수 있음
+- 로그 레벨 : `ERROR`, `WARN`, `INFO`, `DEBUG`, 또는 `TRACE`
+- 프로세스 ID
+- 실제 로그 메시지의 시작을 구별하는 `---` 분리자
+- 쓰레드 이름 : 네모 괄호([])로 에워싸여있다.(콘솔 출력을 위해 잘릴 수도 있다.)
+- 로거 이름 : 보통 소스 클래스 이름 (자주 생략됨)
+- 로그 메시지
+
+> Logback에는 `FATAL`레벨이 없다. `ERROR`로 매핑된다.
+
+## 26.2 콘솔 출력
+
+기본 로그 설정은 메시지가 쓰일 때 콘솔에 메시지를 출력(echoes)한다. 기본적으로 `ERROR`-레벨, `WARN`-레벨 그리고 `INFO`-레벨 메시지가 로그된다. `--debug` 플래그를 사용하여 어플리케이션을 사용하면   "debug" 모드를 활성화할 수도 있다.
+
+`$ java -jar myapp.jar --debug`
+
+> `application.properties`에서 `debug=true`로 지정할 수도 있다.
+
+debug 모드가 활성화 될 때, 코어 로거의 선택(임베디드 컨테이너, Hibernate, 스프링 부트)이 더 많은 정보를 출력하기 위해 설정된다. debug 모드를 활성화하는 것은 어플리케이션에 `DEBUG`레벨을 사용하여 모든 메시지를 로그하도록 설정하지는 않는다.
+
+대신에, `--trace` 플래그(또는 `application.properties`에서 `trace=true`)`를 사용해서 어플리케이션을 실행하면 "trace" 모드를 활성화 할 수 있다. 이렇게 하면 코어 로거의 선택에 대한 trace 로깅이 활성화 된다. (임베디드 컨테이너, Hibernate 스키마 생성 그리고 전체 스프링 포트폴리오(?))
+
+## 26.2.1 컬러 코드 출력
+## 26.3 파일 출력
+
+
 --- 
 
 ##### 단어  
 
-that is : 즉, 말하자면
+as : (자격, 기능 등이) ~로(서) -> 때
+  - as a child : 어렸을 때
+
+
+truncate : 자르다, 줄이다, 짧게 하다
+abbreviated : 단축된, 생략된, 짧게 한  
+enclosed : 에워싸인, 동봉된  
+sortable : 분류할 수 있는, 선별할 수 있는  
+precision : 정밀, 정확(성)  
+just fine : 잘  
+Appropriate : 적절한  
+In each case : 각각의 경우에  
+leave : 그대로 두다  
+underlying : 기본, 근원적인, 근본적인, 밑에 있는  
+that is : 즉, 말하자면  
 entry point : 진입점  
 unconditionally : 무조건적으로, 절대적으로  
 segregate : 분리하다, 구분하다, 떼어놓다.  
@@ -1336,8 +1405,8 @@ discussed earlier : 앞에서 논의한/설명한/언급한
 whereas : 반면[에], 그렇지만  
 take complete control : 완전히 제어하다.  
 otherwise : 그렇지 않으면, 그 외에는  
-determine : 알아내다, 밝히다, 결정하다
-fairly : 꽤, 상당히
+determine : 알아내다, 밝히다, 결정하다, 확인하다  
+fairly : 꽤, 상당히  
 on your behalf : (사용자) ~대신  
 Internally : 내부로, 내면적으로, 심적으로  
 indicate : 나타내다, 보여주다.  
