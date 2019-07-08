@@ -591,7 +591,7 @@ public static void main(String[] args) {
 
 구성 옵션의 전체 목록은 [`SpringApplication` Javadoc](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/SpringApplication.html)을 보세요
 
-## 23.4 Fluent Builder API
+### 23.4 Fluent Builder API
 
 만약 `ApplicationContext` 계층 (parent/child 관계를 사용하는 복합적인 구문)을 만들어야하거나 "fluent" 빌더 API를 사용하는것을 선호한다면, `SpringApplicationBuilder`를 사용해라.
 
@@ -607,7 +607,7 @@ new SpringApplicationBuilder()
 
 > `ApplicationContext` 계층 구조를 만들 때 몇가지 제한이 있다. 예를 들어서, 웹 컴포넌트는 반드시 child 컨텍스트 안에 포함되어 있어야 하고, 같은 `Environment`은 parent와 child 컨텍스트 양쪽에서 사용 되어야 한다. 더 자세한 것들은 [`SpringApplicationBuilder` Javadoc](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/builder/SpringApplicationBuilder.html)에서 볼 수 있다.
 
-## 23.5 어플리케이션 이벤트와 리스너
+### 23.5 어플리케이션 이벤트와 리스너
 
 보통의 스프링 프레임워크 이벤트들에 더하여, 추가적인 몇몇의 어플리케이션 이벤트인 `ContextRefreshedEvent`, `SpringApplication`를 전송한다.
 
@@ -630,7 +630,7 @@ new SpringApplicationBuilder()
 
 To allow your listener to distinguish between an event for its context and an event for a descendant context, it should request that its application context is injected and then compare the injected context with the context of the event. The context can be injected by implementing ApplicationContextAware or, if the listener is a bean, by using @Autowired.
 
-## 23.6 웹 환경
+### 23.6 웹 환경
 `SpringApplication`는 사용자 대신 `ApplicationContext`의 올바른 타입을 생성하려고 시도한다.  `WebApplicationType`을 알아내기 위해 사용되는 알고리즘은 꽤 간단하다.
 
 - 스프링 MVC가 있는 경우, `AnnotationConfigServletWebServerApplicationContext`가 사용된다.
@@ -666,7 +666,7 @@ public class MyBean {
 
 > 스프링 부트는 또한 스프링 `Environment`에서 `CommandLinePropertySource` 또한 등록한다. 이것은 `@Value` 어노테이션을 사용함으로써 하나의 어플리케이션 인자를 주입하는것도 가능하다.
 
-## 23.8 어플리케이션 실행기나 커맨드라인 실행기 사용하기
+### 23.8 어플리케이션 실행기나 커맨드라인 실행기 사용하기
 
 `SpringApplication`이 시작되고 언젠가 특정한 코드를 실행하려면, `ApplicationRunner`나 `CommandLineRunner` 인터페이스를 구현해라. 두개의 인터페이스는 같은 방식으로 작동하고 하나의 `run` 메소드를 제공한다. 이것은 `SpringApplication.run(...)`이 완료되기 바로 직전에 호출된다.
 
@@ -687,7 +687,7 @@ public class MyBean implements CommandLineRunner {
 ```
 특정한 순서로 호출되어야 하는 몇몇의 `CommandLineRunner`이나 `ApplicationRunner` 빈들이 정의된 경우에 `org.springframework.core.Ordered` 인터페이스나 `org.springframework.core.annotation.Order` 어노테이션을 사용하여 추가적으로 구현할 수 있다.
 
-## 23.9 어플리케이션 끄기
+### 23.9 어플리케이션 끄기
 각각의 `SpringApplication`은 종료시에 `ApplicationContext`가 정상적이게 닫히는 것을 보장하는 JVM을 사용하여 셧다운 훅을 등록한다. 모든 표준 스프링 생명주기는 콜백(`DisposableBean` 인터페이스나  `@PreDestory`어노테이션과 같은)이 사용할 수 있다. 
 
 게다가, 만약 `SpringApplication.exit()`가 호출될때 특정 종료 코드를 리턴 받길 원한다면 빈들은 `org.springframework.boot.ExitCodeGenerator` 인터페이스를 구현해야 한다. 다음에 보여지는 예제에서 이 종료 코드는 상태 코드같은 것을 반환받기 위해서`System.exit()`에 전달할수 있다.
@@ -710,7 +710,7 @@ public class ExitCodeApplication {
 
 또한,`ExitCodeGenerator`인터페이스는 예외에 의해서 구현될 수도 있을 것이다. 예외와 맞닥뜨릴때, 스프링 부트는 구현된 `getExitCode()`로 제공된 종료 코드를 반환한다.
 
-## 23.10 관리자 특징
+### 23.10 관리자 특징
 `spring.application.admin.enabled` 속성에 명시하면 어플리케이션에 대한 관리와 관련된 기능을 활성화하는것이 가능하다. 이는 `MBeanServer` 플랫폼에 `SpringApplicationAdminMXBean`을 드러낸다. 이 기능으로 스프링 부트 어플리케이션을 원격으로 관리할 수 있다. 이 기능은 다른 서비스 랩퍼 구현에 대한 것에도 유용할 수 있다.
 
 > 어플리케이션을 실행하는데 어떤 HTTP 포트를 사용하는지 알고 싶으면, `local.server.port`의 키를 사용하여 속성을 얻을 수 있다.
@@ -763,7 +763,7 @@ public class MyBean {
 
 > 
 
-## 24.1 랜덤 값 설정하기
+### 24.1 랜덤 값 설정하기
 
 `RandomValuePropertySource`는 랜덤 값을 주입하는것에 유용하다. (예를 들어서, 테스트 케이스나 암호) 다음과 같이 Integer, long, uuid 또는 문자열을 만들 수 있다.
 
@@ -778,13 +778,13 @@ my.number.in.range=${random.int[1024,65536]}
 
 `random.int*`구문은 `OPEN value (,max) CLOSE`이다. 여기서 `OPEN,CLOSE`은 문자이고 `value,max`은 정수다. 만약 `max`가 제공된다면, `value` 최소값이고 `max`는 최대값이다.
 
-## 24.2 커맨드-라인 속성 접근하기
+### 24.2 커맨드-라인 속성 접근하기
 
 기본적으로, `SpringApplication`은 커맨드-라인 옵션 인자(인자를 시작할 떄 사용하는 `--`, `--server.port=9000`)를 `property`로 변환한다. 그리고 이것들을 스프링 `Environment`에 추가한다. 이전에 언급한것처럼, 커맨드-라인 속성은 다른 속성 코드보다 항상 우선시 된다.
 
 만약 `Environment`에 추가되는 커맨드-라인 속성을 사용하길 원하지 않으면, `SpringApplication.setAddCommandLineProperties(false)`를 사용하여 비활성화 할 수 있다.
 
-## 24.3 어플리케이션 속성 파일
+### 24.3 어플리케이션 속성 파일
 
 다음의 위치에서 `application.properties`파일에서 `SpringApplication`은 속성을 불러오고 스프링 `Environment`에 추가한다.
 
@@ -836,7 +836,7 @@ my.number.in.range=${random.int[1024,65536]}
 
 > 컨테이너에서 어플리케이션이 실행된다면, 환경 변수나 시스템 속성대신에 JDNI 속성(`java:comp/env`)이나 서블릿 컨텍스트 초기화 파라미터를 사용할 수 있다.
 
-## 24.4 프로파일 specific 속성
+### 24.4 프로파일 specific 속성
 
 `application.properties` 파일에 더하여, 프로필 specific 속성은 `application-{profile}.properties`와 같은 네이밍 컨벤션을 사용하여 정의할 수도 있다. `Environment`는 만약 프로파일을 설정하지 않은 경우에는 기본 프로파일의 설정(기본적으로 `[default]`)으로 사용된다. 다시 말해서, 만약 명확하게 설정한 프로파일이 없으면, `application-default.properties`로 부터 속성들을 불러온다.
 
@@ -846,7 +846,7 @@ my.number.in.range=${random.int[1024,65536]}
 
 > `spring.config.location`에 파일을 명시했으면, 이 파일들의 프로파일-specific 변형은 고려되지 않는다. 프로파일-specific 속성들도 사용하고 싶다면 `spring.config.location`에 디렉토리를 사용해라
 
-## 24.5 Properties 에서의 플레이스홀더
+### 24.5 Properties 에서의 플레이스홀더
 `application.properties`에 있는 값은 사용할 때 존재하는 `Environment`을 통해서 필터된다. 그래서 이전에 정의한 값들을 참조할 수 있다. (예로, 시스템 속성)
 
 ```xml
@@ -859,9 +859,9 @@ app.description=${app.name} is a Spring Boot application
 ## 24.6 Properties 암호화하기
 스프링 부트는 속성 값을 암호화 하는것에 대한 지원을 제공해주지 않는다. 하지만, 스프링 `Environment`에 포함된 값을 수정하기 위해서 필요한 훅 포인트를 제공해준다. `EnvironmentPostProcessor`인터페이스는 어플리케이션 실행 전에 `Environment`을 [조작/처리]하는것을 허용한다. 
 
-## 24.7 Properties 대신에 YAML 사용하기
+### 24.7 Properties 대신에 YAML 사용하기
 ~
-## 24.8 Properties 타입세이프 설정
+### 24.8 Properties 타입세이프 설정
 
 properties 설정을 주입하기 위해 `@Value("${property}")` 어노테이션을 사용하는것은 때때로 다루기 힘들다. 특히 만약 여러개의 properties를 사용하거나 작업하거나 데이터가 계층 구조인 경우라면. 다음에 보여지는 예와 같이, 스프링 부트는 어플리케이션의 설정 검증과 강력하게 빈의 타입을 통제할 수 있는 속성을 사용하여 작동하는 대안의 메소드 제공한다. 
 
@@ -1001,7 +1001,7 @@ public class MyService {
 ```
 > Using @ConfigurationProperties also lets you generate metadata files that can be used by IDEs to offer auto-completion for your own keys. See the Appendix B, Configuration Metadata appendix for details.
 
-## 24.8.1 써드파티 설정
+### 24.8.1 써드파티 설정
 
 클래스에 어노테이트를 하기 위해 `@ConfigurationProperties`를 사용하는 것 뿐만아니라, 퍼블릭 `@Bean` 메소드에서도 사용할 수 있다. 이렇게 하면 제어의 외부인 써드파티 컴포넌트에 속성을 바인딩하는 것을 원할 떄 특히 유용할 수 있다.
 
@@ -1017,7 +1017,7 @@ public AnotherComponent anotherComponent() {
 
 `another` 접두어를 사용하여 정의된 속성은 이전의 `AcmeProperties` 예제와 [유사한/비슷한] 방식으로 `AnotherComponent` 빈에 매핑된다.
 
-## 24.8.2 유연한 바인딩
+### 24.8.2 유연한 바인딩
 
 스프링부트는 `@ConfigurationProperties`빈에서 `Environment` 바인딩에 대한 유연한 규칙을 사용한다. 그래서 `Environment` 속성 이름과 빈 속성 이름이 정확하게 일치할 필요가 없다. 유용한 공통의 예는 대시(`-`)로 구분된 환경 속성(예, `context-path`는 `contextPath`에 바인드한다.) 과 대문자로 쓰는 환경 속성(예, `PORT`가 `port`에 바인드)을 포함한다. 
 
@@ -1075,8 +1075,8 @@ acme:
 
 위의 속성은 `Map`에 map에 key들로 `/key1`, `/key2`와 `key3`가 바인딩 될 것이다.
 
-## 24.8.3 복잡한 타입 합치기 (YAML)
-## 24.8.4 속성 변환
+### 24.8.3 복잡한 타입 합치기 (YAML)
+### 24.8.4 속성 변환
 
 스프링 부트는 `@ConfigurationProperties` 빈들에 바인드 될 때 외부 어플리케이션 속성을 올바른 타입으로 강요하도록 시도한다. 만약 사용자 정의 타입 변형이 필요하면, `ConversionService` 빈(`conversionService`의 이름으로 된 빈)을 제공하거나, 속성 편집(`CustomEditorConfigurer`빈을 통해서)을 커스텀하거나 `Converters`(`@ConfigurationPropertiesBinding`같이 어노테이트 된 빈 정의)를 커스텀을 할 수 있다.
 
@@ -1183,7 +1183,7 @@ public class AppIoProperties {
 
 > `Long`을 사용하여 간단하게 사이즈를 표현하는 이전의 버전에서 업그레이드를 하는경우, `DataSize`로 전환할 때 바이트가 아닌 경우에는 반드시 단위를 사용해라. (`@DataSizeUnit`을 사용) 이렇게하면 풍부한 포맷을 지원하는동안 에 투명한 업그레이드 경로를 얻는다.
 
-## 24.8.5 @ConfigurationProperties 검증
+### 24.8.5 @ConfigurationProperties 검증
 
 스프링 부트는 스프링의 `@Validated` 어노테이션이을 사용할 때 `@ConfigurationProperties` 클래스를 검증하는것을 시도한다. 구성 클래스에 제한 어노테이션인 JSR-303 `javax.validation`을 직접적으로 사용할 수 있다. 그렇게 하기 위해서, 다음에 보여지는 예제와 같이 JSR-303에 부응하는 구현체가 클래스패스에 있는지 확인하고 그러고나서 제약 어노테이션을 필드에 추가해야한다.    
 
@@ -1232,7 +1232,7 @@ public class AcmeProperties {
 > `spring-boot-actuator` 모듈은 모든 `@ConfigurationProperties` 빈을 드러내는 끝점을 포함한다. 웹브라우저에 `/actuator/configprops`를 하거나 동일한 JMX 끝점을 사용해라. 자세한 사항들은 ["생산 준비 기능"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#production-ready-endpoints) 에서 봐라. 
 
 
-## 24.8.6 @ConfigurationProperties vs. @Value
+### 24.8.6 @ConfigurationProperties vs. @Value
 
 `@Value` 어노테이션은 코어 컨테이너 특징이다. 그리고 설정 속성 타입세이프로서 동일한 기능을 제공하지 않는다. 다음은 `@ConfigurationProperties`와 `@Value`에 대해서 지원하는 특징을 요약한 테이블이다.
 
@@ -1266,7 +1266,7 @@ spring.profiles.active=dev,hsqldb
 
 다음의 스위치를 사용해서 커맨드 라인에서도 속성을 지정할 수 있다.: `--spring.profiles.active=dev,hsqldb.`
 
-## 25.1 활성 프로파일 추가하기
+### 25.1 활성 프로파일 추가하기
 `spring.profiles.active` 속성은 다른 속성들로서 동일한 순서의 규칙을 따른다: 가장 높은 `PropertySource`가 우선이다.(가장 높은 우선순위이다.) `application.properties`에 활성 프로파일을 정의할 수 있고, 커맨드 라인 스위치를 사용해서 이것들을 대체할 수 있다는 뜻이다. 
 
 때때로, 활성 프로파일을 이것을 대체하는것 보다는 프로파일-specific 속성에 활성 프로파일을 추가하는 것이 유용하다. `spring.profiles.include` 속성은 활성 프로파일을 추가하는것을 무조건 사용할 수 있다.    `SpringApplication` 진입점 또한 추가적인 프로파일 설정에 대한 Java API를 갖고 있다. [SpringApplication](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/SpringApplication.html)안에 있는 `setAdditionalProfiles()` 메소드를 참고해라.
@@ -1285,11 +1285,11 @@ spring.profiles.include:
 
 > `spring.profiles` 속성은 YAML 문서에 정의되어 특정한 문서가 언제 설정에 포함되었는지를 확인할 수 있음을 기억해라. 자세한 사항들은 [77.7 "환경에 의존하고있는 설정 바꾸기"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-change-configuration-depending-on-the-environment)을 참고해라.
 
-## 25.2 프로그래밍방식으로 프로파일 세팅하기
+### 25.2 프로그래밍방식으로 프로파일 세팅하기
 
 어플리케이션을 구동하기 전에 `SpringApplication.setAdditionalProfiles(...)`를 호출하여 프로그래밍 방식으로 실행 프로파일을 설정할 수 있다. 스프링의 `ConfigurableEnvironment` 인터페이스를 사용함으로써 프로파일을 실행하는것 또한 가능하다.
 
-## 25.3 프로파일-specific 구성 파일
+### 25.3 프로파일-specific 구성 파일
 
 `application.properties`(또는 `application.yml`)와 참조된 파일 두 개 모두의 프로파일-specific 변형은 `@ConfigurationProperties`를 통해서 파일로 [고려되고/간주되고] 불러와진다. 자세한 사항은 [24.4 "프로파일-specific 속성"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-external-config-profile-specific-properties)을 참조해라. 
 
@@ -1301,7 +1301,7 @@ spring.profiles.include:
 
 > Java에 대해 사용가능한 많은 로깅 프레임워크가 있다. 위의 목록이 혼란스러울 것 같아도 걱정하지마라. 일반적으로, 로깅 의존성을 바꿀 필요는 없고 스프링 부트의 기본값으로 잘 작동한다.
 
-## 26.1 로그 포맷
+### 26.1 로그 포맷
 
 다음의 예제는 스프링부트에서의 기본 로그 출력과 유사하다.
 
@@ -1324,7 +1324,7 @@ spring.profiles.include:
 
 > Logback에는 `FATAL`레벨이 없다. `ERROR`로 매핑된다.
 
-## 26.2 콘솔 출력
+### 26.2 콘솔 출력
 
 기본 로그 설정은 메시지가 쓰일 때 콘솔에 메시지를 출력(echoes)한다. 기본적으로 `ERROR`-레벨, `WARN`-레벨 그리고 `INFO`-레벨 메시지가 로그된다. `--debug` 플래그를 사용하여 어플리케이션을 사용하면   "debug" 모드를 활성화할 수도 있다.
 
@@ -1336,8 +1336,8 @@ debug 모드가 활성화 될 때, 코어 로거의 선택(임베디드 컨테�
 
 대신에, `--trace` 플래그(또는 `application.properties`에서 `trace=true`)`를 사용해서 어플리케이션을 실행하면 "trace" 모드를 활성화 할 수 있다. 이렇게 하면 코어 로거의 선택에 대한 trace 로깅이 활성화 된다. (임베디드 컨테이너, Hibernate 스키마 생성 그리고 전체 스프링 포트폴리오(?))
 
-## 26.2.1 컬러 코드 출력
-## 26.3 파일 출력
+### 26.2.1 컬러 코드 출력
+### 26.3 파일 출력
 
 
 --- 
