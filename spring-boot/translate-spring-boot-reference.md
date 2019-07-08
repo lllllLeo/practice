@@ -1392,14 +1392,70 @@ logging.file | logging.path | 예 | 설명
 
 ### 26.4 로그 그룹
 
-로그 그룹은 동시에 모든 것을 설정하도록 관련된 로거를 함께 그룹화 할 수 있어서 유용할 때가 많다. 예를 들어서, 
+로그 그룹은 동시에 모든 것을 설정하도록 관련된 로거를 모두 그룹화 할 수 있어서 유용할 때가 많다. 예를 들어서, 보통 모든 Tomcat 관련 로거에 대한 로깅 레벨을 변경할 수 있지만, 최상위 패키지를 쉽게 기억할 수는 없다.
+
+이를 돕기 위해, 스프링 부트는 스프링 `Environment`에서 로깅 그룹을 정의하는것을 허용한다. 예로, `application.properties` 에 추가하여 "tomcat" 그룹을 어떻게 정의할 수 있는지를 보여준다.
 
 
+`logging.group.tomcat=org.apache.catalina, org.apache.coyote, org.apache.tomcat`
+
+한 번 정의하면, 한 줄로 그룹의 모든 로거에 대해 레벨을 변경할 수 있다.
+
+`logging.level.tomcat=TRACE`
+
+스프링 부트는 out-of-the-box로 사용할 수 있는 미리 정의된 로깅 그룹 포함한다. 
+
+Name | Loggers
+--- | ---
+web | org.springframework.core.codec, org.springframework.http, org.springframework.web
+sql | org.springframework.jdbc.core, org.hibernate.SQL
+
+
+### 26.6 커스텀 로그 설정
+
+다양한 로깅 시스템은 클래스패스에서 적절한 라이브러리를 포함하여 활성화 할 수 있고 더 나아가 클래스패스의 루트에 있는 적절한 설정 파일이나 스프링 `Environment` 속성인 `logging.config`에 따라 지정된 위치에 제공하여 커스텀을 할 수 있다.
+
+스프링 부트에서  `org.springframework.boot.logging.LoggingSystem` 시스템 속성을 사용하여 특정한 로깅 시스템을 사용도록 강요할 수 있다. 값은 `LogginsSystem` 구현체의 클래스 이름이어야 한다. `none`의 값을 사용하면 스프링 부트의 로깅 설정 전부를 비활성화 할 수도 있다.
+
+> `ApplicationContext`가 생성되기 이전에 로깅이 초기화되기 때문에, 스프링 `@Configuration` 파일의 `@PropertySource`에서 로깅을 조작하는 것이 불가능하다. 로깅 시스템을 변경하거나 완전히 비활성화 하는 방법은 시스템 속성을 통해서 할 수 있다.
+
+로깅 시스템에 따르면, 다음의 파일이 불러와진다.
+
+Logging System | Customization
+Logback | `logback-spring.xml`, `logback-spring.groovy`, `logback.xml`, 이나 `logback.groovy`
+Log4j2 | `log4j2-spring.xml` 이나 `log4j2.xml`
+JDK (Java Util Logging) | `logging.properties`
+
+> 가능하면, 로깅 설정에서 `-spring`을 사용하는 것을 추천한다. (예를 들어, `logback.xml`대신에 `logback-spring.xml`) 기본적인 구성 위치에서 사용하는 경우, 스프링은 로그 초기화룰 완전히 조작할 수 없다.
+
+> 'executable jar'에서 실행할 때 야기되는 문제인 Java Util Logging을 사용한 클래스로딩 이슈가 있다. 가능하다면 'executable jar'에서 실행할 때 피하는것을 추천한다.
+
+사용자 정의를 돕기 위해, 다음에 설명된 테이블처럼 일부 다른 속성이 스프링 `Environment`에서 시스템 속성으로 이동된다.
+
+Spring Environment | System Property | Comments
+--- | --- | ---
+`logging.exception-conversion-word` | `LOG_EXCEPTION_CONVERSION_WORD` | The conversion word used when logging exceptions.
+`logging.file` | `LOG_FILE` | If defined, it is used in the default log configuration.
+`logging.file.max-size` | `LOG_FILE_MAX_SIZE` | Maximum log file size (if LOG_FILE enabled). (Only supported with the default Logback setup.)
+`logging.file.max-history` | `LOG_FILE_MAX_HISTORY` | Maximum number of archive log files to keep (if LOG_FILE enabled). (Only supported with the default Logback setup.)
+`logging.path` | `LOG_PATH` | If defined, it is used in the default log configuration.
+`logging.pattern.console` | `CONSOLE_LOG_PATTERN` | The log pattern to use on the console (stdout). (Only supported with the default Logback setup.)
+`logging.pattern.dateformat` | `LOG_DATEFORMAT_PATTERN` | Appender pattern for log date format. (Only supported with the default Logback setup.)
+`logging.pattern.file` | `FILE_LOG_PATTERN` | The log pattern to use in a file (if LOG_FILE is enabled). (Only supported with the default Logback setup.)
+`logging.pattern.level` | `LOG_LEVEL_PATTERN` | The format to use when rendering the log level (default %5p). (Only supported with the default Logback setup.)
+`PID` | `PID` | The current process ID (discovered if possible and when not already defined as an OS environment variable).
 
 --- 
 
 ##### 단어  
 
+if at all possible : 가능하면, 가능한
+When possible : 가능하다면, 가능하면  
+via : 경유하여, 통하여  
+entirely : 전적으로, 완전히, 전부  
+fully : 완전히, 충분히  
+activated : 활성화 된  
+commonly : 흔히, 보통  
 by : ~에 의해서  
 Consequently : 그 결과, 따라서  
 as with : ~와 같이, ~에서처럼, ~와 마찬가지로  
