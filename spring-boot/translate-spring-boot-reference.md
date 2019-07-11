@@ -1435,7 +1435,11 @@ JDK (Java Util Logging) | `logging.properties`
 
 > 'executable jar'에서 실행할 때 야기되는 문제인 Java Util Logging을 사용한 클래스로딩 이슈가 있다. 가능하다면 'executable jar'에서 실행할 때 피하는것을 추천한다.
 
+
+
 사용자 정의를 돕기 위해, 다음에 설명된 테이블처럼 일부 다른 속성이 스프링 `Environment`에서 시스템 속성으로 이동된다.
+
+
 
 Spring Environment | System Property | Comments
 --- | --- | ---
@@ -1450,11 +1454,19 @@ Spring Environment | System Property | Comments
 `logging.pattern.level` | `LOG_LEVEL_PATTERN` | The format to use when rendering the log level (default %5p). (Only supported with the default Logback setup.)
 `PID` | `PID` | The current process ID (discovered if possible and when not already defined as an OS environment variable).
 
+
+### 29.1.6 Welcome Page
+스프링 부트는 static 과 template으로 구성된 welcome 페이지 둘 다 지원한다. 스프링 부트는 정적 컨텐트 위치로 설정되어있는 곳에서 `index.html` 파일을 제일 먼저 찾는다. 찾지 못한다면, `index` template를 찾는다. 만약 둘 중 하나를 찾는다면, 어플리케이션의 welcome page로 자동으로 사용된다.
+
+### 29.1.7 Favicon 커스텀하기
+스프링 부트는 정적 컨텐트 위치로 설정된 곳과 클래스패스의 최상위(그 다음에)에서 `favicon.ico`를 찾는다. 파일이 존재하면, 어플리케이션의 favicon으로 자동으로 사용된다.
+
 --- 
 
 ##### 단어  
 
-if at all possible : 가능하면, 가능한
+in that order : 차례로, 그 다음에
+if at all possible : 가능하면, 가능한  
 When possible : 가능하다면, 가능하면  
 via : 경유하여, 통하여  
 entirely : 전적으로, 완전히, 전부  
