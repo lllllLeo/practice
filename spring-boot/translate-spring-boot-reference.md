@@ -961,7 +961,7 @@ public class AcmeProperties {
 
 }
 ```
-This style of configuration works particularly well with the SpringApplication external YAML configuration, as shown in the following example:
+이 설정의 스타일은 스프링 어플리케이션 외부 YAML 설정[에서/과] 특히 잘 작동한다.
 
 ```yml
 # application.yml
@@ -976,7 +976,7 @@ acme:
 
 # additional configuration as required
 ```
-To work with @ConfigurationProperties beans, you can inject them in the same way as any other bean, as shown in the following example:
+다음의 예와 같이 `@ConfigurationProperties` 빈을 사용하여 작동하기 위해서, 다른 빈 처럼 같은 방법으로 주입하면 된다.
 
 ```java
 @Service
@@ -999,7 +999,7 @@ public class MyService {
 
 }
 ```
-> Using @ConfigurationProperties also lets you generate metadata files that can be used by IDEs to offer auto-completion for your own keys. See the Appendix B, Configuration Metadata appendix for details.
+> `@ConfigurationProperties` 사용하는 것은 자체 키에 대해 자동완성을 제공하는 IDE들을 사용할 수 있는 메타데이터 파일을 만들 수도 있다. 자세한 내용은 부록 B, 설정 메타데이터 부록을 참조해라
 
 ### 24.8.1 써드파티 설정
 
@@ -1465,7 +1465,9 @@ Spring Environment | System Property | Comments
 
 ##### 단어  
 
-in that order : 차례로, 그 다음에
+auto completion : 자동 완성  
+appendix : 부록  
+in that order : 차례로, 그 다음에  
 if at all possible : 가능하면, 가능한  
 When possible : 가능하다면, 가능하면  
 via : 경유하여, 통하여  
