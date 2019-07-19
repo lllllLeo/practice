@@ -1454,6 +1454,57 @@ Spring Environment | System Property | Comments
 `logging.pattern.level` | `LOG_LEVEL_PATTERN` | The format to use when rendering the log level (default %5p). (Only supported with the default Logback setup.)
 `PID` | `PID` | The current process ID (discovered if possible and when not already defined as an OS environment variable).
 
+### 29.1.11 에러 핸들링
+~
+#### 커스텀 에러 페이지
+주어진 상태 코드에 대해서 커스텀 HTML 에러 페이지를 보여주고 싶은 경우에는, `/error` 폴더에 파일을 추가해라. 에러 페이지 정적 HTML(static resource 폴더의 아래에 추가된)이거나 템플릿을 사용하여 만들수 있다. 파일의 이름은 상태 코드나 series maskdhk 정확히 일치해야 한다.
+
+예를 들어서, `404`를 정적 HTML 파일에 매핑하기 위해서는 다음과 같은 폴더 구조가 된다.
+```
+src/
+ +- main/
+     +- java/
+     |   + <source code>
+     +- resources/
+         +- public/
+             +- error/
+             |   +- 404.html
+             +- <other public assets>
+```
+
+`5xx` 에러들을 FreeMarker 템플릿을 사용한 것들에 매핑하려면, 다음과 같은 폴더 구조가 된다.
+```
+src/
+ +- main/
+     +- java/
+     |   + <source code>
+     +- resources/
+         +- templates/
+             +- error/
+             |   +- 5xx.ftl
+             +- <other templates>
+```
+
+다음에 보여지는 예와같이 보다 복잡한 매핑은, `ErrorViewResolver` 인터페이스를 구현한 빈을 추가할 수도 있다.
+
+```
+public class MyErrorViewResolver implements ErrorViewResolver {
+
+	@Override
+	public ModelAndView resolveErrorView(HttpServletRequest request,
+			HttpStatus status, Map<String, Object> model) {
+		// Use the request or status to optionally return a ModelAndView
+		return ...
+	}
+
+}
+```
+
+`@ExceptionHandler`메소드와 `@ControllerAdvice`와 같은 규칙적인 Spring MVC 를 사용할 수도 있다. 그런 다음에 `ErrorController`는 처리 되지 않은 예외를 잡아낸다.
+
+#### Spring MVC의 외부의 에러 페이지 매핑하기
+Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`를 직접 등록하기위해 `ErrorPageRegistrar` 인터페이스를 사용할 수 있다. 이 
+
 
 ### 29.1.6 Welcome Page
 스프링 부트는 static 과 template으로 구성된 welcome 페이지 둘 다 지원한다. 스프링 부트는 정적 컨텐트 위치로 설정되어있는 곳에서 `index.html` 파일을 제일 먼저 찾는다. 찾지 못한다면, `index` template를 찾는다. 만약 둘 중 하나를 찾는다면, 어플리케이션의 welcome page로 자동으로 사용된다.
@@ -1465,6 +1516,7 @@ Spring Environment | System Property | Comments
 
 ##### 단어  
 
+underlying : 근본적인, 근원적인
 auto completion : 자동 완성  
 appendix : 부록  
 in that order : 차례로, 그 다음에  

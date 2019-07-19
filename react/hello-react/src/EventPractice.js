@@ -7,6 +7,9 @@ class EventPractice extends Component {
         username: ' '
     }
 
+    // 메소드 바인딩
+    // 컴포넌트에 임의 메서드를 만들면 기본적으로 this에 접근할 수 없다. 따라서 컴포넌트의 생성자 메서드인 constructor에서 
+    // 각 메소드를 this와 바인딩해 줘야함. 안하면 메소드에서 this를 호출할 때 undefined가 리턴된다.
     // 생성자 메소드에 정의하면 새 메소드를 만들때마다 수정해야한다. 화살표 메소드로 하기 ㄱㄱ
     // constructor(props) {
     //     super(props);
