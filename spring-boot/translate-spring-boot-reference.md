@@ -1454,6 +1454,33 @@ Spring Environment | System Property | Comments
 `logging.pattern.level` | `LOG_LEVEL_PATTERN` | The format to use when rendering the log level (default %5p). (Only supported with the default Logback setup.)
 `PID` | `PID` | The current process ID (discovered if possible and when not already defined as an OS environment variable).
 
+지원되는 모든 로깅시스템은 설정 파일들을 파싱할 때 시스템 속성을 참조할 수 있다.  예는, `spring-boot.jar`에 있는 기본 설정을 봐라.
+
+- [Logback](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml)
+- [Log4j 2](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/log4j2/log4j2.xml)
+- [Java Util logging](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/java/logging-file.properties)
+
+
+> 로깅 속성안에서 플레이스홀더를 사용하고 싶다면, 기본 프레임워크의 문법이 아닌 스프링 부트의 문법을 사용해야 한다. 특히, Logback을 사용하는 경우에는, `:-`를 사용하지 않고 기본 값과 속성 이름사이에 구분자로서 `:`를 사용해야 한다.
+
+> `LOG_LEVEL_PATTERN`(또는 Logback을 사용해서 `logging.pattern.level`)만 재정의함으로써 로그 라인에 ad-hoc 컨텐트와 라인과 MDC를 추가할 수 있다. 예를 들면, `logging.pattern.level=user:%X{user} %5p`를 사용하는 경우에는, 다음 예와 같이 기본 로그 포맷에 "user"에 대한 MDC 항목이 포함되어 있다.
+2015-09-30 12:30:04.031 user:someone INFO 22174 --- [  nio-8080-exec-0] demo.Controller
+Handling authenticated request
+
+### 26.7 Logback 확장 기능
+스프링 부트는 Logback에 고급 설정을 사용을 도와줄 수 있는 수많은 확장 기능을 포함하고 있다. `logback-spring.xml` 설정 파일에 이런 확장기능을 사용할 수 있다.
+
+> 왜냐하면 표준 `logback.xml` 설정 파일은 아주 일찍 로드되기 떄문에, 확장 기능을 사용할 수 없다. `logging.config` 속성을 정의하거나 `logback-spring.xml`을 사용해야 한다.
+
+> 확장 기능은 Logback의 설정 스캐닝이 사용될 수 없다. 만약 시도하려면, 다음과 같이 로깅된 것중의 하나와 비슷한 결 
+
+```
+ERROR in ch.qos.logback.core.joran.spi.Interpreter@4:71 - no applicable action for [springProperty], current ElementPath is [[configuration][springProperty]]
+ERROR in ch.qos.logback.core.joran.spi.Interpreter@4:71 - no applicable action for [springProfile], current ElementPath is [[configuration][springProfile]]
+```
+
+### 26.7.1 프로파일-specific 설정
+
 ### 29.1.11 에러 핸들링
 ~
 #### 커스텀 에러 페이지
@@ -1516,7 +1543,9 @@ Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`�
 
 ##### 단어  
 
-underlying : 근본적인, 근원적인
+Notably : 특히, 현저히, 뚜렷이  
+consult : 참조하다, 상의하다, 상담하다  
+underlying : 근본적인, 근원적인, 기본  
 auto completion : 자동 완성  
 appendix : 부록  
 in that order : 차례로, 그 다음에  
