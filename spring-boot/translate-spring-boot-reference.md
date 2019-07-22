@@ -1472,7 +1472,7 @@ Handling authenticated request
 
 > 왜냐하면 표준 `logback.xml` 설정 파일은 아주 일찍 로드되기 떄문에, 확장 기능을 사용할 수 없다. `logging.config` 속성을 정의하거나 `logback-spring.xml`을 사용해야 한다.
 
-> 확장 기능은 Logback의 설정 스캐닝이 사용될 수 없다. 만약 시도하려면, 다음과 같이 로깅된 것중의 하나와 비슷한 결 
+> 확장 기능은 Logback의 설정 스캐닝이 사용될 수 없다. 만약 시도하면, 설정 파일을 변경하면 다음중 하나와 비슷한 에러가 발생한다.
 
 ```
 ERROR in ch.qos.logback.core.joran.spi.Interpreter@4:71 - no applicable action for [springProperty], current ElementPath is [[configuration][springProperty]]
@@ -1480,6 +1480,37 @@ ERROR in ch.qos.logback.core.joran.spi.Interpreter@4:71 - no applicable action f
 ```
 
 ### 26.7.1 프로파일-specific 설정
+
+`<<springProfile>` 태그는 스프링 프로파일에 기반해서 실행한 설정 부분을 제외하거나 선택적으로 포함할 수 있다. 프로파일 부분은 `<configuration>` 요소내의 어디에서나 지원된다. 설정 프로파일을 받아들이는것을 지정하기 위해서 `name` 속성을 써라. `<springProfile>`태그는 간단한 프로파일 이름(예를 들어 `staging`)이나 프로파일 표현식을 포함할 수 있다. 프로파일 표현식은 더 복잡한 프로파일 로직이 표현되도록 허용한다. 예를 들어 `production & (eu-central | eu-west)`. 더 자세한 것들은 [레퍼런스 가이드](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-java)를 확인해봐라. 다음 리스트는 3개의 프로파일 예를 보여준다.
+
+```xml
+<springProfile name="staging">
+	<!-- configuration to be enabled when the "staging" profile is active -->
+</springProfile>
+
+<springProfile name="dev | staging">
+	<!-- configuration to be enabled when the "dev" or "staging" profiles are active -->
+</springProfile>
+
+<springProfile name="!production">
+	<!-- configuration to be enabled when the "production" profile is not active -->
+</springProfile>
+```
+
+### 26.7.2 환경 프로파일
+`<springProperty>`태그는 Logback내에서 사용하기 위해 스프링 `Environment`에서 프로퍼티를 노출할 수 있다. 이렇게 하면 만약 Logback 구성에서 `application.properties` 파일의 값에 접근하고 싶은 경우에 유용할 수 있다. 태그는 Logback의 표준 `<property>` 태그와 비슷한 방식으로 작동한다. 하지만,  직접 `value`를 지정하지 않고 속성의 `source`(`Environment`에서)를 지정한다. `local` 스코프가아닌 다른 어딘가에 속성을 저장해야 하는 경우에는, `scope` 속성을 사용해라. 폴백 값이 필요한 경우에는(`Environment`에서 속성을 설정하지 않은 경우), `defaultValue` 속성을 사용해라. 다음의 예는 Logback에서 사용할 속성을 노출하는 방법을 보여준다.
+
+```xml
+<springProperty scope="context" name="fluentHost" source="myapp.fluentd.host"
+		defaultValue="localhost"/>
+<appender name="FLUENT" class="ch.qos.logback.more.appenders.DataFluentAppender">
+	<remoteHost>${fluentHost}</remoteHost>
+	...
+</appender>
+```
+
+> `source`는 케밥 케이스로 정의되어야 한다.(`my.property-name`과 같이). 하지만, 속성은 유연한 방법을 사용해서 `Environment`를 추가할 수 있다.
+
 
 ### 29.1.11 에러 핸들링
 ~
@@ -1543,6 +1574,8 @@ Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`�
 
 ##### 단어  
 
+optionally : 마음대로, 선택적으로  
+result : (~의 결과로) 발생하다[생기다]  
 Notably : 특히, 현저히, 뚜렷이  
 consult : 참조하다, 상의하다, 상담하다  
 underlying : 근본적인, 근원적인, 기본  
