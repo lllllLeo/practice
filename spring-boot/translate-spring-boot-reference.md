@@ -1511,6 +1511,75 @@ ERROR in ch.qos.logback.core.joran.spi.Interpreter@4:71 - no applicable action f
 
 > `source`는 케밥 케이스로 정의되어야 한다.(`my.property-name`과 같이). 하지만, 속성은 유연한 방법을 사용해서 `Environment`를 추가할 수 있다.
 
+## 27. Internationalization. 국제화
+스프링 부트는 어플리케이션은 다른 언어 설정의 사용자에게 서비스할 수 있게 하도록 지역화된 메시지를 지원한다. 기본적으로, 스프링 부트는 클래스패스의 상위에 있는 `message` 리소스 번들의 존재를 찾는다.
+
+> 자동-설정은 구성된 리소스 번들에 대해 기본 속성 파일이 사용가능할 때 적용된다 (즉, 기본적으로 `messages.properties). 리소스 번들이 지정된 언어만 속성파일에 포함되는 경우, 기본값에 추가해야 한다.
+
+다음 보여지는 예처럼, 리소스 번들의 베이스네임은 몇몇의 다른 속성들 처럼 `spring.messages` 네임스페이스를 사용하여 구성할 수 있다.
+
+```
+spring.messages.basename=messages,config.i18n.messages
+spring.messages.fallback-to-system-locale=false
+```
+
+> `spring.messages.basename`은 패키지 한정자나 클래스패스 상위에서 확인된 리소스 둘 다에서 쉼표로 구분된 위치의 목록을 지원한다.
+  - ??? spring.messages.basename supports comma-separated list of locations, either a package qualifier or a resource resolved from the classpath root.
+
+더 지원되는 옵션에 대한것은 [`MessageSourceProperties`](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/context/MessageSourceProperties.java)를 봐라
+
+## 28. JSON
+스프링 부트는 3개의 JSON 매핑 라이브러리 통합을 제공한다
+
+- Gson
+- Jackson
+- JSON-B
+
+Jackson은 기본 라이브러리이고 더 선호된다.
+
+### 28.1 Jackson
+Jackson에 대한 자동 설정은 제공되고 Jackson은 `spring-boot-starter-json`의 한 부분이다. Jackson이 클래스패스에 있으면 [ObjectMapper] 빈이 자동으로 설정된다. [`ObjectMapper`의 설정 커스터마이징하기]위해서 몇몇의 설정 속성은 제공된다.(https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-the-jackson-objectmapper)
+
+### 28.2 Gson
+Gson에 대한 자동 설정은 제공된다. Gson이 클래스패스에 있을 때 `Gson` 빈이 자동으로 설정된다. 설정을 커스터마이즈하기 위해서 몇몇의 `spring.gson.*` 설정 속성은 제공된다. 더 조작하려면, 하나 이상의 `GsonBuilderCustomizer` 빈들을 사용할 수 있다.
+
+### 28.3 JSON-B
+JSON-B에 대한 자동설정은 제공된다. JSON-B API와 구현이 클래스패스에 있으면 `Jsonb` 빈은 자동으로 설정된다. JSON-B 구현은 의존성 관리가 제공되는 Apache Johnzon가 선호된다.
+
+## 29. 웹 어플리케이션 개발하기
+스프링 부트는 웹 어플리케이션 개발에 대해 매우 적합하다. embedded Tomcat, Jetty, Undertow, 또는 Netty를 사용해서 자체 포함 HTTP 서버를 만들 수 있다. 대부분의 웹 어플리케이션은 구동과 빠른 실행을 위해 `spring-boot-starter-web` 모듈을 사용한다. 또한 `spring-boot-starter-webflux` 모듈을 사용해서 리액티브 웹 어플리케이션을 만드는것을 선택할 수 있다.
+
+Spring Boot 웹 어플리케이션을 개발해보지 않았다면, [시작하기](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#getting-started-first-application) 섹션에 있는 예제 "Hello World!"를 따라하면 된다.
+
+### 29.1 "Spring Web MVC Framework"
+Spring Web MVC Framework(간단하게 "Spring MVC"라고 자주 불린다.)는 풍부한 "model view controller" 웹 프레임워크이다. Spring MVC는 들어오는 HTTP 요청을 다루기위해 특별한 `@Controller`이나 `@RestController`빈을 생성할 수 있다. 컨트롤러에 있는 메소드는 `@RequestMapping` 어노테이션을 사용함으로써 HTTP에 매핑한다.
+
+다음의 코드는 JSON 데이터를 제공하는 일반적인 `@RestController`을 보여준다.
+
+```java
+@RestController
+@RequestMapping(value="/users")
+public class MyRestController {
+
+	@RequestMapping(value="/{user}", method=RequestMethod.GET)
+	public User getUser(@PathVariable Long user) {
+		// ...
+	}
+
+	@RequestMapping(value="/{user}/customers", method=RequestMethod.GET)
+	List<Customer> getUserCustomers(@PathVariable Long user) {
+		// ...
+	}
+
+	@RequestMapping(value="/{user}", method=RequestMethod.DELETE)
+	public User deleteUser(@PathVariable Long user) {
+		// ...
+	}
+
+}
+```
+
+Spring MVC는 스프링 프레임워크의 핵심 부분이다. 그리고 더 자세한 정보들은 [참고 서적](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web.html#mvc)에서 확인할 수 있다.
 
 ### 29.1.11 에러 핸들링
 ~
@@ -1574,6 +1643,10 @@ Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`�
 
 ##### 단어  
 
+rich : 풍부한  
+one or more : 하나 이상의  
+cater : 서비스하는, 공급하다, 
+be required to : ~하라는 요구를 받다, ~하도록 요구되다  
 optionally : 마음대로, 선택적으로  
 result : (~의 결과로) 발생하다[생기다]  
 Notably : 특히, 현저히, 뚜렷이  
