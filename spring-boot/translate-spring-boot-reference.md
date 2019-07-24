@@ -1579,7 +1579,81 @@ public class MyRestController {
 }
 ```
 
-Spring MVC는 스프링 프레임워크의 핵심 부분이다. 그리고 더 자세한 정보들은 [참고 서적](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web.html#mvc)에서 확인할 수 있다.
+Spring MVC는 핵심 스프링 프레임워크의 일부분이다. 그리고 더 자세한 정보들은 [참고 서적](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web.html#mvc)에서 확인할 수 있다. 또한, [spring.io/guides](https://spring.io/guides)에서 Spring MVC를 사용할 수 있는 몇몇의 가이드가 있다.
+
+### 29.1.1 Spring MVC 자동 설정
+
+스프링 부트는 대부분 어플리케이션에서 잘 작동하는 Spring MVC에 대한 자동 설정을 제공한다. 
+
+자동 설정은 Spring의 기본값 위에 다음의 특징들을 추가한다.
+
+- `ContentNegotiatingViewResolver`와 `BeanNameViewResolver`빈의 포함.
+- WebJars에 대한 지원을 포함한 정적 자원을 제공하는 것을 지원한다. ([뒤에서](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-web-binding-initializer) 다룰 내용)
+- `Converter`, `GenericConverter`및 `Formatter`빈들의 자동 등록 
+- `HttpMessageConverters`에 대한 지원 ([뒤에서](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-message-converters) 다룰 내용)
+- `MessageCodesResolver`의 자동 등록([뒤에서](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-message-codes) 다룰 내용)
+- 정적 `index.html` 지원
+- 사용자 정의 `Favicon` 지원 ([뒤에서](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-favicon) 다룰 내용)
+- `ConfigurableWebBindingInitializer`빈의 자동 사용([뒤에서](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-spring-mvc-web-binding-initializer) 다룰 내용)
+
+Spring Boot MVC 특징을 계속 사용하고 싶고, 추가적인 [MVC 설정](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web.html#mvc)(인터셉터, 포맷터, 뷰 컨트롤러, 다른 특징들)을 추가하고 싶다면,   `@EnableWebMvc`가 아닌 `WebMvcConfigurer` 타입의 `@Configuration` 클래스를 추가해라. `RequestMappingHandlerMapping`, `RequestMappingHandlerAdapter`, 또는 `ExceptionHandlerExceptionResolver`의 사용자 정의 인스턴스를 제공하고 싶으면, 컴포넌트 같은 것을 제공하는 `WebMvcRegistrationsAdapter` 인스턴스를 선언해라.
+
+Spring MVC의 완벽하게 조작하고 싶으면, `@EnableWebMvc`를 사용해서 `@Configuration` 어노테이션을 추가해라.
+
+### 29.1.2 HttpMessageConverters
+스프링 부트는 HTTP 요청과 응답을 변환하는 `HttpMessageConverter` 인터페이스를 사용한다. 합리적인 기본값은 즉시 포함되어있다.(Sensible defaults are included out of the box.) 예를 들어서, 오브젝트는 자동으로 JSON(Jackson 라이브러리를 사용해서)이나 XML(가능한 경우, Jackson XML 확장 기능을 사용하거나 Jackson XML 확장 기능이 불가능한 경우 JAXB를 사용해서)로 변환될 수 있다. 기본적으로, 문자열은 `UTF-8`로 인코딩 되어있다.
+
+사용자 정의한 컨버터를 추가하고 싶은 경우에는, 다음의 목록에 나와있는 것 처럼 스프링 부트의 `HttpMessageConverters` 클래스를 사용할 수 있다.
+
+```java
+import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
+import org.springframework.context.annotation.*;
+import org.springframework.http.converter.*;
+
+@Configuration
+public class MyConfiguration {
+
+	@Bean
+	public HttpMessageConverters customConverters() {
+		HttpMessageConverter<?> additional = ...
+		HttpMessageConverter<?> another = ...
+		return new HttpMessageConverters(additional, another);
+	}
+
+}
+```
+
+컨텍스트에 존재하는 `HttpMessageConverter` 빈은 컨버터의 목록에 추가된다. 또한, 같은 방법으로 기본 컨버터를 재정의 할 수 있다.
+
+### 29.1.3 JSON Serializers와 Deserializers 사용자 정의하기
+JSON 데이터를 직렬화하고 비직렬화하기 위해 Jackson을 사용하는 경우, `JsonDeserializer`클래스와 `JsonSerializer`에 써야한다. 사용자 정의한 serializers는 보통 모듈을 통해서 Jackson에 등록되지만, 스프링 부트는 대신에 Spring 빈들을 직접 등록하는 것이 쉽게 해주는 `@JsonComponent` 어노테이션을 제공한다.
+
+`JsonSerializer`나 `JsonDeSerializer` 구현체에서 직접 `@JsonComponent` 어노테이션을 사용할 수 있다. 또한, 다음 예와 같이 이너 클래스로서 serializers/deserializers가 포함된 클래스에서도 사용할 수 있다.
+
+```java
+import java.io.*;
+import com.fasterxml.jackson.core.*;
+import com.fasterxml.jackson.databind.*;
+import org.springframework.boot.jackson.*;
+
+@JsonComponent
+public class Example {
+
+	public static class Serializer extends JsonSerializer<SomeObject> {
+		// ...
+	}
+
+	public static class Deserializer extends JsonDeserializer<SomeObject> {
+		// ...
+	}
+
+}
+```
+
+`ApplicationContext`안에 있는 모든 `@JsonComponent` 빈들은 Jackson에 자동으로 등록된다. 왜냐하면 `@JsonComponent`는 보통의 컴포넌트-스캔 방법을 지원하는 `@Component`를 사용한 메타 어노테이션이기 때문이다.
+
+또한 스프링 부트는 `JsonObjectSerializer`와 `JsonObjectDeserializer`에 기반한 클래스들을 지원한다.
+
 
 ### 29.1.11 에러 핸들링
 ~
@@ -1643,6 +1717,9 @@ Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`�
 
 ##### 단어  
 
+might want to = should  
+if available : 사용 가능한 경우, 가능한 경우  
+out of the box : 즉시, 발군의, 특별 취급의  
 rich : 풍부한  
 one or more : 하나 이상의  
 cater : 서비스하는, 공급하다, 
