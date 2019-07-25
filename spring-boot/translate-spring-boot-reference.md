@@ -1652,7 +1652,35 @@ public class Example {
 
 `ApplicationContext`안에 있는 모든 `@JsonComponent` 빈들은 Jackson에 자동으로 등록된다. 왜냐하면 `@JsonComponent`는 보통의 컴포넌트-스캔 방법을 지원하는 `@Component`를 사용한 메타 어노테이션이기 때문이다.
 
-또한 스프링 부트는 `JsonObjectSerializer`와 `JsonObjectDeserializer`에 기반한 클래스들을 지원한다.
+또한 스프링 부트는 [`JsonObjectSerializer`](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/jackson/JsonObjectSerializer.java)와 [`JsonObjectDeserializer`](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/jackson/JsonObjectDeserializer.java)의 기본 클래스들을 제공해서 오브젝트를 직렬화할 때 표준 Jackson 버전에 유용한 대안을 제공한다. 자세한 것들은 Javadoc에 있는 [`JsonObjectSerializer`](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/jackson/JsonObjectSerializer.html)와 [`JsonObjectDeserializer`](https://docs.spring.io/spring-boot/docs/2.1.6.RELEASE/api/org/springframework/boot/jackson/JsonObjectDeserializer.html)를 참조해라.
+
+### 29.1.4 MessageCodesResolver
+
+Spring MVC은 바인딩 오류에서 에러 메시지를 렌더링하기위한 에러 코드를 생성하는 전략을 가지고 있다: `MessageCodesResolver`. `spring.mvc.message-codes-resolver.format` 속성의 `PREFIX_ERROR_CODE`나 `POST_ERROR_CODE`를 설정할 경우, 스프링 부트는 하나를 생성한다([`DefaultMessageCodesResolver.Format`](https://docs.spring.io/spring/docs/5.1.8.RELEASE/javadoc-api/org/springframework/validation/DefaultMessageCodesResolver.Format.html)에 있는 열거를 봐라).
+
+### 29.1.5 정적 컨텐츠
+
+기본적으로, 스프링 부트는 `ServletContext`의 최상위 또는 클래스 패스에 있는 `/static`(또는 `/public`나 `/resources`나 `/META-INF/resources`)으로 불리는 디렉토리로 부터 정적 컨텐츠를 제공한다. `addResourceHandlers`메소드를 재정의하고 `WebMvcConfigurer`를 추가함으로써 수정하도록 할 수 있도록 Spring MVC에서 `ResourceHttpRequestHandler`를 사용한다. 
+
+독립형 웹 어플리케이션에서, 컨테이너에 있는 기본 서블릿은 사용가능하고 폴백으로서 작용하며 Spring이 다루지 않기로 결정하면 `ServletContext`의 최상위에서 컨텐츠를 제공한다. 거의 대부분 Spring은 `DispatcherServlet`을 통해서 항상 요청을 다루기 때문에 이런 일이 일어나지 않는다.
+
+기본적으로, 리소스는 `/**`으로 매핑되지만 `spring.mvc.static-path-pattern` 속성을 사용해서 조정할 수 있다. 예를 들어서 다음과 같이 모든 리소스들은 `/resources/**`로 재배치할 수 있다.
+
+```
+spring.mvc.static-path-pattern=/resources/**
+```
+
+`spring.resources.static-locations` 속성을 사용해서 정적 리소스 위치를 커스터마이즈 할 수도 있다(디렉토리 위치의 목록으로 기본 값을 대체). 상위 Servlet 컨텍스트 패스 `"/"`는 적합한 위치로 자동으로 추가된다.
+
+이전에 언급된 "standard" 정적 리소스 위치 외에도 [Webjars content](https://www.webjars.org/)에 만들어진 특별한 경우가 있다. `/webjars/**`인 경로를 사용한 리소스들은 Webjars 포맷에서 패키지된 경우 jar 파일에서 저장된다.
+
+> jar로 패키지된 어플리케이션일 경우, `src/main/webapp` 디렉토리를 사용하지 마라. 비록 이 디렉토리는 일반적인 표준이지만, 오직 war 패키징에서만 작동하고, jar로 생성하면 대부분의 빌드 툴에 의해서 조용히 무시된다.
+
+또한, 스프링 부트는 Spring MVC에서 제공되는 고급 리소스를 조작하는 기능을 지원하고 cache-busting 정적 리소스 또는 Webjars에 대한 버전에 구속받지 않는 URLs 사용같은 경우를 허용한다.
+
+Webjars에 대해 버전에 구속받지 않는 URLs을 사용하기 위해서, `webjars-locator-core` 의존성을 추가해라. 그러고나서 Webjar를 선언해라. JQuery를 사용한 예처럼, `"/webjars/jquery/jquery.min.js"`를 추가하면 `"/webjars/jquery/x.y.z/jquery.min.js"`가 된다. 여기서 `x.y.z`는 Webjar 버전이다.
+
+> JBoss를 사용한다면 `webjars-locator-core`대신에 `webjars-locator-jboss-vfs` 의존성을 선언해라. 그렇지 않으면, 모든 Webjars는 `404`가 된다.
 
 
 ### 29.1.11 에러 핸들링
@@ -1717,6 +1745,11 @@ Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`�
 
 ##### 단어  
 
+result in : 그 결과 ~가 되다
+result in sth : (결과적으로) ~을 낳다[야기하다], 
+In addition to : ~외에도, ~에 더하여  
+Most of the time : 대부분, 거의  
+In a stand-alone : 독립형  
 might want to = should  
 if available : 사용 가능한 경우, 가능한 경우  
 out of the box : 즉시, 발군의, 특별 취급의  
