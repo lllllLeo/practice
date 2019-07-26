@@ -1680,7 +1680,82 @@ spring.mvc.static-path-pattern=/resources/**
 
 Webjars에 대해 버전에 구속받지 않는 URLs을 사용하기 위해서, `webjars-locator-core` 의존성을 추가해라. 그러고나서 Webjar를 선언해라. JQuery를 사용한 예처럼, `"/webjars/jquery/jquery.min.js"`를 추가하면 `"/webjars/jquery/x.y.z/jquery.min.js"`가 된다. 여기서 `x.y.z`는 Webjar 버전이다.
 
-> JBoss를 사용한다면 `webjars-locator-core`대신에 `webjars-locator-jboss-vfs` 의존성을 선언해라. 그렇지 않으면, 모든 Webjars는 `404`가 된다.
+> JBoss를 사용한다면 `webjars-locator-core`대신에 `webjars-locator-jboss-vfs` 의존성을 선언해라. 그렇지 않으면, 모든 Webjars는 `404`가 된다./해결된다( Otherwise, all Webjars resolve as a 404.)
+
+cache busting을 사용하기 위해서, 다음의 구성처럼 모든 정적 리소스에 대한 cache busting 솔루션을 설정을 설정하고 URLs에서 `<link href="/css/spring-2a2d595e6ed9a0b24f027f2b63b134d6.css"/>`과 같은 효과적으로 컨텐츠 해시를 추가한다.
+
+```
+spring.resources.chain.strategy.content.enabled=true
+spring.resources.chain.strategy.content.paths=/**
+```
+
+> Thymeleaf와 FreeMarker에 대한 자동 설정된 `ResourceUrlEncodingFilter` 덕분에 리소스에 대한 링크는 런타임 때 템플릿 에서 재작성된다. JSPs를 사용할 때 이 필터를 직접 선언해야한다. 다른 템플릿 엔진은 현재 자동적으로 지원되지 않지만 커스텀 템플릿 매크로/도움말 그리고 `ResourceUrlProvicer`를 사용할 수 있다.
+
+예를 들어서 JavaScript 모듈 로더처럼 동적으로 리소스를 로딩할 때 파일명을 바꾸는 것은 옵션이 아니다. 그렇기 떄문에 다른 전략도 결합될 수 있고 지원된다. 다음의 예처럼, "fixed" 전략은 URL에서 파일 명을 바꾸는 것 없이 정적 버전 문자열을 추가한다.
+
+```
+spring.resources.chain.strategy.content.enabled=true
+spring.resources.chain.strategy.content.paths=/**
+spring.resources.chain.strategy.fixed.enabled=true
+spring.resources.chain.strategy.fixed.paths=/js/lib/
+spring.resources.chain.strategy.fixed.version=v12
+```
+
+설정을 사용하면, `/js/lib/` 하위로 위치된 JavaScript 모듈은 고쳐진 버전 전략(`"/v12/js/lib/mymodule.js"`)을 사용하지만 다른 리소스들은 여전히 콘텐츠(`<link href="/css/spring-2a2d595e6ed9a0b24f027f2b63b134d6.css"/>`)를 사용한다.
+
+더 지원되는 옵션은 [`ResourceProperties`](https://github.com/spring-projects/spring-boot/tree/v2.1.6.RELEASE/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web/ResourceProperties.java)를 참조해라.
+
+> 이 특징은 스프링 프레임워크의 [참조 문서](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web.html#mvc-config-static-resources)와 전용 [블로그 포스트](https://spring.io/blog/2014/07/24/spring-framework-4-1-handling-static-web-resources)에 자세히 설명되어 있다.
+
+
+### 29.1.6 Welcome Page
+스프링 부트는 static 과 template으로 구성된 welcome 페이지 둘 다 지원한다. 스프링 부트는 정적 컨텐트 위치로 설정되어있는 곳에서 `index.html` 파일을 제일 먼저 찾는다. 찾지 못한다면, `index` template를 찾는다. 만약 둘 중 하나를 찾는다면, 어플리케이션의 welcome page로 자동으로 사용된다.
+
+### 29.1.7 Favicon 커스텀하기
+스프링 부트는 정적 컨텐트 위치로 설정된 곳과 클래스패스의 최상위(그 다음에)에서 `favicon.ico`를 찾는다. 파일이 존재하면, 어플리케이션의 favicon으로 자동으로 사용된다.
+
+### 29.1.8 경로 선정 및 Content Negotiation
+
+Spring MVC는 요청 경로를 보고 응용 프로그램에 정의된 매핑에 연결하여 들어오는 HTTP 요청을 매핑할 수 있다. (Spring MVC can map incoming HTTP requests to handlers by looking at the request path and matching it to the mappings defined in your application) (예를 들면, 컨트롤러 메소드에서 `@GetMapping` 어노테이션)
+
+스프링 부트는 기본적으로 접미사 패턴을 사용하지 않도록 선택한다. 이 뜻은 `"GET /projects/spring-boot.json"`같은 요청은 `@GetMapping("/projects/spring-boot")` 매핑에 일치하지 않는다. 이는 [Spring MVC 어플리케이션에 대한 가장 좋은 연습](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web.html#mvc-ann-requestmapping-suffix-pattern-match)으로 간주된다. 이 특징은 과거에 적절한 "Accept" 요청 헤더를 보내지 않는 HTTP 클라이언트에 대해 주로 유용했다; 클라이언트에게 올바른 컨텐츠 타입을 보내야 할 필요가 있다. 최근에, Content Negotiation은 더 믿을만 하다.
+
+"Accept" 요청 헤더를 일관적이지 않게 HTTP 클라이언트를 다루는 다른 방법이 있다. 접두사 매칭을 사용하는 대신에, `"GET /projects/spring-boot?format=json"`을 `@GetMapping("/projects/spring-boot")`로 매핑되는 이같은 요청을 보장하는 쿼리 파라미터를 사용할 수 있다.(we can use a query parameter to ensure that requests like "GET /projects/spring-boot?format=json" will be mapped to @GetMapping("/projects/spring-boot"):)
+
+```
+spring.mvc.contentnegotiation.favor-parameter=true
+
+# We can change the parameter name, which is "format" by default:
+# spring.mvc.contentnegotiation.parameter-name=myparam
+
+# We can also register additional file extensions/media types with:
+spring.mvc.contentnegotiation.media-types.markdown=text/markdown
+```
+
+경고를 이해하고 어플리케이션에서 여전히 접미사 패턴 일치방법을 사용하려면, 다음의 구성이 필요하다.
+
+```
+spring.mvc.contentnegotiation.favor-path-extension=true
+spring.mvc.pathmatch.use-suffix-pattern=true
+```
+
+대신에, 모든 접미사 패턴으로 여는 것 보다 등록된 접미사 패턴을 지원하는 것이 더 안전한다.
+
+```
+spring.mvc.contentnegotiation.favor-path-extension=true
+spring.mvc.pathmatch.use-registered-suffix-pattern=true
+
+# You can also register additional file extensions/media types with:
+# spring.mvc.contentnegotiation.media-types.adoc=text/asciidoc
+```
+
+### 29.1.9 ConfigurableWebBindingInitializer
+
+Spring MVC는 특정한 요청에 대해 `WebDataBinder`를 초기화하기 위해서 `WebBindingInitializer`를 사용한다. `ConfigurableWebBindingInitializer` `@Bean`을 생성하면, 스프링 부트는 이를 사용하기 위해서 Spring MVC를 자동으로 설정한다.
+
+### 29.1.10 템플릿 엔진
+
+REST 웹 서비스뿐만 아니라, 동적 HTML 컨텐츠를 제공하는 Spring MVC를 사용할 수도 있다. Spring MVC는 다양한 템플릿 기술인 Thymeleaf, FreeMarker와 JSP를 MVC는 지원한다.
 
 
 ### 29.1.11 에러 핸들링
@@ -1688,7 +1763,7 @@ Webjars에 대해 버전에 구속받지 않는 URLs을 사용하기 위해서, 
 #### 커스텀 에러 페이지
 주어진 상태 코드에 대해서 커스텀 HTML 에러 페이지를 보여주고 싶은 경우에는, `/error` 폴더에 파일을 추가해라. 에러 페이지 정적 HTML(static resource 폴더의 아래에 추가된)이거나 템플릿을 사용하여 만들수 있다. 파일의 이름은 상태 코드나 series maskdhk 정확히 일치해야 한다.
 
-예를 들어서, `404`를 정적 HTML 파일에 매핑하기 위해서는 다음과 같은 폴더 구조가 된다.
+예를 들어서, `404`를 정적 HTML 파일에 매핑하기 위해서는 다음과 같은 폴더 구조가 된다. 
 ```
 src/
  +- main/
@@ -1735,17 +1810,17 @@ public class MyErrorViewResolver implements ErrorViewResolver {
 Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`를 직접 등록하기위해 `ErrorPageRegistrar` 인터페이스를 사용할 수 있다. 이 
 
 
-### 29.1.6 Welcome Page
-스프링 부트는 static 과 template으로 구성된 welcome 페이지 둘 다 지원한다. 스프링 부트는 정적 컨텐트 위치로 설정되어있는 곳에서 `index.html` 파일을 제일 먼저 찾는다. 찾지 못한다면, `index` template를 찾는다. 만약 둘 중 하나를 찾는다면, 어플리케이션의 welcome page로 자동으로 사용된다.
-
-### 29.1.7 Favicon 커스텀하기
-스프링 부트는 정적 컨텐트 위치로 설정된 곳과 클래스패스의 최상위(그 다음에)에서 `favicon.ico`를 찾는다. 파일이 존재하면, 어플리케이션의 favicon으로 자동으로 사용된다.
 
 --- 
 
 ##### 단어  
 
-result in : 그 결과 ~가 되다
+caveat : (격식, 라틴어에서)(특정 절차를 따르라는) 통고[경고]
+in the past : 옛날, 이전에, 과거에  
+thoroughly : 철저히, 대단히, 완전히, 충분히, 샅샅이  
+dedicated : ~전용의, 특정한 작업용으로 만들어진  
+That is why : 왜냐하면, 그렇기 떄문에, 그러니까, 그것이[그게] 바로  
+result in : 그 결과 ~가 되다  
 result in sth : (결과적으로) ~을 낳다[야기하다], 
 In addition to : ~외에도, ~에 더하여  
 Most of the time : 대부분, 거의  
