@@ -1755,13 +1755,56 @@ Spring MVC는 특정한 요청에 대해 `WebDataBinder`를 초기화하기 위�
 
 ### 29.1.10 템플릿 엔진
 
-REST 웹 서비스뿐만 아니라, 동적 HTML 컨텐츠를 제공하는 Spring MVC를 사용할 수도 있다. Spring MVC는 다양한 템플릿 기술인 Thymeleaf, FreeMarker와 JSP를 MVC는 지원한다.
+REST 웹 서비스뿐만 아니라, 동적 HTML 컨텐츠를 제공하는 Spring MVC를 사용할 수도 있다. Spring MVC는 다양한 템플릿 기술인 Thymeleaf, FreeMarker와 JSP를 MVC는 지원한다. 또한, 많은 다른 템플릿 엔진은 Spring MVC 통합을 포함한다.
 
+스프링 부트는 자동 설정을 지원하는 다음의 템플릿 엔진을 포함한다.
+
+- [FreeMarker](https://freemarker.apache.org/docs/)
+- [Groovy](http://docs.groovy-lang.org/docs/next/html/documentation/template-engines.html#_the_markuptemplateengine)
+- [Thymeleaf](https://www.thymeleaf.org/)
+- [Mustache](https://mustache.github.io/)
+
+> 가능하면, JSP는 피해라. 내장 서블릿 컨테이너에서 JSP를 사용할 때 몇몇의 [알려진 제한 사항](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-jsp-limitations)이 있다.
+
+기본 설정을 사용해서 여기 중 하나의 템플릿 엔진을 사용할 때, `src/main/resources/templates`에서 자동으로 템플릿을 선택한다.
+
+> 어떻게 어플리케이션을 실행시키냐에 따라, IntelliJ IDEA는 클래스패스를 다르게 정렬한다. IDE에서 메인 메서드를 사용하여 어플리케이션을 실행하는 것은 Maven이나 Gradle이나 jar로 패키지 된 것들을 사용해서 어플리케이션을 실행할 때보다 다른 순서가 생성된다. 이는 스프링 부트가 클래스패스에서 템플릿을 찾는 것을 실패하는 것을 야기할 수 있다. 이런 문제가 있다면 IDE에서 클래스패스를 reorder하여 모듈의 클래스와 리소스를 첫번째로 배치해라.(If you have this problem, you can reorder the classpath in the IDE to place the module’s classes and resources first.) 대신에, 클래스패스에 모든 `template` 디렉토리를 검색하기 위해 템플릿 접두사를 다음과 같이 설정할 수 있다: `classpath*:/template/`
 
 ### 29.1.11 에러 핸들링
-~
+
+기본적으로, 스프링 부트는 모든 에러를 합리적인 방법으로 다루는 `/error` 매핑을 제공하고 서블릿 컨테이너에서 "global" 에러 페이지로 등록되어 있다. 기계 클라이언트의 경우, 예외 메시지, HTTP 상태, 에러의 자세한 사항을 가진 JSON 응답을 생성한다. 브라우저 클라이언트의 경우, HTML 포맷에 동일한 데이터를 랜더링하는 "whitelabel"에러 뷰가 있다(사용자 정의하려면, `error`를 해결하는 `View`를 추가해라). 기본 동작을 완전히 바꾸기위해서, `ErrorController`를 구현하고 타입의 빈 정의를 등록하거나 이미 존재하는 메커니즘을 사용하지만 컨텐츠는 교체하는 `ErrorAttributes` 타입의 빈을 추가해라.
+
+> `BasicErrorController`은 사용자 정의한 `ErrorController`의 기초 클래스로서 사용될 수 있다. 이것은 특히 새로운 컨텐츠 타입에 대한 핸들러를 추가하기를 원한다면 유용하다(기본 동작은 `text/html`을 명확하게 조작하는 것이고 모든 것에 대해 fallback을 제공한다.). 이렇게 하려면, `BasicErrorController`를 확장하고, `produeces` 속성을 가진 `@RequestMapping`를 사용한 public 메소드를 추가하고 새로운 타입의 빈을 생성해라.
+
+다음으로 보여지는 예제 처럼, 특정 컨트롤러나 예외 타입에 대해 반환하는 예외 JSON 문서를 사용자 정의하기 위한 `@ControllerAdvice`를 사용한 클래스 어노테이트를 정의할 수도 있다.
+
+```
+@ControllerAdvice(basePackageClasses = AcmeController.class)
+public class AcmeControllerAdvice extends ResponseEntityExceptionHandler {
+
+	@ExceptionHandler(YourException.class)
+	@ResponseBody
+	ResponseEntity<?> handleControllerException(HttpServletRequest request, Throwable ex) {
+		HttpStatus status = getStatus(request);
+		return new ResponseEntity<>(new CustomErrorType(status.value(), ex.getMessage()), status);
+	}
+
+	private HttpStatus getStatus(HttpServletRequest request) {
+		Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+		if (statusCode == null) {
+			return HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return HttpStatus.valueOf(statusCode);
+	}
+
+}
+```
+
+앞선 예제에서, `AcmeController`로 같은 패키지에 정의된 컨트롤러에 대해 `YourException`이 던져진다면, `ErrorAttributes` 표현 대신에 `CustomErrorType` POJO의 JSON 표현은 사용된다.
+
+
 #### 커스텀 에러 페이지
-주어진 상태 코드에 대해서 커스텀 HTML 에러 페이지를 보여주고 싶은 경우에는, `/error` 폴더에 파일을 추가해라. 에러 페이지 정적 HTML(static resource 폴더의 아래에 추가된)이거나 템플릿을 사용하여 만들수 있다. 파일의 이름은 상태 코드나 series maskdhk 정확히 일치해야 한다.
+주어진 상태 코드에 대해서 커스텀 HTML 에러 페이지를 보여주고 싶은 경우에는, `/error` 폴더에 파일을 추가해라. 에러 페이지 정적 HTML(static resource 폴더의 아래에 추가된)이거나 템플릿을 사용하여 만들수 있다. 파일의 이름은 상태 코드나 series mask와 정확히 일치해야 한다.
 
 예를 들어서, `404`를 정적 HTML 파일에 매핑하기 위해서는 다음과 같은 폴더 구조가 된다. 
 ```
@@ -1807,14 +1850,51 @@ public class MyErrorViewResolver implements ErrorViewResolver {
 `@ExceptionHandler`메소드와 `@ControllerAdvice`와 같은 규칙적인 Spring MVC 를 사용할 수도 있다. 그런 다음에 `ErrorController`는 처리 되지 않은 예외를 잡아낸다.
 
 #### Spring MVC의 외부의 에러 페이지 매핑하기
-Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`를 직접 등록하기위해 `ErrorPageRegistrar` 인터페이스를 사용할 수 있다. 이 
+Spring MVC를 사용하지 않은 어플리케이션에 대해서, `ErrorPages`를 직접 등록하기위해 `ErrorPageRegistrar` 인터페이스를 사용할 수 있다. 이 abstraction은 내부의 서블릿 컨테이너에서 직접 작동하고 Spring MVC `DispatcherServlet`을 가지고 있지 않더라도 작동한다.
 
+```java
+@Bean
+public ErrorPageRegistrar errorPageRegistrar(){
+	return new MyErrorPageRegistrar();
+}
 
+// ...
+
+private static class MyErrorPageRegistrar implements ErrorPageRegistrar {
+
+	@Override
+	public void registerErrorPages(ErrorPageRegistry registry) {
+		registry.addErrorPages(new ErrorPage(HttpStatus.BAD_REQUEST, "/400"));
+	}
+
+}
+```
+
+> `Filter`로서 조작되는 경로(스프링 프레임워크가 아닌 일반적인 Jersey와 Wicket 같은)에서 `ErrorPage`를 등록하는 경우, 다음에 보여지는 예제처럼 `ERROR` 디스패쳐로서 `Filter`를 명백하게 등록해야 한다.
+
+```java
+@Bean
+public FilterRegistrationBean myFilter() {
+	FilterRegistrationBean registration = new FilterRegistrationBean();
+	registration.setFilter(new MyFilter());
+	...
+	registration.setDispatcherTypes(EnumSet.allOf(DispatcherType.class));
+	return registration;
+}
+```
+
+기본 `FilterRegistrationBean`은 `ERROR` 디스패쳐 타입을 포함하지 않는 것을 알아둬라.
+
+주의 : 서클릿 컨테이너에 배포할 때, 스프링 부트는 에러 상태에 요청을 적절한 에러 페이지에 포워드하는 에러 페이지 필터를 사용한다.
 
 --- 
 
 ##### 단어  
 
+deploy : 배포하다  
+then : (논리적인 결과를 나타내어) 그러면[그렇다면]
+end up : 결국 (어떤 처지에) 처하게 되다  
+depending on : ~에 따라  
 caveat : (격식, 라틴어에서)(특정 절차를 따르라는) 통고[경고]
 in the past : 옛날, 이전에, 과거에  
 thoroughly : 철저히, 대단히, 완전히, 충분히, 샅샅이  
