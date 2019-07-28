@@ -1336,13 +1336,10 @@ debug 모드가 활성화 될 때, 코어 로거의 선택(임베디드 컨테�
 
 대신에, `--trace` 플래그(또는 `application.properties`에서 `trace=true`)`를 사용해서 어플리케이션을 실행하면 "trace" 모드를 활성화 할 수 있다. 이렇게 하면 코어 로거의 선택에 대한 trace 로깅이 활성화 된다. (임베디드 컨테이너, Hibernate 스키마 생성 그리고 전체 스프링 포트폴리오(?))
 
-<<<<<<< HEAD
-## 26.2.1 컬러 코드 출력
-ANSI를 지원하는 터미널인 경우, 읽기 쉽게 지원하는 컬러 출력을 사용할 수 있다.  `spring.output.ansi.enabled`를 지원되는 값으로 설정해서 자동 탐지를 재정의할 수 있다.(You can set spring.output.ansi.enabled to a supported value to override the auto detection.)
-=======
 ### 26.2.1 컬러 코드 출력
+ANSI를 지원하는 터미널인 경우, 읽기 쉽게 지원하는 컬러 출력을 사용할 수 있다.  `spring.output.ansi.enabled`를 지원되는 값으로 설정해서 자동 탐지를 재정의할 수 있다.(You can set spring.output.ansi.enabled to a supported value to override the auto detection.)
+
 ### 26.3 파일 출력
->>>>>>> 23c3ef9283168a52f49e15e02c798eadd1459f19
 
 `%clr` ~ 단어를 사용함으로서 컬러 코딩이 설정된다. 다음의 예제와 같이, 가장 단순한 형태로, 컨버터는 로그 레벨에 따라 출력을 색칠한다.
 
@@ -1427,6 +1424,7 @@ sql | org.springframework.jdbc.core, org.hibernate.SQL
 로깅 시스템에 따르면, 다음의 파일이 불러와진다.
 
 Logging System | Customization
+--- | ---
 Logback | `logback-spring.xml`, `logback-spring.groovy`, `logback.xml`, 이나 `logback.groovy`
 Log4j2 | `log4j2-spring.xml` 이나 `log4j2.xml`
 JDK (Java Util Logging) | `logging.properties`
@@ -1538,7 +1536,7 @@ spring.messages.fallback-to-system-locale=false
 Jackson은 기본 라이브러리이고 더 선호된다.
 
 ### 28.1 Jackson
-Jackson에 대한 자동 설정은 제공되고 Jackson은 `spring-boot-starter-json`의 한 부분이다. Jackson이 클래스패스에 있으면 [ObjectMapper] 빈이 자동으로 설정된다. [`ObjectMapper`의 설정 커스터마이징하기]위해서 몇몇의 설정 속성은 제공된다.(https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-the-jackson-objectmapper)
+Jackson에 대한 자동 설정은 제공되고 Jackson은 `spring-boot-starter-json`의 한 부분이다. Jackson이 클래스패스에 있으면 [ObjectMapper] 빈이 자동으로 설정된다. [`ObjectMapper`의 설정 커스터마이징하기](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-customize-the-jackson-objectmapper)위해서 몇몇의 설정 속성은 제공된다.
 
 ### 28.2 Gson
 Gson에 대한 자동 설정은 제공된다. Gson이 클래스패스에 있을 때 `Gson` 빈이 자동으로 설정된다. 설정을 커스터마이즈하기 위해서 몇몇의 `spring.gson.*` 설정 속성은 제공된다. 더 조작하려면, 하나 이상의 `GsonBuilderCustomizer` 빈들을 사용할 수 있다.
@@ -1885,12 +1883,45 @@ public FilterRegistrationBean myFilter() {
 
 기본 `FilterRegistrationBean`은 `ERROR` 디스패쳐 타입을 포함하지 않는 것을 알아둬라.
 
-주의 : 서클릿 컨테이너에 배포할 때, 스프링 부트는 에러 상태에 요청을 적절한 에러 페이지에 포워드하는 에러 페이지 필터를 사용한다.
+주의 : 서클릿 컨테이너에 배포할 때, 스프링 부트는 에러 상태에 요청을 적절한 에러 페이지에 포워드하는 에러 페이지 필터를 사용한다. 응답이 아직 커밋 되지 않은 경우에만 요청은 올바른 에러 페이지로 포워드 할 수 있다. 기본적으로, WebSphere Application Server 8.0 이상은 서블릿의 서비스 메소드의 성공적으로 완료하면 응답을 커밋한다. 이 동작을 막으려면 `com.ibm.ws.webcontainer.invokeFlushAfterService`를 `false`로 설정하면 된다.
+
+### 29.1.12 Spring HATEOAS
+
+하이퍼미디어를 이용한 RESTful API로 개발하는 경우, 스프링 부트는 대부분의 어플리케이션에서 잘 작동하는 Spring HATEOAS에 대한 자동 설정을 제공한다. 자동 설정은 `@EnableHypermediaSupport` 사용 할 필요를 대체하고  `LinkDiscoverers`와  원하는 표현에 올바른 marshal 응답을 하도록 구성된 `ObjectMapper`을 포함하여 하이퍼미디어 기반인 어플리케이션으로 쉽게 만드는 많은 빈들을 등록한다. `ObjectMapper`은 다양한 `spring.jackson.*` 속성을 설정하거나 사용자 정의가 되거나 만약 존재한다면 `Jackson2ObjectMapperBuilder` 빈으로 사용자 정의된다.
+
+`@EnableHypermediaSupport`를 사용하면 Spring HATEOAS의 구성을 조작할 수 있다. 이렇게 하면 이전에 설명한 `ObjectMapper` 사용자 정의를 사용 불가능하게 된다.
+
+### 29.1.13 CORS 지원
+[Cross-origin resource sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) (CORS)은 대부분의 브라우저에서 구현된 W3C 설명서이다.
+
+버전 4.2에서 Spring MVC는 [CORS를 지원한다](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web.html#cors). 스프링 부트 어플리케이션에서 `@CrossOrigin`으로 CORS 설정하는 컨트롤러 메소드를 사용하는 것은 다른 특정한 설정이 요구되지 않는다. 다음에 보여지는 예제처럼, 글로벌 CORS 설정은 사용자 정의된 `addCorsMappings(CorsRegistry)`메소드로 `WebMvcConfigurer`빈을 등록해서 정의 될 수 있다.
+
+```java
+@Configuration
+public class MyConfiguration {
+
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/api/**");
+			}
+		};
+	}
+}
+```
+
+## 29.2 The “Spring WebFlux Framework”
+
+
+
 
 --- 
 
 ##### 단어  
 
+make use of : ~을 이용[활용]하다, ~로 덕보다  
 deploy : 배포하다  
 then : (논리적인 결과를 나타내어) 그러면[그렇다면]
 end up : 결국 (어떤 처지에) 처하게 되다  
