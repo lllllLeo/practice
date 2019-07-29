@@ -1913,14 +1913,98 @@ public class MyConfiguration {
 ```
 
 ## 29.2 The “Spring WebFlux Framework”
+Spring WebFlux는 스프링 프레임워크 5.0에서 초개된 새로운 리액티브 웹 프레임워크이다. Spring MVC와는 달리, Servlet API를 필요로 하지않고 완전히 비동기적이고 논블로킹, 그리고 [Reactor 프로젝트](https://projectreactor.io/)를 통해서 [Reactive Streams](https://www.reactive-streams.org/) 규격을 구현한다.
 
+Spring WebFlux는 functional과 어노테이션 기반 두 가지가 있다. 다음의 예제처럼, 어노테이션 기반은 Spring MVC 모델과 꽤 가깝다.
 
+```java
+@RestController
+@RequestMapping("/users")
+public class MyRestController {
 
+	@GetMapping("/{user}")
+	public Mono<User> getUser(@PathVariable Long user) {
+		// ...
+	}
+
+	@GetMapping("/{user}/customers")
+	public Flux<Customer> getUserCustomers(@PathVariable Long user) {
+		// ...
+	}
+
+	@DeleteMapping("/{user}")
+	public Mono<User> deleteUser(@PathVariable Long user) {
+		// ...
+	}
+
+}
+```
+
+다음으로 보여지는 예제에서, functional variant인 "WebFlux.fn"는 라우팅 구성을 요청의 실제 핸들링으로부터 분리한다.
+
+```java
+@Configuration
+public class RoutingConfiguration {
+
+	@Bean
+	public RouterFunction<ServerResponse> monoRouterFunction(UserHandler userHandler) {
+		return route(GET("/{user}").and(accept(APPLICATION_JSON)), userHandler::getUser)
+				.andRoute(GET("/{user}/customers").and(accept(APPLICATION_JSON)), userHandler::getUserCustomers)
+				.andRoute(DELETE("/{user}").and(accept(APPLICATION_JSON)), userHandler::deleteUser);
+	}
+
+}
+
+@Component
+public class UserHandler {
+
+	public Mono<ServerResponse> getUser(ServerRequest request) {
+		// ...
+	}
+
+	public Mono<ServerResponse> getUserCustomers(ServerRequest request) {
+		// ...
+	}
+
+	public Mono<ServerResponse> deleteUser(ServerRequest request) {
+		// ...
+	}
+}
+```
+
+WebFlux는 스프링 프레임워크의 한 부분이고 [참조 문서](https://docs.spring.io/spring/docs/5.1.8.RELEASE/spring-framework-reference/web-reactive.html#webflux-fn)에서 자세한 정보들을 확인할 수 있다.
+
+> 라우터의 정의를 원하는 만큼 모듈화한 것 처럼 많은 `RouterFunction` 빈을 정의할 수 있다. 우선 순위로 적용할 필요가 있는 경우에는 빈을 정렬할 수 있다.
+
+시작하기 위해서, 어플리케이션에 `spring-boot-starter-webflux` 모듈을 추가해라
+
+> 어플리케이션에 `spring-boot-starter-web`와 `spring-boot-starter-webflux` 모듈을 둘 다 추가하는 것은 WebFlux가 아닌 스프링 부트은 Spring MVC 자동 설정을 한다. 이 동작이 선택되었기 때문에 많은 Spring 개발자는 리액티브 `WebClient`를 사용하기 위해서 Spring MVC 어플리케이션에 `spring-boot-starter-webflux`를 추가한다. `SpringApplication.setWebApplicationType(WebApplicationType.REACTIVE)`으로 어플리케이션 타입을 선택함으로써 사용자의 선택을 강요할 수 있다.
+
+### 29.2.1 Spring WebFlux Auto-configuration
+
+스프링 부트는 대부분의 어플리케이션에서 잘 작동하는 Spring WebFlux에 대해 자동 설정을 제공한다.
+
+다음의 자동 설정은 스프링의 기본의 위에 다음의 기능을 추가한다.
+
+- `HttpMessageReader`와 `HttpMessageWriter` 인스턴스에 대한 코드 설정하기 (이 문서에서 추후에 설명됨)
+- Webjars에 대한 지원을 포함하고 static resources을 제공하는 것에 대한 지원 (이 문서에서 추후에 설명됨)
+
+Spring Boot WebFlux 특징을 계속 유지하고 싶고 추가적인 WebFlux configuration을 추가하고 싶다면, `@EnableWebFlux`없이 `WebFluxConfigurer`타입의 `@Configuration`클래스을 추가할 수 있다.
+
+Spring WebFlux를 완전히 조작하기를 원한다면 `@EnableWebFlux`를 사용해서 `@Configuration` 어노테이션을 추가해라.
+
+### 29.2.2 HttpMessageReaders와 HttpMessageWriters를 이용한 HTTP 코덱
+Spring WebFlux는 HTTP 요청과 응답을 변환하는 `HttpMessageReader`와 `HttpMessageWriter`인터페이스를 사용한다. 클래스패스에서 이용가능한 라이브러리에서 찾아서 합리적인 기본값을 가지기 위해 `CodecConfigurer`를 사용하여 설정한다.
+
+스프링 부트는 `CodecCustomizer` 인스턴스를 사용해서 추가의 사용자정의를 지원한다. 예를 들어서, `spring.jackson.*` 설정 키는 Jacson codec에서 지원된다.
 
 --- 
 
 ##### 단어  
 
+enforce : 집행[시행/실시]하다, 강요하다
+as you like (it) : 뜻대로, 마음이 내키는 대로, 하고싶은 대로  
+specification : 설명서, 규격  
 make use of : ~을 이용[활용]하다, ~로 덕보다  
 deploy : 배포하다  
 then : (논리적인 결과를 나타내어) 그러면[그렇다면]
