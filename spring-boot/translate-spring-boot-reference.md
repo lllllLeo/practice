@@ -1996,13 +1996,45 @@ Spring WebFlux를 완전히 조작하기를 원한다면 `@EnableWebFlux`를 사
 ### 29.2.2 HttpMessageReaders와 HttpMessageWriters를 이용한 HTTP 코덱
 Spring WebFlux는 HTTP 요청과 응답을 변환하는 `HttpMessageReader`와 `HttpMessageWriter`인터페이스를 사용한다. 클래스패스에서 이용가능한 라이브러리에서 찾아서 합리적인 기본값을 가지기 위해 `CodecConfigurer`를 사용하여 설정한다.
 
-스프링 부트는 `CodecCustomizer` 인스턴스를 사용해서 추가의 사용자정의를 지원한다. 예를 들어서, `spring.jackson.*` 설정 키는 Jacson codec에서 지원된다.
+스프링 부트는 `CodecCustomizer` 인스턴스를 사용해서 추가의 사용자 정의를 지원한다. 예를 들어서, `spring.jackson.*` 설정 키는 Jacson codec에서 적용된다.
+
+코덱을 커스터마이즈하거나 추가하려면, 다음에서 볼 수 있는 예제처럼 `CodecCustomizer` 컴포넌트를 생성해라.
+
+```java
+import org.springframework.boot.web.codec.CodecCustomizer;
+
+@Configuration
+public class MyConfiguration {
+
+	@Bean
+	public CodecCustomizer myCodecCustomizer() {
+		return codecConfigurer -> {
+			// ...
+		}
+	}
+
+}
+```
+
+부트의 커스텀 JSON serializer와 deserializers을 활용할 수 있다.
+
+### 29.2.3 정적 컨텐츠
+
+기본적으로 스프링 부트는 클래스패스 안에있는 `/static`(또는 `/public`또는 `/resources`또는 `/META_INF/resources`)이라 불리는 디렉토리로부터 정적 컨텐츠를 제공한다. `addResourceHandlers` 메소드 재정의하기와 `WebFluxConfigurer`를 추가를 함으로써 동작을 수정할 수 있도록 Spring WebFlux로부터 `ResourceWebHandler`를 사용한다.
+
+기본적으로, 리소스는 `/**`로 매핑되어있지만 `spring.webflux.static-path-pattern` 속성을 설정함으로써 조정할 수 있다. 예를 들어서, 다음처럼 모든 리소스들은 `/resources/**`로 재배치될 수 있다.
+
+```
+spring.webflux.static-path-pattern=/resources/**
+```
+
 
 --- 
 
 ##### 단어  
 
-enforce : 집행[시행/실시]하다, 강요하다
+leverage : 활용
+enforce : 집행[시행/실시]하다, 강요하다  
 as you like (it) : 뜻대로, 마음이 내키는 대로, 하고싶은 대로  
 specification : 설명서, 규격  
 make use of : ~을 이용[활용]하다, ~로 덕보다  
