@@ -2028,12 +2028,59 @@ public class MyConfiguration {
 spring.webflux.static-path-pattern=/resources/**
 ```
 
+또한, `spring.resources.static-locations`를 사용해서 정적 리소스 위치를 커스터마이즈할 수 있다. 이렇게 하면 디렉토리 위치의 목록을 사용한 기본 값이 대체된다. 이렇게 하면, 기본 welcome 페이지 탐지는 커스텀 한 위치로 바뀐다. 따라서 프로그램을 실행할 때 위치에 `index.html`이 있다면, 그것은 어플리케이션의 홈페이지이다.
+
+앞에서 나열된 "standard" 정적 리소스 위치 이외에도, [Webjars content](https://www.webjars.org/)로 만들어진 특별한 경우가 있다. `/webjars/**`의 경로로 사용되는 리소스는 Webjars 포맷으로 패키지되어 있는 경우 jar 파일로부터 제공된다.
+
+> Spring WebFlux 어플리케이션은 Servlet API에 절대적으로 의존하지 않는다. 따라서 war file로 배포할 수 없고, `src/main/webapp` 디렉토리를 사용하지 않는다.
+
+### 29.2.4 Template Engines
+REST 웹 서비스 뿐만 아니라, 동적 HTML 컨텐트를 제공하는 Spring WebFlux도 사용할 수 있다. Spring WebFlux는 Thymeleaf, FreeMarker 그리고 Mustache를 포함한 다양한 템플릿 기술을 지원한다.
+
+스프링 부트는 다음의 템플릿 엔진에 대한 자동 설정을 지원한다.
+- [FreeMarker](https://freemarker.apache.org/docs/)
+- [Thymeleaf](https://www.thymeleaf.org/)
+- [Mustache](https://mustache.github.io/)
+
+기본 설정을 사용한 이중의 템플릿 엔진 하나를 사용할 때, `src/main/resources/templates`에서 자동적으로 템플릿을 가져온다. 
+
+### 29.2.5 Error Handling
+
+스프링 부트는 합리정인 방법으로 모든 에러를 다루는 `WebExceptionHandler`를 제공한다. 처리 순서에서의 `WebExceptionHandler`의 위치는 WebFlux로 제공된 헨들러 바로 앞에 있고 마지막으로 고려된다. 기계 클라이언트의 경우, 그것은/// 에러, HTTP 상태 그리고 예외 메시지의 자세한 사항을 가진 JSON 응답을 생성한다. 브라우저 클라이언트의 경우, HTML 포맷으로 동일한 데이터를 랜더링하는 "whitelabel" 에러 핸들러가 있다. 또한, 에러를 띄우기 위해 HTML 템플릿을 제공할 수 있다.([다음 섹션](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-webflux-error-handling-custom-error-pages)을 봐라)
+
+이 기능을 커스터마이징하는 첫번째 일은 흔히 존재하는 메커니즘을 사용하지만 에러 컨텐츠를 대체하거나 증대시킨다. 이를 위해 `ErrorAttributes` 타입의 빈을 추가할 수 있다.
+에러를 처리하는 동작을 바꾸기 위해서, `ErrorWebExceptionHandler`를 구현할 수 있고 해당 타입의 빈 정의를 등록할 수 있다. 왜냐하면 `WebExceptionHandler`은 완전히 low-level 이기 떄문에, 다음에 보여지는 예제처럼, 스프링 부트 또한 WebFlux functional 방법으로 에러를 처리할 수 있는 편리한 `AbstractErrorWebExceptionHandler`를 제공한다.
+
+```java
+public class CustomErrorWebExceptionHandler extends AbstractErrorWebExceptionHandler {
+
+	// Define constructor here
+
+	@Override
+	protected RouterFunction<ServerResponse> getRoutingFunction(ErrorAttributes errorAttributes) {
+
+		return RouterFunctions
+				.route(aPredicate, aHandler)
+				.andRoute(anotherPredicate, anotherHandler);
+	}
+
+}
+```
 
 --- 
 
 ##### 단어  
 
-leverage : 활용
+
+in : ~으로   
+involve : 수반하다, 사용하다  
+immediately : (특정 장소시간) 바로 옆에[가까이에]  
+  - immediately after : 직후에
+  - immediately before : 직전에, 바로 전에, 바로 앞에  
+
+strictly : 엄격히 엄하게, 절대적으로, 엄밀히, 정확히  
+in addition to : ~이외에도  
+leverage : 활용  
 enforce : 집행[시행/실시]하다, 강요하다  
 as you like (it) : 뜻대로, 마음이 내키는 대로, 하고싶은 대로  
 specification : 설명서, 규격  
