@@ -2066,6 +2066,41 @@ public class CustomErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
 
 }
 ```
+보다 완벽한 그림을 위해서, 직접 `DefaultErrorWebExceptionHandler`를 서브클래스로 등록하고 특정 메소드를 재정의 할 수 있다.
+
+#### 커스텀 에러 페이지
+주어진 상태 코드에 대해 커스텀 HTML 에러 페이지를 띄우고 싶은 경우, `/error` 폴더에 파일을 추가해라. 에러 페이지는 정적 HTML(정적 리소스 폴더의 아래에 추가)이 될 수 있거나 템플릿으로 만들어질 수 있다. 파일의 이름은 정확한 상태 코드나 series mask가 되어야한다.
+
+예를 들어, `404`를 정적 HTML 파일에 매핑하기 위해서, 다음과 같은 폴더 구조가 되어야 한다.
+
+```
+src/
+ +- main/
+     +- java/
+     |   + <source code>
+     +- resources/
+         +- public/
+             +- error/
+             |   +- 404.html
+             +- <other public assets>
+```
+
+Mustache 템플릿을 사용하여 모든 `5xx` 에러를 매핑하려면, 다음과 같은 폴더 구조가 되어야 한다.
+
+```
+src/
+ +- main/
+     +- java/
+     |   + <source code>
+     +- resources/
+         +- templates/
+             +- error/
+             |   +- 5xx.mustache
+             +- <other templates>
+```
+
+### 29.2.6 Web Filters
+Spring WebFlux는 HTTP 요청-응답 교환을 필터하기 위해서 구현할 수 있는 `WebFilter` 인터페이스를 제공한다. 어플리케이션 컨텍스트에서 발견된 `WebFiter` 빈은 자동으로 각 교환을 필터링하는데 사용된다.
 
 --- 
 
