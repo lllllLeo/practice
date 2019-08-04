@@ -2102,11 +2102,23 @@ src/
 ### 29.2.6 Web Filters
 Spring WebFlux는 HTTP 요청-응답 교환을 필터하기 위해서 구현할 수 있는 `WebFilter` 인터페이스를 제공한다. 어플리케이션 컨텍스트에서 발견된 `WebFiter` 빈은 자동으로 각 교환을 필터링하는데 사용된다.
 
+필터의 순서가 중요한 경우에는 `@Order`를 어노테이트하거나 `Ordered`를 구현할 수 있다. 아마 스프링 부트 자동 설정은 웹 필터는 설정해 줄 것이다. 이를 사용할 때, 순서는 다음에 표시된 테이블처럼 사용된다.
+
+
+Web Filter | Order
+--- | ---
+MetricsWebFilter | Ordered.HIGHEST_PRECEDENCE + 1
+WebFilterChainProxy (Spring Security) | -100
+HttpTraceWebFilter | Ordered.LOWEST_PRECEDENCE - 10
+
+### 29.3 JAX-RS and Jersey
+REST endpoint에 대해 JAX-RS 프로그래밍 모델을 선호하는 경우, Spring MVC 대신에 사용 가능한 구현 중 하나를 사용할 수 있다. Jersy와 Apache CXF는 즉시 잘 작동한다?.
+
 --- 
 
 ##### 단어  
 
-
+where : ~ 경우에는, ~상황에는  
 in : ~으로   
 involve : 수반하다, 사용하다  
 immediately : (특정 장소시간) 바로 옆에[가까이에]  
