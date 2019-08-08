@@ -2112,12 +2112,55 @@ WebFilterChainProxy (Spring Security) | -100
 HttpTraceWebFilter | Ordered.LOWEST_PRECEDENCE - 10
 
 ### 29.3 JAX-RS and Jersey
-REST endpoint에 대해 JAX-RS 프로그래밍 모델을 선호하는 경우, Spring MVC 대신에 사용 가능한 구현 중 하나를 사용할 수 있다. Jersy와 Apache CXF는 즉시 잘 작동한다?.
+REST endpoint에 대해 JAX-RS 프로그래밍 모델을 선호하는 경우, Spring MVC 대신에 사용 가능한 구현 중 하나를 사용할 수 있다. Jersy와 Apache CXF는 즉시 잘 작동한다?. CFX는 어플리케이션 컨텍스트에 `@Bean`으로서 `Filter`이나 `Servlet` 등록하는 것을 요구한다. Jersey는 네이티브 Spring의 지원을 가지고, 스프링 부트에서 자동 설정을 지원하고 스타터도 함께 제공한다.
+
+Jersey를 사용하여 시작하기 위해, 의존성으로 `spring-boot-starter-jersey`를 포함하고 다음에 보여지는 예제처럼, 모든 endpoints를 등록하는 `ResourceConfig`타입의 `@Bean` 하나가 필요할 것이다.
+
+```java
+@Component
+public class JerseyConfig extends ResourceConfig {
+
+	public JerseyConfig() {
+		register(Endpoint.class);
+	}
+
+}
+```
+
+> Jersey의 실행가능한 아카이브의 스캔에 대한 지원은 다소 제한적이다. 예를 들어, 실행가능한 jar 파일로 채워져있거나 실행가능한 war 파일로 구동될 때 `WEB-INF/clalsses`에 있는 패키지에서 endpoints에 대한 스캔을 할 수 없다. 이런 제한을 피하기 위해서, 앞의 예와 같이 `packages` 메소드를 사용하면 안되고, endpoints는 `register` 메소드를 사용하여 개별적으로 등록해야 한다.
+
+더 고급의 커스터마이즈를 위해, `ResourceConfigCustomizer`를 구현한 임의의 수의 빈을 등록 할 수도 있다.
+
+모든 등록된 endpoints는 HTTP 리소스 어노테이션을 가진 `@Component`이어야 한다.
+
+```java
+@Component
+@Path("/hello")
+public class Endpoint {
+
+	@GET
+	public String message() {
+		return "Hello";
+	}
+
+}
+```
+
+`Endpoint`는 Spring `@Component`이기 때문에, 생명 주기는 Spring에 의해서 관리되고 의존성 주입을 위해 `@Autowired` 어노테이션을 사용할 수 있고 외부 설정을 주입하기 위해 `@Value` 어노테이션을 사용할 수 있다. 기본적으로, Jersey 서블릿은 등록되어 있고 `/*`fh aovldehldj dlTek. `ResourceConfig`에 `@ApplicationPath`를 추가함으로써 매핑을 변경할 수 있다.
+
+기본적으로, Jersey는 `jerseyServletRegistration`라는 이름의 `ServletRegistrationBean` 타입의 `@Bean`에서 서블릿으로 구성된다. 기본적으로, 서블릿은 느리게 초기화되지만 `spring.jersey.servlet.load-on-startup`를 세팅함으로써 동작을 커스터마이즈를 할 수 있다. 동일한 이름을 사용해서 그 중 하나를 생성함으로써 빈을 재정의하거나 사용가능하지 않게 할 수 있다.
+`spring.jersey.type=filter`(이 경우, 대체하거나 재정의하는 `@Bean`은 `jerseyFilterRegistration`이다.)를 설정해서 서블릿 대신에 필터도 사용할 수 있다. 필터는 `@Order`를 가지고 있어서 `spring.jersey.filter.order`를 사용해서 설정할 수 있다. 서블릿과 필터 등록 둘다 map의 속성을 명시하기 위해서 `spring.jersey.init.*`를 사용해서 초기 파라미터를 제공 할 수 있다.
+
+설정하는 방법이 있는 [Jersey sample](https://github.com/spring-projects/spring-boot/tree/v2.1.7.RELEASE/spring-boot-samples/spring-boot-sample-jersey)를 보자
+
+### 29.4 Embedded Servlet Container Support
 
 --- 
 
 ##### 단어  
 
+arbitrary : (행동, 결정, 법칙 등이)) 임의 적인, 제멋대로인  
+  - arbitrary number
 where : ~ 경우에는, ~상황에는  
 in : ~으로   
 involve : 수반하다, 사용하다  
