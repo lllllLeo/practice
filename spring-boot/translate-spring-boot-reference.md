@@ -2154,6 +2154,20 @@ public class Endpoint {
 설정하는 방법이 있는 [Jersey sample](https://github.com/spring-projects/spring-boot/tree/v2.1.7.RELEASE/spring-boot-samples/spring-boot-sample-jersey)를 보자
 
 ### 29.4 Embedded Servlet Container Support
+스프링 부트는 내장된 Tomcat, Jetty 그리고 Undertow 서버에 대한 지원을 포함하고 있다. 대부분의 개발자들은 완전히 설정된 인스턴스를 얻기위해 적절한 "Starter"를 사용한다. 기본적으로, 내장된 서버는 포트 `8080`으로 HTTP 요청을 수신한다.
+
+### 29.4.1 Servlets, Filters, and listeners
+
+내장된 서블릿 컨테이너를 사용할 때, Spring 빈을 사용하는 것과 서블릿 컴포넌트를 스캔해서 서블릿 spec에서 서블릿, 필터 그리고 모든 리스너(`HttpSessionListener`과 같은)를 등록할 수 있다.
+
+#### Registering Servlets, Filters, and Listeners as Spring Beans
+`Servlet`, `Filter`나 서블릿 `*Listener`인스턴스는 내장 컨테이너를 사용해서 등록된 Spring 빈이다. 이는 설정하는 동안에 `application.properties`로부터 값에 대해 참조하길 원하는 경우 특히 편리하다.
+
+기본적으로, 컨텍스트에 하나의 서블릿만이 포함되어 있는 경우, `/`로 매핑된다. 여러 개의 서블릿 빈의 경우에는, 빈의 이름은 경로 접두사로서 사용된다. 필터는 `/*`로 매핑된다.
+
+컨벤션 기반의 매핑이 충분히 유연하지 않다면, 완전한 조작을 위해 `ServletRegistrationBean`, `FilterRegistrationBean`, 그리고 `ServletListenerRegistrationBean` 클래스를 사용할 수 있다.
+
+스프링 부트는 많은 자동 설정을 사용한
 
 --- 
 
