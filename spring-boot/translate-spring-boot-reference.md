@@ -2167,7 +2167,21 @@ public class Endpoint {
 
 컨벤션 기반의 매핑이 충분히 유연하지 않다면, 완전한 조작을 위해 `ServletRegistrationBean`, `FilterRegistrationBean`, 그리고 `ServletListenerRegistrationBean` 클래스를 사용할 수 있다.
 
-스프링 부트는 많은 자동 설정을 사용한
+스프링 부트는 필터 빈을 정의하는 많은 자동 설정을 사용하는 배이다. 여기에 필터의 예와 각각의 순서가 있다. (낮은 순서의 값은 높은 우선순위라는 뜻이다.)
+
+Servlet Filter | Order
+--- | --- 
+OrderedCharacterEncodingFilter | Ordered.HIGHEST_PRECEDENCE
+WebMvcMetricsFilter | Ordered.HIGHEST_PRECEDENCE + 1
+ErrorPageFilter | Ordered.HIGHEST_PRECEDENCE + 1
+HttpTraceFilter | Ordered.LOWEST_PRECEDENCE - 10
+
+보통 필터 빈을 정렬하지 않은채로 놔두는 것이 안전하다.
+
+특정 순서가 요구되는 경우에는, 어플리케이션의 문자 인코딩 설정은 그것과 위배되기 때문에 `Ordered.HIGHEST_PRECEDENCE`에서 request body를 읽는 필터 설정하는 것을 피해라. 서블릿 필터가 요청을 감싸고 있는 경우, `OrderedFilter.REQUEST_WRAPPER_FILTER_MAX_ORDER`에 작거나 똑같은 순서를 사용해서 설정되어야 한다. 
+
+### 29.4.2 Servlet Context Initialization
+내장된 서블릿 컨테이너는 서블릿 3.0+ `javax.servlet.ServletContainerInitializer`인터페이스나 스프링의 `org.springframework.web.WebApplicationInitializer`인터페이스를 직접 실행하지 않는다. 이는 war 내부에서 실행하기위해 설계뙨 써드 파티 라이브러리가 스프링 부트 어플리케이션을 고장내는 위험을 줄이기 위해 의도적인 설계 결정으로 만들어졌다.
 
 --- 
 
