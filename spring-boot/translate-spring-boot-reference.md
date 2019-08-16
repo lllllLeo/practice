@@ -2183,10 +2183,42 @@ HttpTraceFilter | Ordered.LOWEST_PRECEDENCE - 10
 ### 29.4.2 Servlet Context Initialization
 내장된 서블릿 컨테이너는 서블릿 3.0+ `javax.servlet.ServletContainerInitializer`인터페이스나 스프링의 `org.springframework.web.WebApplicationInitializer`인터페이스를 직접 실행하지 않는다. 이는 war 내부에서 실행하기위해 설계뙨 써드 파티 라이브러리가 스프링 부트 어플리케이션을 고장내는 위험을 줄이기 위해 의도적인 설계 결정으로 만들어졌다.
 
+스프링 부트 어플리케이션에서 서블릿 컨텍스르 초기화를 행할 필요가 있는 경우, `org.springframework.boot.web.servlet.ServletContextInitializer` 인터페이스를 구현하는 빈을 등록해야 한다. 하나의 `onStartUp` 메소드는 `ServletContext`에 접근하는 것 제공하고, 필요하다면, 쉽게 존재하는 `WebAplpicationInitializer`에 어뎁터로서 쉽게 사용 될 수 있다.
+
+
+####서블릿, 필터 그리고 리스너에 대한 스캐닝
+
+내장 된 컨테이너를 사용할 떄, `@WebServlet`, `@WebFilter` 그리고 `@WebListener`를 사용한 클래스 어노테이트의 자동 등록을 `@ServletComponentScan`을 사용함으로서 사용 가능하게 할 수 있다.
+
+> `@ServletComponentScan`은 컨테이너의 내장된 탐색 매커니즘을 사용하는 대신에 독립된 컨테이너 안에서는 영향이 없다.
+
+### 29.4.3 The ServletWebServerApplicationContext
+
+스프링 부트는 내장된 서블릿 컨테이너 지원에 대해 `ApplicationContext`의 다른 타입을 사용한다. `ServeltWebServerApplicationContext`는 하나의 `ServletWebServerFactory`빈에 대해 탐색하는 스스로 부트스트랩하는 `WebApplicationContext`의 특별한 타입이다. 보통 `TomcatServletWebServerFactory`이고, `JettyServeltWebServerFactory`나 `UndertowServeltWebServerFactory`는 자동 설정되어있다.
+
+> 보통 이 구현 클래스에 대해 알 필요는 없다. 대부분의 어플리케이션은 자동 설정이 되고, `ApplicationContext`에 접근하고 `WervletWebServerFactory`는 당신을 대신해서 생성한다.
+
+### 29.4.4 Customizing Embedded Servlet Containers
+
+공통의 서블릿 컨테이너 세팅은 스프링 `Environment` 속성을 이용해서 설정할 수 있다. 보통, `application.properties` 파일에서 속성을 정의한다.
+
+보통의 서버 세팅 포함:
+
+- 네트워크 세팅 : 들어오는 HTTP 요청(`server.port`)에 대해 리슨하고 있는 포트, `server.address`에 바인드하는 인터페이스 주소 등
+- 세션 세팅 : 세션이 현재 지속되고 있는지 아닌지.
+
+
+
 --- 
 
 ##### 단어  
 
+persistent : 끊김없이, 지속되는  
+and so on : 기타 등등 ...   
+on behalf : ~을 대신해서  
+bootstrap : [비유]혼자 힘, 자기 스스로 하는, 독력의  
+itself : 스스로, 그 자신  
+standalone : 독립되다, 분리되다  
 arbitrary : (행동, 결정, 법칙 등이)) 임의 적인, 제멋대로인  
   - arbitrary number
 where : ~ 경우에는, ~상황에는  
