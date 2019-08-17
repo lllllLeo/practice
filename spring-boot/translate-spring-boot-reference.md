@@ -2206,13 +2206,62 @@ HttpTraceFilter | Ordered.LOWEST_PRECEDENCE - 10
 
 - 네트워크 세팅 : 들어오는 HTTP 요청(`server.port`)에 대해 리슨하고 있는 포트, `server.address`에 바인드하는 인터페이스 주소 등
 - 세션 세팅 : 세션이 현재 지속되고 있는지 아닌지.
+  (`server.servlet.session.persistent`), 세션 타임아웃  
+  (`server.servlet.session.timeout`), 세션 데이터의 위치  
+  (`server.servlet.session.store-dir`), 그리고 세션-쿠키 설정  (`server.servlet.session.cookie.*`).  
+- 오류 관리 : 오류 페이지의 위치(`server.error.path`) 등등
+- [SSL](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-configure-ssl)
+- [HTTP 압축](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#how-to-enable-http-response-compression)
 
 
+스프링 부트는 공통의 세팅을 보여주는 것을 가능한 한 많이 시도하지만, 항상 가능하지만은 않다. 이런 경우에 대해, 전용의 네임스페이스에서 서버-특정 사용자 정의를 제공한다(`server.tomcat`과 `server.undertow`를 봐라). 예를 들어, 액세스 로그를 내장된 서블릿 컨테이너의 특정한 기능으로 설정할 수 있다.
+
+> 완벽한 목록에 대해서는 [`ServerProperties`](https://github.com/spring-projects/spring-boot/tree/v2.1.7.RELEASE/spring-boot-project/spring-boot-autoconfigure/src/main/java/org/springframework/boot/autoconfigure/web/ServerProperties.java) 클래스를 참조해라.
+
+#### Programmatic Customization
+
+내장 서블릿 컨테이너를 프로그래밍 방식으로 설정할 필요가 있다면, `WebServerFactoryCustomizer` 인터페이스를 구현한 스프링 빈을 등록할 수 있다.  
+`WebServerFactoryCustomizer`는 많은 사용자 정의 setter 메소드를 포함하는  `ConfigurableServletWebServerFactory`에 접근하는 것을 제공한다. 다음의 예는 프로그래밍 방식으로 포트를 설정하는 것을 보여준다.
+
+```java
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomizationBean implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
+
+	@Override
+	public void customize(ConfigurableServletWebServerFactory server) {
+		server.setPort(9000);
+	}
+
+}
+```
+
+> `TomcatServletWebServerFactory`, `JettyServletWebServerFactory`와 `UndertowServletWebServerFactory`는 제각각의 Tomcat, Jetty와 Undertow 대한 추가적인 사용자 정의 setter 메소드를 가지고 있는 `ConfigurableServletWebServerFactory`의 전용 variant이다.
+
+#### Customizing ConfigurableServletWebServerFactory Directly
+
+이전에 사용자 정의한 기술에 한계가 있다면, `TomcatServletWebServerFactory`, `JettyServletWebServerFactory`,나 `UndertowServletWebServerFactory`를 스스로 등록할 수 있다.
+
+```java
+@Bean
+public ConfigurableServletWebServerFactory webServerFactory() {
+	TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+	factory.setPort(9000);
+	factory.setSessionTimeout(10, TimeUnit.MINUTES);
+	factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notfound.html"));
+	return factory;
+}
+```
 
 --- 
 
 ##### 단어  
 
+respectively : 각자, 각각, 제각기  
+dedicated : 전용의  
 persistent : 끊김없이, 지속되는  
 and so on : 기타 등등 ...   
 on behalf : ~을 대신해서  
