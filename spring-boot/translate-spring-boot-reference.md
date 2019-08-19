@@ -2256,10 +2256,41 @@ public ConfigurableServletWebServerFactory webServerFactory() {
 }
 ```
 
+Setters는 많은 설정 옵션에 대해서 제공한다. 몇몇의 protected 메소드 "hooks"는 더 이국적인 무언가를 할 필효가 있을 때도 제공된다.
+
+### 29.4.5 JSP Limitations
+
+패키지된 내장 서블릿 컨테이너를 사용하는 스프링 부트 어플리케이션을 실행할 때, JSP 지원에서 몇 가지의 제한사항이 있다.
+
+- Jetty와 Tomcat을 사용하면, war 패키징을 하는 경우 작동한다. 실행가능한 war는 `java -jar`를 실행할 때 작동하고, 또한 어느 표준 컨테이너에 배포 할 수 있다. JSP는 실행가능한 jar를 사용할 때 지원받을 수 없다.
+- Undertow는 JSP를 지원하지 않는다.
+- 커스텀 `error.jsp` 페이지를 생성하는 것은 [에러 핸들링](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-error-handling)에 대한 기본 뷰를 재정의를 안한다. 대신 [커스텀 에러 페이지](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-error-handling-custom-error-pages)가 사용해야 한다.
+
+설정하는 방법을 볼 수 있도록 [JSP 예제](https://github.com/spring-projects/spring-boot/tree/v2.1.7.RELEASE/spring-boot-samples/spring-boot-sample-web-jsp)가 있다.
+
+
+### 29.5 Embedded Reactive Server Support
+
+스프링 부트는 Reactor Netty, Tomcat, Jetty와 Undertow과 같은 내장된 리액티브 웹 서버에 대한 지원을 포함한다. 대부분의 개발자는 와전한 설정 인스턴스를 얻기 위한 적절한 "Starter"를 사용한다. 기본적으로, HTTP 요청에 대해 내장된 서버는 8080 포트를 사용한다.
+
+### 29.6 Reactive Server Resources Configuration
+자동 설정을 할 때 Reactor Netty나 Jetty 서버, 스프링 부트는 서버 인스턴스에 HTTP 리소스를 제공하는 특정한 빈을 생성한다. : `ReactorResourceFactory`나 `JettyResourceFactory`
+
+기본적으로, 이 리소스들은 또한 최상의 퍼포먼스를 위해 Reactor Netty와 Jetty 클라이언트와 공유한다.
+
+- 서버와 클라이언트에 대해 같은 기술이 사용된다.
+- 클라이언트 인스턴스는 스프링 부트에서 자동설정 `WebClient.Builder`빈을 사용해서 만들어진다.
+
+
+개발자는 커스텀 `ReactorResourceFactory`나 `JettyResourceFactory`빈을 제공함으로써 Jetty와 Reactor Netty에 대한 리소스 설정 재정의 할 수 있다. - 이는 클라이언트와 서버 둘다 적용이 될것이다.
+
+
+
 --- 
 
 ##### 단어  
 
+optimal : 최상의, 최적의, 최상의  
 respectively : 각자, 각각, 제각기  
 dedicated : 전용의  
 persistent : 끊김없이, 지속되는  
