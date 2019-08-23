@@ -333,3 +333,41 @@ export default App;
  #### 매모
    - 모든 리액트 컴포넌트에는 라이프사이클이 존재하는데 컴포넌트 수명은 페이지에 랜더링되기 전 준비 과정에서 시작하여 페이지에서 사라질 때 끝난다.
    - 라이프사이클 메서드는 컴포넌트 상태에 변화가 있을 떄마다 실행하는 메서드이다.
+
+
+### 19/08/24
+
+ #### 함수형 컴포넌트
+   - 컴포넌트를 만들 때 마다 class를 만들고 ~~ 작업안해도 되고 만들 컴포넌트가 라이프사이클 API와 state를 사용할 필요가 없고, 오로지 props를 전달받아 뷰를 랜더링하는 역할만 한다면 컴포넌트를 더 간단하게 선언할 수 있다.
+   - 함수형 컴포넌트는 컴포넌트에서 라이프사이클, state 등 불필요한 기능을 제거한 상태이기 때문에 메모리 소모량은 일반 클래스형 컴포넌트보다 적다.
+   - 리액트 프로젝트에서는 state를 사용하는 컴포넌트 개수를 최소화하면 좋다. 따라서 컴포넌트를 만들 때는 대부분 함수형으로 작성하여 state를 사용하는 컴포넌트 개수를 줄이는 방향으로 하고, state나 라이프사이클 API를 꼭 써야 할 때만 클래스 형태로 변환하여 컴포넌트를 작성하면 된다.
+
+ ```javascript
+ import React from 'react';
+ 
+ function Hello(props) {
+   return (
+     <div>Hello {props.name}</div>
+   )
+ }
+
+ export default Hello;
+ ```
+
+ ES6
+ ```javascript
+ import React from 'react';
+
+ const Hello = ({name}) => {
+   return (
+     <div>Hello {name}</div>
+   )
+ }
+
+ export default Hello;
+ ```
+
+ #### CSS
+   - css를 작성하다보면 클래스네임이 중복될 가능성이 있으니까 이를 방지하기 위해 앞에 컴포넌트 이름을 접두사로 붙여주는게 좋겠다. 
+     - (App-header, App-intro)
+   - .App .header { ... } 도 가능
