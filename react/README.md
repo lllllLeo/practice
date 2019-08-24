@@ -372,6 +372,7 @@ export default App;
      - (App-header, App-intro)
    - .App .header { ... } 도 가능
 
+### 컴포넌트 스타일링
  #### CSS Module
   - <div className={[styles.box, styles.blue].join(' ')}> 이렇게 하면 
   아래 처럼 됨
@@ -399,6 +400,7 @@ export default App;
 
   #### styled-components
    - \\`\`\\ 사이에 `${자바스크립트 표현}`이 들어가면 끊어서 함수 인자로 전달한다. 이 표현을 안쓰면 문자열 그대로 감. 이를 사용하는 이유는 스타일링할 때 props에 접근하기 위해서이다.
+   - 장점은 자바스크립트 내부에서 스타일을 정의하기 때문에 동적 스타일링이 더욱 편함
  
  #### 메모
    - `yarn eject`

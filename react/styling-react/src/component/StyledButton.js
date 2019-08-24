@@ -7,18 +7,22 @@ const Wrapper = styled.div`
   padding: 1rem;
   border-radius: 3px;
   font-size: ${(props) => props.fontSize};
+    ${props => props.big && `   
+    font-size: 2rem;
+    padding: 2rem;
+    `}
   &:hover {
     background: black;
     color: white;
   }
 `;
  
-const StyledButton = ({children, ...rest}) => {
+const StyledButton = ({children, big, ...rest}) => {
   return (
-    <Wrapper {...rest}>
+    <Wrapper fontSize="1.25rem" {...rest} big = {big}>  
       {children}
     </Wrapper>
   );
 };
- 
+//  big ={big} 은 big = {true}와 동일
 export default StyledButton;
