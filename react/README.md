@@ -371,3 +371,58 @@ export default App;
    - css를 작성하다보면 클래스네임이 중복될 가능성이 있으니까 이를 방지하기 위해 앞에 컴포넌트 이름을 접두사로 붙여주는게 좋겠다. 
      - (App-header, App-intro)
    - .App .header { ... } 도 가능
+
+ #### CSS Module
+  - <div className={[styles.box, styles.blue].join(' ')}> 이렇게 하면 
+  아래 처럼 됨
+ <div class="src-App_-_box--mjrNr src-App_-_blue--3CWHK"></div>
+
+  ##### classnames
+  - 위보다 `yarn add classnames`로 라이브러리를 다운받으면 훨씬 쉽게 할 수 있다. 
+    - classNames(클래스 이름1, 클래스 이름2) 으로 하면 위처럼 자동으로 사이에 공백을 넣어줌
+      - <div className={classNames(styles.box, styles.blue)}>
+    - classNames의 bind 기능
+      - 객체 형식이나 배열 형식 또는 혼용해서 전달할 수도 있다.
+    - 객체 형식으로 사용한다면 조건부 스타일링을 할 때 매우 편리하다.
+      - 이 조건에 부합하는 값을 props로 받아와서 사용하면 동적으로 스타일 설정 가능
+  
+  #### Sass
+   - sass-loader
+     - webpack에서 Sass 파일을 읽어옴
+   - node-sass
+     - Sass로 작성된 코드들을 CSS로 변환한다.
+   - nested구조, DOM 트리 구조대로 클래스 작성가능 -> 가독성, 편리함
+   - 변수 사용 가능
+     - `$size: 100px` 이렇게 작성해놓고 밑에서 값 적는 곳에 `$size`작성하면 됨
+   - 믹스인 사용 (자주 사용하는 구문)
+     - `mixin place-at-center() { ... }` 선언 후 사용 할 때는 `@include place-at-center();`
+
+  #### styled-components
+   - \\`\`\\ 사이에 `${자바스크립트 표현}`이 들어가면 끊어서 함수 인자로 전달한다. 이 표현을 안쓰면 문자열 그대로 감. 이를 사용하는 이유는 스타일링할 때 props에 접근하기 위해서이다.
+ 
+ #### 메모
+   - `yarn eject`
+     - node_modules/react-scripts 경로에 내장된 리액트 프로젝트의 환경설정 파일들을 프로젝트 루트 경로로 이동한다.
+   
+   - 경로설정
+     **config/paths.js**에  파일에 해당 파일 경로 넣어주고
+     ```javascript
+     module.exports = {
+      (...),
+      styles: resolveApp(‘src/styles’)
+     };
+     ```
+
+     **config/webpack.config.js**의 sass-loader 부분에
+     ```javascript               
+     {
+      loader: require.resolve(‘sass-loader’),
+      options: {
+        includePaths: [paths.styles]  // 추가
+       }
+     }
+     ```
+     ~~왜 안대~~
+   - npm 또는 yarn으로 설치한 패키지 내부에 있는 파일을 불러올 때는 `~` 문자를 사용해서 node_modules에 접근할 수 있다
+     - `@import '~open-color/open-color';`
+
