@@ -428,3 +428,8 @@ export default App;
    - npm 또는 yarn으로 설치한 패키지 내부에 있는 파일을 불러올 때는 `~` 문자를 사용해서 node_modules에 접근할 수 있다
      - `@import '~open-color/open-color';`
 
+
+### 19/08/25
+
+#### 메모
+ - 아래에 readOnly가 있는데 원래 readOnly=true 이런데 리액트에서 props를 설정할 떄 = 표시가 생략되어 있으면 = {true}와 동일하다.
