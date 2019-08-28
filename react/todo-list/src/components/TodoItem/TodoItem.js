@@ -5,6 +5,11 @@ import classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 class TodoItem extends Component {
+
+    shouldComponentUpdate(nextProps, nextState) { // done일떄만 리랜더링
+        return this.props.done !== nextProps.done;
+    }
+
     render() {
         const {done, children, onToggle, onRemove} = this.props;
         /* 앞 코드에서는 비구조화 할당을 이용하여 this.props 안에 있는
@@ -19,12 +24,18 @@ class TodoItem extends Component {
 
        delete에서 자식 onClick과 부모 onClick이 있는데 지우기 버튼을 누르면 onReove -> onToggle
        순으로 함수가 실행된다.
+       -> propagation이라고 한다. 이를 방지하려면 자식 요소의 onClick 처리 함수 내부에서 e.stopPropagation
+       함수를 호출해야 한다.
         */
         return(
             <div className={cx('todo-item')} onClick={onToggle}>
                 <input className={cx('tick')} type="checkbox" checked={done} readOnly/>
                 <div className={cx('text', {done})}>{children}</div>
-                <div className={cx('delete')} onClick={onRemove}>[지우기]</div>
+                <div className={cx('delete')} onClick={(e) => {
+                    onRemove();
+                    e.stopPropagation();
+                }
+                }>[지우기]</div>
             </div>
         );
     }
