@@ -266,6 +266,7 @@ export default App;
    - state를 수정할 때에는 setState()를 사용해야한다. 배열에서 값을 추가하기 위해 push()를 사용한다면 기존 배열 자체가 변형되므로 안됨. 자동 트리거가 실행이 안된다. 그래서 기존 배열을 직접 수정하지 않고, 기존 배열과 새 값을 합친 새 배열을 생성하는 concat()을 사용하면 된다.
 
  #### 전개 연산자 (spread operator)
+   - 함수를 호출하는 인자로 배열을 사용하고 싶을 때나 배열을 정의하는 리터럴 내에서 사용할 수 있다.
    - ... 뒤에 위치한 배열 값을 그대로 꺼내서 현재 배열에 복사하는 것
 
  #### array.filter()
@@ -461,7 +462,7 @@ export default App;
    - action : store에서 상태 변화를 일으킬 때 참조하는 객체이다.
      - type의 값은 필수이다. 나머지는 선택
 
-   - reducer : 상태에 변화를 일으키는 함수. 파라미터를 두 개 받는데, 첫 번쨰는 현재 상태, 두 번쨰는 액션 객체를 파라미터로 받는다.
+   - reducer : 액션의 type에 따라 변화를 일으키는 함수 / 상태에 변화를 일으키는 함수. 파라미터를 두 개 받는데, 첫 번쨰는 현재 상태(state), 두 번쨰는 액션 객체를 파라미터로 받는다.
    　　－리듀서가 초기에 사용할 초기 상태 initialState 값부터 먼저 설정해야 리듀서를 만들 수 있다.
        - 리듀서 함수에서 counter(state = initialState) 라고 되어있는데 ES6 문법으로, state 값이 undefined라면 initialState를 기본 값으로 사용한다는 의미이다.
        - 리덕스에서 상태를 업데이트할 때는 컴포넌트의 state를 다룰 때처럼 값을 직접 수정하면 안된다. 새로운 객체를 만든 후 그 안에 상태를 정의해야 한다.
@@ -470,12 +471,22 @@ export default App;
    - subscribe() : 이 함수가 호출되면 반호나 값으로 구동을 취소하는 unsubscribe 함수를 반환한다. 나중에 구독을 취소해야 할 때는 unsubscribe()를 입력하여 호출하면 됨
    - getState() 함수는 현재 스토어 상태를 반환
 
+   - store : 리액트에서 스토어를 생성할 때 보통 프로젝트의 엔트리 포인트인 `src/index.js`파일에서 만든다
    - store.dispatch(action); 을 하면 이 액션들이 디스패치될 때마다 구독할 때 등록했던 함수를 실행 함
 
      ```javasciprt
      const unsubscribe = store.subscribe(() => {
         console.log(store.getState()) //  <-
      });
+     ```
+
+   - Provider : react-redux 라이브러리에 내장된 리액트 어플리케이션에 손쉽게 스토어를 연동할 수 있도록 도와주는 컴포넌트이다.
+     - Provicer 컴포넌트를 불러온 후 연동할 프로젝트의 최상위 컴포넌트(redux-counter프로젝트에서는 App컴포넌트)를 감싸고, Provider 컴포넌트의 props로 store를 넣어주면 된다
+
+     ```javascript
+       <Provider store={store}>
+          <App/>
+       </Provider>,
      ```
 
    ##### 리덕스의 세 가지 규칙
