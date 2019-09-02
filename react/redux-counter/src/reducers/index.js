@@ -12,6 +12,9 @@ const initialState = {
  이때 주의할 점은 state를 직접 수정하면 안 되고,
  기존 상태 값에 원하는 값을 덮어쓴 새로운 객체를 만들어서 반환해야 한다.
 
+ ------------
+ 리듀서를 분리하면 서브 리듀서라고 한다. 만든 후에는 이를 통합시키는 루트 리듀서를 만들어야 한다.
+
 */
 
 function counter(state = initialState, action) {
