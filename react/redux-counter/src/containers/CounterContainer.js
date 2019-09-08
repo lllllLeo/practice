@@ -25,7 +25,7 @@ export function getRandomColor() {
     const random = Math.floor(Math.random() * 13);
 
     // 랜덤 색상 반환
-    return colors[random];
+    return color[random];
 }
 
 // mapStateToProps: store.getState() 결과 값인 state를 파라미터로 받아 
@@ -33,8 +33,8 @@ export function getRandomColor() {
 
 // store 안의 state 값을 props로 연결
 const mapStateToProps = (state) => ({
-    color: state.color,
-    number: state.number
+    color: state.colorData.color,
+    number: state.numberData.number
 });
 
 
