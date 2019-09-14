@@ -2284,14 +2284,43 @@ Setters는 많은 설정 옵션에 대해서 제공한다. 몇몇의 protected �
 
 개발자는 커스텀 `ReactorResourceFactory`나 `JettyResourceFactory`빈을 제공함으로써 Jetty와 Reactor Netty에 대한 리소스 설정 재정의 할 수 있다. - 이는 클라이언트와 서버 둘다 적용이 될것이다.
 
+[웹클라이언트 런타임 섹션](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-webclient-runtime)에서 클라이언트 측의 리소스 설정에 대해서 더 배울 수 있다.
 
+## 30. Security 보안
 
+Spring Security가 클래스패스에 있는 경우, 웹 어플리케이션은 기본적으로 안전하다. 스프링 부트는 `httpBasic` 또는 `forLogin`을 사용할지 말지 결정하기위해 Spring Security의 컨텐트 타협 전략에 의지한다. 웹 어플리케이션에 메소드-레벨 보안을 추가하기 위해 원하는 설정으로 `@EnableGlobalMethodSecurity`를 추가할 수 있다. 추가 정보들은 
+[Spring Security Reference Guide](https://docs.spring.io/spring-security/site/docs/5.1.6.RELEASE/reference/htmlsingle/#jc-method)에서 찾을 수 있다.
 
+기존의 `UserDetailsService`는 하나의 유저를 가진다. 다음의 예와 같이 어플리케이션이 시작 될 때 유저 네임은 `user`이고 패스워드는 랜덤이고 INFO 레벨에서 출력된다.
+
+```
+Using generated security password: 78fa095d-3f4c-48b1-ad50-e24c31d5cf35
+
+```
+
+> 로깅 설정을 미세하게 조정할 경우에는 `org.springframework.boot.autoconfigure.security` 카테고리는 `INFO`-레벨 메시지 로그하도록 세팅하는 것을 보장한다. 그렇지 않으면, 기본 패스워드는 출력되지 않는다.
+
+`spring.security.user.name`와 `spring.security.user.password`가 제공됨으로써 유저네임과 패스워드를 바꿀 수 있다.
+
+웹 어플리케이션에서 기본적으로 얻는 기본 기능은 : 
+
+- 메모리 내부 저장소를 가지고 일반적인 패스워드를 가진 싱글 유저(유저의 속성에 대한 것은 [`SecurityProperties.User`](https://docs.spring.io/spring-boot/docs/2.1.8.RELEASE/api/org/springframework/boot/autoconfigure/security/SecurityProperties.User.html)를 참조)가 있는 `UserDetailsService` (또는 WebFlux 어플리케이션 경우에 따라 `ReactiveUserDetailsService`) 
+
+- 폼 기반 로그인이나 HTTP 기반 보안(요청에 있는 `Accept` 헤더에 의존하는)에 대한 전체 어플리케이션(장치가 클래스패스에 있는 경우 엔드포인트 장치를 포함하고 있는)
+
+- 인증 이벤트를 퍼블리싱하기 위한`DefaultAuthenticationEventPublisher`
+
+빈을 추가함으로써 다른 `AuthenticationEventPublisher`을 제공할 수 있다.
+
+### 30.1 MVC Security 
 
 --- 
 
 ##### 단어  
 
+actuator : 작동시키는 것, 작동기[장치]  
+fine-tune : 미세 조정을 하다  
+rely on : ~에 의지[의존]하다, ~을 필요로하다.
 optimal : 최상의, 최적의, 최상의  
 respectively : 각자, 각각, 제각기  
 dedicated : 전용의  
