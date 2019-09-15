@@ -2314,10 +2314,79 @@ Using generated security password: 78fa095d-3f4c-48b1-ad50-e24c31d5cf35
 
 ### 30.1 MVC Security 
 
+기본 보안 설정은 `SecurityAutoConfiguration`과 `UserDetailsServiceAutoConfiguration`안에 구현되어 있다. `SecurityAutoConfiguration`는 웹 보안에 대한 `SpringBootWebSecurityConfiguration`과 인증을 설정하는 `UserDetailsServiceAutoConfiguration`을 임포트하고 이는 웹 이외의 어플리케이션에도 관련이 있다. 기존의  웹 어플리케이션 보안 설정을 완전히 끄기 위해서 `WebSecurityConfigurerAdapter` 타입의 빈을 추가할 수 있다.(이렇게 하면 `UserDetailsService`설정이나 장치의 보안이 비활성화가 되지 않는다.)
+
+또한 `UserDetailsService` 설정을 끄기 위해서, `UserDetailsService`, `AuthenticationProvider` 또는 `AuthenticationManager` 타입의 빈을 추가할 수 있다. 일반적으로 사용하는 케이스를 사용해서 시작하는 몇몇의 보안 어플리케이션을 [스프링 부트 예제](https://github.com/spring-projects/spring-boot/tree/v2.1.8.RELEASE/spring-boot-samples/)에서 얻을 수 있다.
+
+커스텀 `WebSecurityConfigurerAdapter`을 추가함으로써 접근하는 규칙을 재정의할 수 있다. 스프링 부트는 엔드포인트 장치와 정적 리소스에 대해 접근하는 규칙을 재정의하기위해 사용하는 편리한 메소드를 제공한다. `EndpointRequest`는 `management.endpoints.web.base-paht` 속성에 기반한 `RequestMatcher`를 생성하기 위해 사용 된다. `PathRequest`는 일반적으로 사용되는 위치의 리소스에 대한 `RequestMatcher`를 생성하기 위해 사용할 수 있다.
+
+### 30.2 WebFlux Security
+Spring MVC 어플리케이션과 비슷하게, `spring-boot-starter-security` 의존성을 추가함으로써 WebFlux 어플리케이션을 안전하게 할 수 있다. 기본 보안 설정은 `ReactiveSecurityAutoConfiguration`과 `UserDetailsServiceAutoConfiguration`안에 구현되어 있다. `ReactiveSecurityAutoConfiguration`는 웹 보안을 위해 `WebFluxSecurityConfiguration`와 인증을 설정하는 `UserDetailsServiceAutoConfiguration` 을 임포트하고 웹 이외의 어플리케이션에도 관련이 있다. 웹 어플리케이션 보안 설정을 완전히 끄려면, `WebFilterChainProxy` (이렇게 하면 장치의 보안 또는`UserDetailsService`이 비활성화 되지 않는다. ) 타입의 빈을 추가하면 된다.
+
+커스텀 `SecurityWebFilterChain`을 추가함으로써 접근하는 규칙 설정할 수 있다. 스프링 부트는 장치 엔드포인트와 정적 리소스에 대해 접근하는 규칙을 재정의하는 것을 사용할 수 있는 편리한 메소드를 제공한다. `EndpointRequest`는 `management.endpoints.web.base-path` 속성에 기반한 `ServerWebExchangeMatcher`을 생성할 수 있다.
+
+`PathRequest`는 일반적으로 사용되는 위치의 리소스에 대한 `ServerWebExchangeMatcher`를 생성할 수 있다.
+
+예를 들어서, 다음과 같이 추가함으로써 보안 설정을 사용자 정의할 수 있다.
+
+```java
+@Bean
+public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+	return http
+		.authorizeExchange()
+			.matchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+			.pathMatchers("/foo", "/bar")
+				.authenticated().and()
+			.formLogin().and()
+		.build();
+}
+```
+
+### 30.3 OAuth2
+OAuth2는 스프링에서 지원하는 널리 사용되는 인증 프레임워크이다.
+
+#### 30.3.1 Client
+
+클래스패스에 `spring-security-oauth2-client`가 있으면, OAuth2/Open ID Connect 클라이언트를 설정하기 쉽게하는 auto-configuration의 이점을 가질 수 있다. 이 속성은 `OAuth2ClientProperties` 아래에 있는 속성을 활용한다. 같은 속성은 서블릿과 리액티브 어플리케이션에 적용된다.
+
+다음 얘제와 같이 `spring.security.oauth2.client` 접두사 아래에 다양한 OAuth2 클라이언트와 제공자를 등록할 수 있다.
+
+```
+spring.security.oauth2.client.registration.my-client-1.client-id=abcd
+spring.security.oauth2.client.registration.my-client-1.client-secret=password
+spring.security.oauth2.client.registration.my-client-1.client-name=Client for user scope
+spring.security.oauth2.client.registration.my-client-1.provider=my-oauth-provider
+spring.security.oauth2.client.registration.my-client-1.scope=user
+spring.security.oauth2.client.registration.my-client-1.redirect-uri-template=https://my-redirect-uri.com
+spring.security.oauth2.client.registration.my-client-1.client-authentication-method=basic
+spring.security.oauth2.client.registration.my-client-1.authorization-grant-type=authorization_code
+
+spring.security.oauth2.client.registration.my-client-2.client-id=abcd
+spring.security.oauth2.client.registration.my-client-2.client-secret=password
+spring.security.oauth2.client.registration.my-client-2.client-name=Client for email scope
+spring.security.oauth2.client.registration.my-client-2.provider=my-oauth-provider
+spring.security.oauth2.client.registration.my-client-2.scope=email
+spring.security.oauth2.client.registration.my-client-2.redirect-uri-template=https://my-redirect-uri.com
+spring.security.oauth2.client.registration.my-client-2.client-authentication-method=basic
+spring.security.oauth2.client.registration.my-client-2.authorization-grant-type=authorization_code
+
+spring.security.oauth2.client.provider.my-oauth-provider.authorization-uri=http://my-auth-server/oauth/authorize
+spring.security.oauth2.client.provider.my-oauth-provider.token-uri=http://my-auth-server/oauth/token
+spring.security.oauth2.client.provider.my-oauth-provider.user-info-uri=http://my-auth-server/userinfo
+spring.security.oauth2.client.provider.my-oauth-provider.user-info-authentication-method=header
+spring.security.oauth2.client.provider.my-oauth-provider.jwk-set-uri=http://my-auth-server/token_keys
+spring.security.oauth2.client.provider.my-oauth-provider.user-name-attribute=name
+```
+
+
 --- 
 
 ##### 단어  
 
+applicable : 해당[적용]되는  
+make use of : ~을 이용[활용]하다, ~로 덕보다  
+widely : 널리, 광범위하게  
+similar to : ~와 비슷한  
 actuator : 작동시키는 것, 작동기[장치]  
 fine-tune : 미세 조정을 하다  
 rely on : ~에 의지[의존]하다, ~을 필요로하다.
