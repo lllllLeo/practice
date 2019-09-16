@@ -2378,11 +2378,53 @@ spring.security.oauth2.client.provider.my-oauth-provider.jwk-set-uri=http://my-a
 spring.security.oauth2.client.provider.my-oauth-provider.user-name-attribute=name
 ```
 
+OpenID 연결 발견을 지원하는 OpenID 연결 제공자에 대해서 설정은 더 간소화할 수 있다. 제공자는 Issuer Identifier로 주장하는 URI는 `issuer-uri`를 사용해 설정하기 위해서 필요하다. 예를 들어서, `issuer-uri`가 "https://example.com"으로 제공되면, `OpenID Provider Configuration Request`는 "https:"//example.com/.well-known/openid-configuration"으로 만든다. 결과는 `OpenID Provider Configuration Reseponse`로 예상된다. 다음 예제는 OpenID Connect Provider가 어떻게 `issuer-uri`를 사용해서 설정할 수 있는지 보여준다.
 
+```
+spring.security.oauth2.client.provider.oidc-provider.issuer-uri=https://dev-123456.oktapreview.com/oauth2/default/
+```
+
+기본적으로, Spring Security의 `OAuth2LoginAuthenticationFilter`는 오직 `/login/oauth2/code/*`과 일치하는 URL들로만 작동한다. 다른 패턴을 사용해서 `redirect-uri`를 사용자 정의하고 싶은 경우에는, 사용자 정의 패턴에 작동하기 위한 구성을 제공해야 한다. 예를 들어, 
+서블릿 어플리케이션에 대해서 다음과 비슷한 `WebSecurityConfigurerAdapter`를 추가할 수 있다.
+
+```java
+public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+			.authorizeRequests()
+				.anyRequest().authenticated()
+				.and()
+			.oauth2Login()
+				.redirectionEndpoint()
+					.baseUri("/custom-callback");
+	}
+}
+```
+
+#### OAuth2 client registration for common providers 
+
+흔한 Google, Github, Facebook 과 Okta를 포함하는 OAuth2와 OpenID 제공자에 대해 제공자의 기본 세팅을 제공한다. (각각 `google`,`github`,`facebook`과 `okta`)
+
+이러한 제공자가 필요 없는 경우에는, 기본값을 추론해야 하는 제공자 하나를 `provider` 속성을 설정할 수 있다. 또한 기본으로 제공된 제공자와 일치하는 클라이언트 등록을 위한 키는, 스프링 부트에서도 추론
+
+다른 말로, Google 제공자는 사용한 다음의 예제에서 두개의 설정을 사용한다.
+
+```
+spring.security.oauth2.client.registration.my-client.client-id=abcd
+spring.security.oauth2.client.registration.my-client.client-secret=password
+spring.security.oauth2.client.registration.my-client.provider=google
+
+spring.security.oauth2.client.registration.google.client-id=abcd
+spring.security.oauth2.client.registration.google.client-secret=password
+```
 --- 
 
 ##### 단어  
 
+infer : 추론하다, (간접적으로) 뜻하다, 암시하다  
+respectively : 각각, 제각기, 각자  
 applicable : 해당[적용]되는  
 make use of : ~을 이용[활용]하다, ~로 덕보다  
 widely : 널리, 광범위하게  
