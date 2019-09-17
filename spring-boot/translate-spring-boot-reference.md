@@ -2407,7 +2407,7 @@ public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
 
 흔한 Google, Github, Facebook 과 Okta를 포함하는 OAuth2와 OpenID 제공자에 대해 제공자의 기본 세팅을 제공한다. (각각 `google`,`github`,`facebook`과 `okta`)
 
-이러한 제공자가 필요 없는 경우에는, 기본값을 추론해야 하는 제공자 하나를 `provider` 속성을 설정할 수 있다. 또한 기본으로 제공된 제공자와 일치하는 클라이언트 등록을 위한 키는, 스프링 부트에서도 추론
+이러한 제공자가 필요 없는 경우에는, 기본값을 추론해야 하는 제공자 하나를 `provider` 속성을 설정할 수 있다. 또한 클라이언트 등록에 대한 키가 기본으로 제공된 제공자와 일치한다면, 스프링 부트도 이를 유추한다.
 
 다른 말로, Google 제공자는 사용한 다음의 예제에서 두개의 설정을 사용한다.
 
@@ -2419,10 +2419,42 @@ spring.security.oauth2.client.registration.my-client.provider=google
 spring.security.oauth2.client.registration.google.client-id=abcd
 spring.security.oauth2.client.registration.google.client-secret=password
 ```
+
+### 30.3.2 Resource Server
+
+다음에 보여지는 예와 같이, 클래스 패스에 `spring-security-oauth2-resource-server`가 있다면, 스프링 부트는 JWK Set URI 나 OIDC Issuer URI가 명시되어있다면 OAuth2 Resource Server를 설정할 수 있다.
+
+```
+spring.security.oauth2.resourceserver.jwt.jwk-set-uri=https://example.com/oauth2/default/v1/keys
+
+```
+
+```
+spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-123456.oktapreview.com/oauth2/default/
+
+```
+
+같은 속성은 서블릿과 리액티브 어플리케이션에 대해서도 적용된다.
+
+대신에, 서블릿 어플리케이션용 `JwtDecoder`빈이나 리액티브 어플리케이션용인 `ReactiveJwtDecoder`을 정의할 수 있다.
+
+#### 30.3.3 Authorization Server
+
+현재, Spring Security는 OAuth 2.0 Authorization Server를 구현하는것에 대한 지원을 제공하지 않는다. 하지만, 이 기능은 [Spring Security OAuth](https://spring.io/projects/spring-security-oauth) 프로젝트로 부터 사용이 가능하고 결국 Spring Security 로 완전히 대체된다.  `spring-security-oauth2-autoconfigure` 모듈은 OAuth 2.0 authorization server 설정을 쉽게 사용할 수 있다. 자세한 사항은 문서(https://docs.spring.io/spring-security-oauth2-boot)를 봐라.
+
+### 30.4 Actuator Security
+
+
+
 --- 
 
 ##### 단어  
 
+see its documentation for instructions. : 자세한 내용은 설명서를 참조하십시오.  
+be superseded : ~로 대체된다  
+functionality : 기능
+for : ~용  
+applicable : 해당되는, 적용되는  
 infer : 추론하다, (간접적으로) 뜻하다, 암시하다  
 respectively : 각각, 제각기, 각자  
 applicable : 해당[적용]되는  
