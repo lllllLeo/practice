@@ -856,11 +856,96 @@ app.description=${app.name} is a Spring Boot application
 > 존재하는 스프링 부트 속성의 "short" 변형을 생성하기 위해서 이 기술을 사용할 수 있다. 자세한 설명은 [77.4, "커맨드 라인 인자에서 'Short' 사용하기"](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-use-short-command-line-arguments)을 봐라
 
 
-## 24.6 Properties 암호화하기
+### 24.6 Properties 암호화하기
 스프링 부트는 속성 값을 암호화 하는것에 대한 지원을 제공해주지 않는다. 하지만, 스프링 `Environment`에 포함된 값을 수정하기 위해서 필요한 훅 포인트를 제공해준다. `EnvironmentPostProcessor`인터페이스는 어플리케이션 실행 전에 `Environment`을 [조작/처리]하는것을 허용한다. 
 
 ### 24.7 Properties 대신에 YAML 사용하기
-~
+
+[YAML](https://yaml.org/)은 JSON의 상위 집합이고, 계층적 구성 데이터로 지정하는 편리한 포맷이다. `SpringApplication` 클래스는 클래스패스에 [SnakeYAML](https://bitbucket.org/asomov/snakeyaml)라이브러리가 있으면 언제든지 프로퍼티스 대신에 자동으로 YAML을 지원한다.
+
+> "Starters"를 사용하는 경우에는 SnakeYAML은 `spring-boot-starter`에서 자동으로 제공된다.
+
+#### 24.7.1 Loading YAML
+스프링 프레임워크는 YAML 파일을 불러오기 위해 사용할 수 있는 두 개의 편리한 클래스를 제공한다. `YamlPropertiesFactoryBean`은 `Properties`로 YAML을 불러오고 `YamlMapFactoryBean`은 `Map`으로 YAML을 불러온다.
+
+예를 들어서, 다음의 YAML 파일을 고려해봐라.
+
+```json
+environments:
+	dev:
+		url: https://dev.example.com
+		name: Developer Setup
+	prod:
+		url: https://another.example.com
+		name: My Cool App
+```
+
+위의 예제는 다음의 properties로 변환 될 것이다.
+
+```
+environments.dev.url=https://dev.example.com
+environments.dev.name=Developer Setup
+environments.prod.url=https://another.example.com
+environments.prod.name=My Cool App
+```
+
+YAML 목록은 `[index]` 역참조자를 이용한 속성 키로 표시된다. 예로, 다음의 YAML을 고려해봐라
+```
+my:
+servers:
+	- dev.example.com
+	- another.example.com
+```
+
+위의 예제는 이 properties로 변환 될 것이다.
+```
+my.servers[0]=dev.example.com
+my.servers[1]=another.example.com
+```
+
+스프링 부트의 `Binder` 유틸리티(`@ConfigurationProperties`가 하는 일)를 사용해서 이처럼 properties로 바인드하기 위해서 `java.util.List` 타입의 빈에 해당되는 속성을 가지고 있어야하고 setter를 제공하거나 변할 수 있는 값으로 초기화애햐한다. 예제로 다음은 이전에 보여준 속성에 바인드하는 예제이다.
+
+```java
+@ConfigurationProperties(prefix="my")
+public class Config {
+
+	private List<String> servers = new ArrayList<String>();
+
+	public List<String> getServers() {
+		return this.servers;
+	}
+}
+```
+
+#### 24.7.2 Exposing YAML as Properties in the Spring Environment
+`YamlPropertySourceLoader` 클래스는 스프링 `Environment`에서 `PropertySource`로 YAML을 드러내는데 사용할 수 있다. 이렇게 하면 YAML 프로퍼티에 접근하기 위한 플레이스홀더 문법을 사용해서 `@Value` 어노테이션을 사용할 수 있다.
+
+#### 24.7.3 Multi-profile YAML Documents
+다음에 보여지는 예처럼, YAML 파일을 사용할 때 나타내기위한 `spring.profiles` 키를 사용해서 하나의 파일에 여러가지 profile-specific YAML 파일을 정의할 수 있다.
+
+```
+server:
+	address: 192.168.1.100
+---
+spring:
+	profiles: development
+server:
+	address: 127.0.0.1
+---
+spring:
+	profiles: production & eu-central
+server:
+	address: 192.168.1.120
+```
+
+위의 예제에서, `development` 프로파일이 작동하고 있는 경우에는, `server.address` 속성은 `127.0.0.1`이다. 비슷하게, `production`과 `eu-central` 프로파일이 작동하는 있는 경우에는, `server.address`속성은 `192.168.1.120`이다. `development`, `production`과 `eu-central`프로파일을 이용할 수 없는 경우에는, 속성에 대한 값은 `192.168.1.100`이다.
+
+> 그러므로 `spring.profiles`는 간단한 프로파일 이름과(예로 `production`) 프로파일 표현식을 포함할 수 있다. 프로파일 표현식은 더 복잡하게 포현된 프로파일 로직에 대해 허용한다. 예를 들어서 `production & (eu-central | eu-west)`. 더 자세한 사항들은 [레퍼런스 가이드](https://docs.spring.io/spring/docs/5.1.9.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-java)를 확인해라
+
+
+complicated : 복잡한
+superset : 상위집합  
+dereference : 역참조하다.
 ### 24.8 Properties 타입세이프 설정
 
 properties 설정을 주입하기 위해 `@Value("${property}")` 어노테이션을 사용하는것은 때때로 다루기 힘들다. 특히 만약 여러개의 properties를 사용하거나 작업하거나 데이터가 계층 구조인 경우라면. 다음에 보여지는 예와 같이, 스프링 부트는 어플리케이션의 설정 검증과 강력하게 빈의 타입을 통제할 수 있는 속성을 사용하여 작동하는 대안의 메소드 제공한다. 
