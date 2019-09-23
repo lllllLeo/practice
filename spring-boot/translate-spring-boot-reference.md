@@ -940,12 +940,59 @@ server:
 
 위의 예제에서, `development` 프로파일이 작동하고 있는 경우에는, `server.address` 속성은 `127.0.0.1`이다. 비슷하게, `production`과 `eu-central` 프로파일이 작동하는 있는 경우에는, `server.address`속성은 `192.168.1.120`이다. `development`, `production`과 `eu-central`프로파일을 이용할 수 없는 경우에는, 속성에 대한 값은 `192.168.1.100`이다.
 
-> 그러므로 `spring.profiles`는 간단한 프로파일 이름과(예로 `production`) 프로파일 표현식을 포함할 수 있다. 프로파일 표현식은 더 복잡하게 포현된 프로파일 로직에 대해 허용한다. 예를 들어서 `production & (eu-central | eu-west)`. 더 자세한 사항들은 [레퍼런스 가이드](https://docs.spring.io/spring/docs/5.1.9.RELEASE/spring-framework-reference/core.html#beans-definition-profiles-java)를 확인해라
+> 그러므로 `spring.profiles`는 간단한 프로파일 이름과(예로 `production`) 프로파일 표현식을 포함할 수 있다. 프로파일 표현식은 더 복잡하게 포현된 프로파일 로직에 대해 허용한다. 예를 들어서 `production & (eu-central | eu-west)`. 더 자세한 사항들은 [레퍼런스 가이드](https://docs.spring.io/spring/docs/5.1.9.RELEASE/spring-framework-reference/core.
+html#beans-definition-profiles-java)를 확인해라
 
+어플리케이션 컨텍스트가 시작할 때 명시적으로 활성화 된 것이 없으면 기본 프로파일이 활성화된다. 다음의 YAML에서, "기본" 프로파일에서만 사용 가능한 `spring.security.user.password`에 대한 값을 설정한다.
 
-complicated : 복잡한
-superset : 상위집합  
-dereference : 역참조하다.
+```
+server:
+  port: 8000
+---
+spring:
+  profiles: default
+  security:
+    user:
+      password: weak
+```
+
+다음의 예제에서, 패스워드는 어떤 프로파일에도 접근하지 못하기 때문에 항상 설정해야하고 필요하면 모든 다른 프로파일을 명시적으로 재설정애햐 할 것이다. -?
+
+```
+server:
+  port: 8000
+spring:
+  security:
+    user:
+      password: weak
+```
+
+`spring.profiles` 속성을 사용해서 지정된 스프링 프로파일은 선택적으로 `!` 문자를 사용해서 부정할 수 있다.　만약 하나의 문서에 대해서 부정되거나 부정하지 않은 프로파일이 지정되는 경우, 적어도 하나의 부정되지 않은 프로파일이 매치되어야하고 부정되지 않은 프로파일이 매치되어야한다.
+> If both negated and non-negated profiles are specified for a single document, at least one non-negated profile must match, and no negated profiles may match.
+
+#### 24.7.4 YAML Shortcomings
+
+YAML 파일은 `@PropertySource` 어노테이션을 사용해서 불러올 수 없다. 그래서, 이 경우에는 값을 불러오려면 프로퍼티스 파일을 사용해야 한다.
+
+profile-specific YAML 파일에서 다양한 YAML 문서 문법을 사용하면 예기치 않은 동작이 발생할 수 있다. 예를 들어, 파일에서 다음의 설정을 고려해라.
+
+##### application-dev.yml
+```
+server:
+  port: 8000
+---
+spring:
+  profiles: "!test"
+  security:
+    user:
+      password: "secret"
+```
+`--spring.profiles.active=dev" you might expect `\\`security.user.password` 인자로 어플리케이션을 실행하는 경우에는 "secret"으로 설정 될 것 같지만 아니다.
+
+메인 파일은 이름이 `application-dev.yml`이기 때문에 중첩된 파일은 필터 될 것이다. 이는 이미 profile-specfic으로 간주되고, 중첩된 파일은 무시될 것 이다.
+
+> profile-specific YAML 파일과 다중 YAML 파일을 합치지 않는 것을 추천한다. 그 중 하나만 사용해라.
+
 ### 24.8 Properties 타입세이프 설정
 
 properties 설정을 주입하기 위해 `@Value("${property}")` 어노테이션을 사용하는것은 때때로 다루기 힘들다. 특히 만약 여러개의 properties를 사용하거나 작업하거나 데이터가 계층 구조인 경우라면. 다음에 보여지는 예와 같이, 스프링 부트는 어플리케이션의 설정 검증과 강력하게 빈의 타입을 통제할 수 있는 속성을 사용하여 작동하는 대안의 메소드 제공한다. 
@@ -2535,6 +2582,14 @@ spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-123456.oktaprev
 
 ##### 단어  
 
+be set to : ~하도록 예정되어 있다.  
+lead to unexpected  : 예상치 않은 ~가 발생   
+be negated : 부정되다.    
+Whereas : 반면, <두 가지 사실을 비교, 대조할 때 씀>, (공식적인 문서에서 문장 첫 부분에 쓰여)...한 사실이 있으므로  
+explicitly : 명쾌하게, 명백하게, 명백히, 명시적으로    
+complicated : 복잡한  
+superset : 상위집합  
+dereference : 역참조하다.  
 see its documentation for instructions. : 자세한 내용은 설명서를 참조하십시오.  
 be superseded : ~로 대체된다  
 functionality : 기능
