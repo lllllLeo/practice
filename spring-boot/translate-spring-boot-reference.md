@@ -2575,13 +2575,35 @@ spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-123456.oktaprev
 현재, Spring Security는 OAuth 2.0 Authorization Server를 구현하는것에 대한 지원을 제공하지 않는다. 하지만, 이 기능은 [Spring Security OAuth](https://spring.io/projects/spring-security-oauth) 프로젝트로 부터 사용이 가능하고 결국 Spring Security 로 완전히 대체된다.  `spring-security-oauth2-autoconfigure` 모듈은 OAuth 2.0 authorization server 설정을 쉽게 사용할 수 있다. 자세한 사항은 문서(https://docs.spring.io/spring-security-oauth2-boot)를 봐라.
 
 ### 30.4 Actuator Security
+ 
+보안을 위해 모든 장치에서 `/health`와 `/info`이외의 것들은 기본적으로 비활성화 된다. `management.endpoints.web.exposure.include` 속성을 사용해서 장치를 활성화 할 수 있다.
 
+Spring Security가 클래스패스에 있고 현재 다른 WebSecurityConfigurerAdapter이 존재하지 않는다면, `/health`와 `/info`이외으 모든 장치는 스프링 부트 자동 설정으로 인해 보호된다. 커스텀 `WebSecurityConfigurerAdapter`을 정의한다면, 스프링 부트 자동 설정은 꺼지고 장치에 접근하는 규칙의 모든 것을 제어할 수 있게 된다.
 
+> `management.endpoints.web.exposure.include`를 설정하기 전에, 노출된 장치가 민감한 정보들을 포함하지 않는 지 방화벽의 뒤에서 또는 Spring Security 같은 곳에 배치돼서 보호되는지 보장해라
+
+#### 30.4.1 Cross Site Request Forgery Protection
+
+스프링 부트는 Spring Security의 기본값을 필요로하기 때문에, CSRF 보호는 기본적으로 켜져있다. 이는 장치 엔드포인트가 기본 보안 설정을 사용중일 때 `POST`, `PUT`나 `DELETE`는 403 금지 에러를 띄우는 것을 의미한다.
+
+> 논-브라우저 클라이언트로서 사용되는 서비스를 만드는 중이라면 CSRF 보호를 완전히 비활성화하는 것을 추천한다.
+
+CSRF에 대한 추가적인 정보는 [Spring Security Reference Guide](https://docs.spring.io/spring-security/site/docs/5.1.6.RELEASE/reference/htmlsingle/#csrf)에서 찾을 수 있다.
+
+### 31. Working with SQL Databases
+스프링 프레임워크는 `JdbcTemplate`를 사용해서 Hibernate와 같은 "object relational mapping"에 완전하게 바로 JDBC에 접근하는 기술처럼 SQL 데이터베이스를 사용해서 작업하는 것에 대해 광범위한 지원을 제공한다. Spring Data는 기술의 추가적인 레벨을 제공한다: 인터페이스로 부터 직접 `Repository`를 생성하거나 메소드 이름으로부터 쿼리를 생성하는 컨벤션을 사용한다.
+
+#### 30.1.1 Configure a DataSource
+
+Java의 `javax.sql.DataSource` 인터페이스는 데이터베이스 커넥션을 사용해서 작동하는 표준 메소드를 제공한다. 전통적으로, 'DataSource'는 일부 자격과 `URL`을 사용해서 데이터베이스 연결을 구축한다.
 
 --- 
 
 ##### 단어  
 
+along with : ~와 함께, ~에 따라  
+relies on (rely on) : ~에 기대다, ~에 의존하다  
+back off : 꺼지다, 철회하다, 물러서다  
 be set to : ~하도록 예정되어 있다.  
 lead to unexpected  : 예상치 않은 ~가 발생   
 be negated : 부정되다.    
