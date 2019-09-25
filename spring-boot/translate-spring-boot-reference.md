@@ -2593,14 +2593,100 @@ CSRF에 대한 추가적인 정보는 [Spring Security Reference Guide](https://
 ### 31. Working with SQL Databases
 스프링 프레임워크는 `JdbcTemplate`를 사용해서 Hibernate와 같은 "object relational mapping"에 완전하게 바로 JDBC에 접근하는 기술처럼 SQL 데이터베이스를 사용해서 작업하는 것에 대해 광범위한 지원을 제공한다. Spring Data는 기술의 추가적인 레벨을 제공한다: 인터페이스로 부터 직접 `Repository`를 생성하거나 메소드 이름으로부터 쿼리를 생성하는 컨벤션을 사용한다.
 
-#### 30.1.1 Configure a DataSource
+#### 31.1 Configure a DataSource
 
 Java의 `javax.sql.DataSource` 인터페이스는 데이터베이스 커넥션을 사용해서 작동하는 표준 메소드를 제공한다. 전통적으로, 'DataSource'는 일부 자격과 `URL`을 사용해서 데이터베이스 연결을 구축한다.
+
+> 일반적으로 DataSource의 모든 조작을 완전히 제어하기 위한 더 고급 예제는 "How-to" 부분에서 봐라. 
+
+#### 31.1.1 Embedded Database Support
+
+인 메모리 임베디드 데이터베이스를 사용함으로써 어플리케이션을 개발하는것은 종종 편리하다. 확실히, 인 메모리 데이터베이스는 영속적인 저장공간을 제공하지 않는다. 어플리케이션을 시작할 때 데이터베이스에 덧붙여야 하고 어플리케이션을 종료할 때 데이터를 날려버리는 것을 준비해야 한다.
+
+> "How-to" 섹션은 [데이트베이스를 초기화시키는 법에 대한 섹션](The “How-to” section includes a section on how to initialize a database.)을 포함하고 있다.
+
+스프링 부트는 내장된 [H2](https://www.h2database.com/), [HSQL](http://hsqldb.org/) [Derby](https://db.apache.org/derby/) 데이터베이스를 자동 설정할 수 있다. 어떤 URLs 커넥션을 제공할 필요가 없다. 사용하기 원하는 내장 데이터베이스에 대해 빌드 의존성을 포함하기만 하면 된다.
+
+> 테스트에서 이 특징을 사용한다면, 사용하고 있는 수많은 어플리케이션 컨텍스트에 상관없이 전체 테스트 그룹으로 동일한 데이터베이스를 재사용하는 것을 알 수 있다. 각각의 컨텍스트가 분리된 내장된 데이터베이스를 가지려면 반드시 `spring.datasource.generate-unique-name`을 `true`로 설정해라.
+
+예를 들어서, 일반적인 POM 의존성은 다음과 같을 것이다.
+
+```xml
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.hsqldb</groupId>
+	<artifactId>hsqldb</artifactId>
+	<scope>runtime</scope>
+</dependency>
+```
+
+> 내장된 데이터베이스의 자동 설정을 하기 위해 의존성에 `spring-jdbc`가 필요하다. 이 예제는, `spring-boot-starter-data-jpa`를 통해서 transitively 가져온다.
+
+> 가령, 어떤 이유로 내장 데이터베이스에 대해 URL 커넥션을 설정할 경우, 데이터베이스의 자동적으로 꺼지는 것을 비활성화하는 것을 보장하는지 주의해야한다. H2를 사용할 경우, 데이터베이스의 자동꺼짐을 비활성화하기위해 `DB_CLOSE_ON_EXIT=FALSE`를 사용해야 한다. HSQLDB를 사용할 경우, `shutdown=true`를 사용하지 않는 것을 보장해야 한다. 데이터베이스의 자동 꺼짐을 비활성화 하는것은 데이터베이스가 닫힐 때 스프링 부트가 제어할 수 있다. 그렇기 때문에 데이터베이스에 한 번 접근하는 일은 더 이상 필요하지 않는것을 보장한다.
+
+#### 31.1.2 Connection to a Production Database
+
+프로덕트 데이터베이스 연결은 `DataSource` 풀링을 사용함으로써 자동 설정을 할 수도 있다. 스프링 부트는 특정 구현체를 선택하는 것에 대해 다음의 알고리즘을 사용한다.
+
+1. 퍼포먼스와 동시성에 대해서 [HikariCP](https://github.com/brettwooldridge/HikariCP)를 선호한다. 만약 HikariCP가 사용가능하다면, 항상 HikariCP를 선택한다.
+1. 그렇지 않으면, Tomcat `DataSource` 풀링이 사용가능하다면, Tomcat을 사용한다.
+1. HicariCP와 Tomcat 풀링 데이터베이스 둘 다 사용불가능하고 [Commons DBCP2](https://commons.apache.org/proper/commons-dbcp/)가 사용가능하다면, Commons DBCP2를 사용한다.
+
+`spring-boot-starter-jdbc`나 `spring-boot-starter-data-jpa` "starters" 를 사용한다면, `HikariCP` 의존성을 자동적으로 얻는다.
+
+> 완전히 알고리즘과 특정 커넥션 풀을 `spring.datasource.type`속성을 설정하는 것을 사용해서 건너 뛸 수 있다. 이는 기본적으로 제공되는 `tomcat-jdbc`처럼 Tomcat 컨테이너에서 어플리케이션을 실행할 때 특히 중요하다.
+
+> 추가적인 커넥션 풀은 항상 수동으로 설정할 수 있다. `DataSource`빈을 정의하는 경우, 자동 설정은 일어나지 않는다.
+
+DataSource 설정은 `spring.datasource.*`에서 외부 설정 속성으로 제어할 수 있다. 예를 들어서, `application.properties`에서 다음 부분을 선언해야한다.
+
+```
+spring.datasource.url=jdbc:mysql://localhost/test
+spring.datasource.username=dbuser
+spring.datasource.password=dbpass
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+```
+
+> `spring.datasource.url`속성을 설정해서 적어도 URL을 명시해야 한다. 그렇지 않으면, 스프링 부트는 내장된 데이터베이스 자동 설정으로 시도한다.
+
+> 스프링 부트는 `url`으로 부터 대부분의 데이터베이스에 대한 것을 추론할 수 있기 때문에 보통 `driver-class-name`을 명시할 필요는 없다.
+
+> `DataSource` 풀링을 생성하기 위해서, 유효한 `Driver` 클래스가 사용가능한지 확인할 필요가 있어서 어떤 작업을 하기 전에 체크를 하자. 다시 말해서, `spring.datatsource.driver-class-name=com.mysql.jdbc.Driver`를 설정하는 경우면 클래스가 로드가 될 것이다.
+
+지원되는 옵션의 더 자세한 것은 `DataSourceProperties`를 봐라. 이것들은 실제의 구현과 관계없이 작동하는 표준 옵션이다. 또한 그것의 각각의 접두사를(`spring.datasource.hikari.*`, `spring.datasource.tomcat.*`, 와 `spring.datasource.dbcp2.*`) 사용해서 구현체의 특정 설정들을 미세 조정하는 것이 가능하다. 더 자세한 것들을 사용중인  커넥션 풀 구현의 문서를 참조해라.
+
+예를 들어서, Tomcat connection pool을 사용하는 경우에, 다음에 보여지는 예제처럼 많은 추가적인 세팅을 커스터마이즈 할 수 있다.
+
+```
+# Number of ms to wait before throwing an exception if no connection is available.
+spring.datasource.tomcat.max-wait=10000
+
+# Maximum number of active connections that can be allocated from this pool at the same time.
+spring.datasource.tomcat.max-active=50
+
+# Validate the connection before borrowing it from the pool.
+spring.datasource.tomcat.test-on-borrow=true
+```
+
+#### 31.1.3 
 
 --- 
 
 ##### 단어  
 
+deduce : 추론하다, 연역하다
+bypass : 걸러뛰다, 건너뛰다, 우회하다. 무시하다,  
+thereby : 그렇게 함으로써, 그것 때문에  
+take care ~ : ~을 주의해라
+pull in : 끌어당긴다, 가져온다  
+you may notice ~ : ~알 수 있다, ~볼 수 있다.
+regardless : 개의치 않고  
+regardless of : ~에 상관없이[구애받지 않고]  
+populate : 채우다, 덧붙이다, 이주하다  
+Obviously : 분명히, 확실히  
 along with : ~와 함께, ~에 따라  
 relies on (rely on) : ~에 기대다, ~에 의존하다  
 back off : 꺼지다, 철회하다, 물러서다  
