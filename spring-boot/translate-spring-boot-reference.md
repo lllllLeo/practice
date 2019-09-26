@@ -2671,20 +2671,160 @@ spring.datasource.tomcat.max-active=50
 spring.datasource.tomcat.test-on-borrow=true
 ```
 
-#### 31.1.3 
+#### 31.1.3 Connection to a JNDI DataSource
+
+어플리케이션 서버에 스프링 부트 어플리케이션을 배포하는 경우에는, 어플리케이션 서버의 내장 기능을 사용해서 DataSource를 관리하고 설정할 수 있고 JNDI를 사용해서 접근할 수 있다.
+
+특정 JNDI 위치로 부터 `DataSource`에 접근하기위한 `spring.datasource.url`, `spring.datasource.username`, 와 `spring.datasource.password`속성 대신에 `spring.datasource.jndi-name` 속성을 사용할 수 있다. 예를 들어서, `application.properties`에 있는 다음의 섹션은 `DataSource`에 정의된 JBoss AS에 접근하는 법을 보여준다.
+
+```
+spring.datasource.jndi-name=java:jboss/datasources/customers
+```
+
+### 32.2 Using Jdbc Template
+
+스프링의 `JdbcTemplate`와 `NamedParameterJdbcTemplate`클래스는 자동 설정이 되고, 다음의 예제 처럼 빈에 직접 `@Autowire`를 사용 할 수 있다. 
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyBean {
+
+	private final JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	public MyBean(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
+
+	// ...
+
+}
+```
+
+다음에 보여지는 예처럼, `spring.jdbc.template.*`속성을 사용해서 템플릿의 속성들을 사용자 정의할 수 있다.
+
+```
+spring.jdbc.template.max-rows=500
+```
+
+> `NamedParameterJdbcTemplate`는 이 현장 뒤에서 같은 `JdbcTemplate` 인스턴스를 재사용한다. `JdbcTemplate` 가 정의되어 있고 우선 후보가 존재하지 않는 경우, `NamedParametherJdbcTemplate`는 자동설정이 되지 않는다.
+
+
+### 31.3 JPA and Spring Data JPA
+
+Java Persistence API는 관계형 데이터베이스에 "map" 오브젝트를 사용할 수 있는 표준 기술이다. `spring-boot-starter-data-jpa` POM은 빠른 시작을 위한 길을 제공한다. 다음의 키 의존성을 제공한다.
+
+- Hibernate : 가장 유명한 JPA 구현체
+- Spring Data JPA : 쉽게 JPA 기반 repository를 구현
+- Spring ORMs : 스프링 프레임워크로부터/의 핵심 ORM을 지원한다.
+
+> 여기서 JPA나 [Spring DATA](https://spring.io/projects/spring-data)를 아주 자세히 보지 않을 것이다. 다음의 [spring.io](https://spring.io/)의 ["Accessing Data with JPA"](https://spring.io/guides/gs/accessing-data-jpa/) 가이드를 따라 [Spring Data JPA](https://spring.io/projects/spring-data-jpa)와 [Hibernate](https://hibernate.org/orm/documentation/) 레퍼런스 문서를 읽어라
+
+#### 31.3.1 Entity Classes
+
+전통적으로, JPA "Entity" 클래스는 `persistence.xml`파일안에 정의되어 있다. 스프링 부트를 사용하면 이 파일은 필요하지 않고 "Enitty Scanning"이 대신에 사용된다. 기본적으로, 메인 설정 클래느 아래의 모든 패키지에서 (`@EnableAutoConfiguration`이나 `@SpringBootApplication`를 사용해서 어노테이트 된) 탐색된다.
+
+`@Entity`, `@Embeddable`, 또는 `@MappedSuperclass`를 사용해서 어노테이트 되어있는 클래스가 고려된다. 일반적으로 엔티티 클래스는 다음의 예제와 유사하다.
+
+```java
+package com.example.myapp.domain;
+
+import java.io.Serializable;
+import javax.persistence.*;
+
+@Entity
+public class City implements Serializable {
+
+	@Id
+	@GeneratedValue
+	private Long id;
+
+	@Column(nullable = false)
+	private String name;
+
+	@Column(nullable = false)
+	private String state;
+
+	// ... additional members, often include @OneToMany mappings
+
+	protected City() {
+		// no-args constructor required by JPA spec
+		// this one is protected since it shouldn't be used directly
+	}
+
+	public City(String name, String state) {
+		this.name = name;
+		this.state = state;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getState() {
+		return this.state;
+	}
+
+	// ... etc
+
+}
+```
+
+> `@EntityScan` 어노테이션을 사용해서 엔티티 스캐닝 위치를 사용자 정의할 수 있다. ["Section 84.4, "Separate @Entity Definitions from Spring Configuration""](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#howto-separate-entity-definitions-from-spring-configuration) 방법을 참조해라.
+
+#### 31.3.2 Spring Data JPA Repositories
+
+Spring Data JPA repositories는 데이터에 접근하기 위해 정의할 수 있는 인터페이스이다. JPA 쿼리는 메소드 이름으로부터 자동적으로 생성된다. 예를 들어서, `CityRepository` 인터페이스는 주어진 주의 모든 도시들을 찾기 위해 `findAllByState(String state)` 메소드로 선언될 것이다.
+
+더 복잡한 쿼리는, Spring Data의 `Query` 어노테이션을 사용해서 메소드에 어노테이트할 수 있다.
+
+Spring Data repositories는 흔히 `Repository`나 `CrudRepository` 인터페이스에서 확장된다. 자동 설정을 사용하는 경우, repositories는 메인 설정 클래스(`@EnableAutoConfiguration`이나 `@SpringBootApplication`을 사용해서 어노테이트 된))를 포함하는 패키지에서 부터 검색된다.
+
+다음의 예제는 일반적인 Spring Data repository 인터페이스 정의를 보여준다.
+
+```java
+package com.example.myapp.domain;
+
+import org.springframework.data.domain.*;
+import org.springframework.data.repository.*;
+
+public interface CityRepository extends Repository<City, Long> {
+
+	Page<City> findAll(Pageable pageable);
+
+	City findByNameAndStateAllIgnoringCase(String name, String state);
+
+}
+```
+
+Spring Data JPA repositories는 세 개의 부트스트래핑의 모드를 지원한다: 기본, 연기 그리고 지연. 연기나 지연 부트스트래핑 활성화 하기 위해서, `spring.data.jpa.repositories.bootstrap-mode`에서 각각 `deferred`나 `lazy`를 설정해라. 연기 또는 지연 부트스트래핑을 사용할 때, 자동 설정 된 `EntityManagerFactoryBuilder`는 컨텍스트의 `AsyncTaskExecutor`를 부트스트랩의 실행기로서 사용한다. 하나가 더 존재한다면, `appilcationTaskExecutor`라는 이름이 사용된다.
+
+> 우리는 Spring Data JPA의 수박겉햝기로 훑어봤다. 완벽하게 자세하게 알고 싶으면 [Spring Data JPA reference documentation](https://docs.spring.io/spring-data/jdbc/docs/1.0.10.RELEASE/reference/html/)을 참조해라
+
+#### 31.3.3 Creating and Dropping JPA Databases
+
+기본적으로, 
 
 --- 
 
 ##### 단어  
 
-deduce : 추론하다, 연역하다
-bypass : 걸러뛰다, 건너뛰다, 우회하다. 무시하다,  
+barely : 간신히, 가싸스로, 빠듯하게, 거의 ... 아니게[없이], 꼭, 겨우  
+more than one : 하나뿐 아니라, 많은  
+deferred : 연기  
+built-in : 내장  
+deduce : 추론하다, 연역하다  
+bypass : 걸러뛰다, 건너뛰다, 우회하다. 무시하다,    
 thereby : 그렇게 함으로써, 그것 때문에  
-take care ~ : ~을 주의해라
+take care ~ : ~을 주의해라  
 pull in : 끌어당긴다, 가져온다  
-you may notice ~ : ~알 수 있다, ~볼 수 있다.
-regardless : 개의치 않고  
-regardless of : ~에 상관없이[구애받지 않고]  
+you may notice ~ : ~알 수 있다, ~볼 수 있다.  
+regardless : 개의치 않고   
+regardless of : ~에 상관없1이[구애받지 않고]  
 populate : 채우다, 덧붙이다, 이주하다  
 Obviously : 분명히, 확실히  
 along with : ~와 함께, ~에 따라  
