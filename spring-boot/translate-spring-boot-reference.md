@@ -2807,12 +2807,149 @@ Spring Data JPA repositories는 세 개의 부트스트래핑의 모드를 지�
 
 #### 31.3.3 Creating and Dropping JPA Databases
 
-기본적으로, 
+기본적으로, JPA 데이터베이스는 내장된 데이터베이스(H2, HSQL, 또는 Derby)를 사용하는 경우에만 자동적으로 생성된다. `spring.jpa.*`속성을 사용해서 JPA 설정을 명쾌하게 설정할 수 있다. 예를 들어서, `application.properties`에 다음의 라인을 추가해서 생성하고 테이블을 삭제할 수 있다.:
+
+```
+spring.jpa.hibernate.dll-auto=create-drop
+```
+
+> 이 `hibernate.hbm2ddl.auto`는 Hibernate의 내부 속성에 이름이다. `spring.jpa.properties.*`(접두사는 엔티티 매니저에 추가하기 전에 소멸된다.)를 사용해서 다른 Hibernate 네이티브 속성과 마찬가지로 설정을 할 수 있다. 다음의 라인은 JPA 속성에 대한 Hibernate 설정의 예를 보여준다.:
+
+```
+spring.jpa.properties.hibernate.globally_quoted_identifiers=true
+```
+
+위의 예제안에 라인은 Hibernate 엔티티 매니저에서 `hibernate.globally_quoted_identifiers` 속성에 대해서 `true`의 값을 보내준다.
+
+기본적으로, DDL실행은 `ApplicationContext`가 시작될 때 까지 연기된다. `spring.jpa.generate-ddl` 플래그도 있지만 `ddl_auto` 설정은 더 세분화되기 때문에 Hibernate 자동 설정이 실행되는 경우에는 사용되지 않는다.
+
+
+#### 31.3.4 Open EntityManager In View
+
+웹 어플리케이션을 실행하는 경우, 스프링 부트는 웹 뷰에서 지연 로딩에 대한 허용을 위해 "OpenEntityManager in View" 패턴을 지원하는 `OpenEntityManagerInViewInterceptor`를 기본적으로 등록한다. 이러한 동작을 원하지 않는 경우 `aplication.properties`에서 `spring.jpa.open-in-view`를 `false`를 설정해야 한다.
+
+### 31.4 Spring Data JDBC
+
+Spring Data는 JDBC에 대한 지원하는 repository와 `CrudRepository`에서 메소드에 대해 자동적으로 SQL을 생성하는 것을 포함한다. 더 고급스러운 쿼리에 대해서는, `@Query`어노테이션이 제공된다.
+
+스프링 부트는 클래스패스에서 의존성들이 필요할 때 Spring Data의 JDBC repository가 자동으로 설정된다. `spring-boot-starter-data-jdbc`에서 하나의 의존성을 프로젝트에 추가할 수 있다. 필요한 경우에, 어플리케이션에 `@EnableJdbcRepositories` 어노테이션이나 `JdbcConfiguration` 서브클래스를 추가함으로써 Spring Data JDBC의 설정의 제어를 할 수 있다.
+
+> Spring Data JDBC의 더 자세한 사항에 대해서는, [reference documentation](https://docs.spring.io/spring-data/jdbc/docs/1.0.10.RELEASE/reference/html/)에서 참조하세요
+
+### 31.5 Using H2's Web Console
+
+H2 데이터베이스는 스프링 부트가 자동으로 설정을 할 수 있는 브라우저 기반 콘솔을 제공한다. 콘솔은 다음의 조건에 맞을 때 자동 설정이 된다.
+
+- 서블릿 기반의 웹 어플리케이션을 개발할하는 경우
+- `com.h2database:h2`가 클래스패스에 있는 경우
+- 스프링부트의 developer tools를 사용하는 경우
+
+> 스프링부트의 developer tools를 사용하지 않지만 여전히 H2 콘솔을 사용하는 것처럼 하려는 경우에는, `true`의 값을 사용해서 `spring.h2.console.enabled`속성을 설정할 수 있다.
+
+> H2 콘솔은 개발하는 동안에 사용하기 위해 만들어진 것이라서 프로적션에서는 `spring.h2.console.enabled`를 `true` 설정을 하면 안된다는 것을 주의해야 한다.
+
+#### 31.5.1 Changing the H2 Console's Path
+
+기본적으로 콘솔을 `/h2-console`사용가능하다. `spring.h2.console.path`속성을 사용해서 콘솔의 경로를 커스터마이즈 할 수 있다.
+
+### 31.6 Using jOOQ
+
+jOOQ Object Oriented Querying ([jOOQ](https://www.jooq.org/))는 데이터베이스로부터 Java 코드를 생성하고 유연한 API를 통해서 타입 세이프한 SQL 쿼리를 만들 수 있는 [Data Geekery](https://www.datageekery.com/)에서 인기많은 제품이다. 스프링부트에서 상업적과 오픈 소스 에디션으로 사용할 수 있다.
+
+#### 31.6.1 Conde Generation
+
+jOOQ 타입 세이프 쿼리를 사용하는 것에 따르면, 데이터베이스 스키마로부터 Java 클래스를 생성할 필요가 있다. [jOOQ user manual](https://www.jooq.org/doc/3.11.12/manual-single-page/#jooq-in-7-steps-step3)에서 개요를 따라해볼 수 있다. `jooq-codeen-maven`플러그인을 사용하고 `spring-boot-starter-parent` "parent POM"도 사용하는 경우에, 플러그인의 `<version>` 태그에서 안전하게 생략 할 수 있다. 플러그인의 데이터베이스 의존성을 선언해서 정의된 스프링 부트 버전 변수(`h2.version`처럼)를 사용할 수도 있다. 다음은 목록을 보여주는 예이다.
+
+```xml
+<plugin>
+	<groupId>org.jooq</groupId>
+	<artifactId>jooq-codegen-maven</artifactId>
+	<executions>
+		...
+	</executions>
+	<dependencies>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+		</dependency>
+	</dependencies>
+	<configuration>
+		<jdbc>
+			<driver>org.h2.Driver</driver>
+			<url>jdbc:h2:~/yourdatabase</url>
+		</jdbc>
+		<generator>
+			...
+		</generator>
+	</configuration>
+</plugin>
+```
+
+#### 31.6.2 Using DSLContext
+
+유연한 API를 제공하는 jOOQ는 `org.jooq.DSLContext`인터페이스를 통해서 시작된다. 스프링 부트는 어플리케이션 `DataSource`에서 스프링 빈으로써 `DSLContext`를 자동 설정하고 연결한다. `DSLContext`를 사용하기 위해서는, 다음의 예제처럼 `@Autowire`를 사용해라
+
+```java
+@Component
+public class JooqExample implements CommandLineRunner {
+
+	private final DSLContext create;
+
+	@Autowired
+	public JooqExample(DSLContext dslContext) {
+		this.create = dslContext;
+	}
+
+}
+```
+
+> jOOQ 메뉴얼은 `DSLContext`를 보유하기 위해서 `create`라는 이름으로 된 변수를 사용하는 경향이 있다.
+
+다음에 보여지는 예체처럼 쿼리를 구성하기 위해서 `DSLContext`를 사용할 수 있다.
+
+```java
+public List<GregorianCalendar> authorsBornAfter1980() {
+	return this.create.selectFrom(AUTHOR)
+		.where(AUTHOR.DATE_OF_BIRTH.greaterThan(new GregorianCalendar(1980, 0, 1)))
+		.fetch(AUTHOR.DATE_OF_BIRTH);
+}
+```
+
+#### 31.6.3 jOOQ SQL Dialect
+
+`spring.jooq.sql-dialect` 속성으로 설정된것 이외에는 스프링부트는 데이터소스를 사용하기 위해서 SQL dialect를 정의한다. 스프링 부트는 `DEFAULT`를 사용하는 경우에는 dialect를 감지할 수 없을 것이다.
+
+> 스프링 부트는 jOOQ의 오픈소스 버전으로만 지원된 dialects를 자동 설정을 할 수 있다.
+
+#### 31.6.4 Customizing jOOQ
+
+더 고급 설정은 jOOQ `Configuration`이 생성되었을 때 사용되는 자기만의 `@Bean`정의를 정의함으로서 달성할 수 있다. 다음의 jOOQ 타입에 따라 빈을 정의할 수 있다.
+
+- `ConnectionProvider`
+- `ExecutorProvider`
+- `TransactionProvider`
+- `RecordMapperProvider`
+- `RecordUnmapperProvider`
+- `RecordListenerProvider`
+- `ExecuteListenerProvider`
+- `VisitListenerProvider`
+- `TransactionListenerProvider`
+
+jOOQ 설정을 완전하게 조작하기를 원한다면 자기만의 `org.jooq.Configuration` `@Bean`도 생성할 수 있다.
+
+## 32. Working with NoSQL Technologies
+
+
+
 
 --- 
 
 ##### 단어  
 
+hold : 보유하다.  
+fine-grain : 세분화되는  
+along with : 같이, 함께, 더불어, ~에 덧붙여, ~와 마찬가지로  
 barely : 간신히, 가싸스로, 빠듯하게, 거의 ... 아니게[없이], 꼭, 겨우  
 more than one : 하나뿐 아니라, 많은  
 deferred : 연기  
