@@ -2940,13 +2940,66 @@ jOOQ 설정을 완전하게 조작하기를 원한다면 자기만의 `org.jooq.
 
 ## 32. Working with NoSQL Technologies
 
+Spring Data는 NoSQL 기술의 다양한 접근을 도와주는 추가적인 프로젝트를 제공한다. 다음을 포함한다:
 
+- [MongoDB](https://spring.io/projects/spring-data-mongodb)
+- [Neo4J](https://spring.io/projects/spring-data-neo4j)
+- [Elasticsearch](https://spring.io/projects/spring-data-elasticsearch)
+- [Solr](https://spring.io/projects/spring-data-solr)
+- [Redis](https://spring.io/projects/spring-data-redis)
+- [Gemfire](https://spring.io/projects/spring-data-gemfire) or [Geode](https://spring.io/projects/spring-data-geode)
+- [Cassandra](https://spring.io/projects/spring-data-cassandra)
+- [Couchbase](https://spring.io/projects/spring-data-couchbase)
+- [LDAP](https://spring.io/projects/spring-data-ldap)
 
+스프링 부트는 Redis, MongoDB, Neo4j, Elasticsearch, Solr Cassandra, Couchbase, 그리고 LDAP에 대한 자동 설정을 제공한다. 다른 프로젝트를 이용할 수 있지만 직접 설정해야만 한다. [spring.io/projects/spring-data](https://spring.io/projects/spring-data)에서 적절한 레퍼런스 문서를 참조해라.
+
+### 32.1 Redis
+
+Redis는 캐시, 메시지 브로커 그리고 풍부한 기능을 갖춘 키-값 스토어이다. 스프링 부트는 [Lettuce]와 [Jedis] 클라이언트 라이브러리에 대한 기본적인 자동 설정을 제공하고 Spring Data Redis에서 제공되는 추상화를 제공한다.
+
+편리한 방법으로 의존성들을 모아둔 `spring-boot-starter-data-redis` "Starter"가 있다. 기본적으로, [Lettuce]를 사용한다. 이 starter는 전통적과 리액티브 어플리케이션 둘 다 조작한다.
+
+> reactive를 지원해서 다른 스토어의 일관성에 대한 `spring-boot-starter-data-redis-reactive` "Starter"에 또한 제공한다.
+
+#### 32.1.1 Connecting to Redis
+
+스프링 빈으로서 자동 설정된 `RedisConnectionFactory`, `StringRedisTemplate`, 또는 바닐라 `RedisTemplate` 인스턴스를 주입할 수 있다. 기본적으로, 인스턴스는 `localhost:6379`에서 Redis 서버에 연결을 시도한다. 다음의 목록은 
+그러한 빈의 예를 보여준다.
+
+```java
+@Component
+public class MyBean {
+
+	private StringRedisTemplate template;
+
+	@Autowired
+	public MyBean(StringRedisTemplate template) {
+		this.template = template;
+	}
+
+	// ...
+
+}
+```
+
+> 더 고급의 사용자 정의를 위해서 `LettuceClientConfigurationBuilderCustomizer`를 구현하는 임의적인 개수의 빈을 등록할 수 도 있다. Jedis를 사용한다면 `JedisClientConfigurationBuilderCustomizer`도 사용 가능하다.
+
+자동 설정된 타입의 `@Bean`을 추가하는 경우에는, 기본(except in the case of `RedisTemplate`, when the exclusion is based on the bean name, `redisTemplate`, not its type))으로 대체된다. 기본적으로, `commons-pool2`가 클래스패스에 있는 경우, 풀된 연력 팩토리를 얻는다.
+
+### 32.2 MongoDB
+
+MongoDB는 전통적인 테이블 기반 관계형 데이터의 대신에 JSON과 같은 스키마를 사용하는 오픈소스 NoSQL 문서 데이터베이스이다. 스프링 부트는 `spring-boot-starter-data-mongodb`와  `spring-boot-starter-data-mongodb-reactive` "Starters"를 포함하고 MongoDB를 사용해서 작업하기 위한 몇몇의 편리함을 제공한다.
+
+#### 32.2.1 Connecting to a MongoDB Database
 
 --- 
 
 ##### 단어  
 
+arbitrary : 임의적인, 제멋대로인  
+appropriate : 적절한  
+make use of smt : ~을 이용[활용]하다  
 hold : 보유하다.  
 fine-grain : 세분화되는  
 along with : 같이, 함께, 더불어, ~에 덧붙여, ~와 마찬가지로  
