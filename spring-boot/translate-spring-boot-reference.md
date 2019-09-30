@@ -2993,10 +2993,130 @@ MongoDB는 전통적인 테이블 기반 관계형 데이터의 대신에 JSON�
 
 #### 32.2.1 Connecting to a MongoDB Database
 
+Mongo 데이터베이스에 접근하기 위해서 `org.springframework.data.mongodb.MongoDbFactory` 자동 설정을 주입할 수 있다. 기본적으로, 인스턴스는 `mongodb://localhost/test`에서 MongoDB 서버로 연결하려고 할 것이다. 다음의 예제는 MongoDB 데이터베이스에 연결하는 방법을 보여준다.
+
+```java
+import org.springframework.data.mongodb.MongoDbFactory;
+import com.mongodb.DB;
+
+@Component
+public class MyBean {
+
+	private final MongoDbFactory mongo;
+
+	@Autowired
+	public MyBean(MongoDbFactory mongo) {
+		this.mongo = mongo;
+	}
+
+	// ...
+
+	public void example() {
+		DB db = mongo.getDb();
+		// ...
+	}
+
+}
+```
+
+replica set와 같은 추가적인 설정 구성과 URL를 변경하는 `spring.data.mongodb.uri` 속성을 설정할 수 있다. 다음은 예제를 보여준다.
+
+```
+spring.data.mongodb.uri=mongodb://user:secret@mongo1.example.com:12345,mongo2.example.com:23456/test
+```
+
+대신에, 당신이 사용하고 있는 Mongo 2.x 뿐만아니라 `host`/`post`를 명시할 수 있다. 예를 들어서, `application.properties`에 다음의 설정을 선언할 수 있다.
+
+```
+spring.data.mongodb.host=mongoserver
+spring.data.mongodb.port=27017
+```
+
+`MongoClient`에 정의되어 있으면, 적합한 `MongoDbFactory` 자동 설정을 사용할 것이다. `com.mongodb.MongoClient`와 `com.mongodb.client.MongoClient` 둘 다 지원된다.
+
+> Mongo 3.0 Java 드라이버를 사용하는 경우에는, `spring.data.mongodb.host`와 `spring.data.mongodb.port`가 지원되지 않는다. 이러한 경우에는 설정의 모든 것을 제공하는 `spring.data.mongodb.uri`를 사용해야 한다.
+
+> `spring.data.mongodb.port`가 명시되어 있지않으면, 기본으로 `27017`가 사용된다. 이전에 보여준 예제에서 이 라인을 지울 수 있다.
+
+> Spring Data Mongo를 사용하지 않는 경우, `MongoDbFactory`를 사용하는것 대신에 `com.mongodb.MongoClient`빈을 주입할 수 있다. MongoDB 연결을 구축하는것의 완전한 조작을 원한다면, `MongoDbFactory`나 `MongoClient`빈을 선언 할 수도 있다.
+
+> reactive 드라이버를 사용하는 경우, Netty는 SSL을 필요로 한다. Netty가 사용가능하고 커스터마이즈가 되지 않은 팩토리일 경우 이 팩토리는 자동적으로 자동설정을 구성한다.
+
+#### 32.2.2 Mongo Template
+
+[Spring Data MongoDB](https://spring.io/projects/spring-data-mongodb)는 Spring의 `JdbcTemplate`과 디자인이 유사한 [`MongoTemplate`](https://docs.spring.io/spring-data/mongodb/docs/2.1.10.RELEASE/api/org/springframework/data/mongodb/core/MongoTemplate.html) 클래스를 제공한다. 다음 처럼, `JdbcTemplate`로서, 스프링 부트는 주입한 템플릿에 대한 빈을 자동 설정한다.
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyBean {
+
+	private final MongoTemplate mongoTemplate;
+
+	@Autowired
+	public MyBean(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
+
+	// ...
+
+}
+```
+
+더 자세한 사항에 대한 것은 [`MongoOperations`](https://docs.spring.io/spring-data/mongodb/docs/2.1.10.RELEASE/api/org/springframework/data/mongodb/core/MongoOperations.html) [Javadoc](https://docs.spring.io/spring-data/mongodb/docs/2.1.10.RELEASE/api/org/springframework/data/mongodb/core/MongoOperations.html)을 참조해라
+
+
+#### 32.2.3 Spring Data MongoDb Repositories
+
+Spring Data는 MongoDB에 대해서 지원하는 repository를 포함하고 있다. 이전에 본 JPA repository와 같이 기본적으로 중요한 것은 메소드 이름에 기반해서 쿼리는 자동적으로 만들어지는 것이다.
+
+사실은, Spring Data JPA와 Spring Data MongoDB 둘다 동일한 공통의 ~를 공유하고 있다. 이전에 한 JPA 예제를 가지고 `City`를 JPA `@Entity` 대신에 이젠 Mongo 데이터 클래스라고 가정하면 다음으로 보여지는 예제처럼 동일한 방식으로 작동할 것이다.
+
+```java
+package com.example.myapp.domain;
+
+import org.springframework.data.domain.*;
+import org.springframework.data.repository.*;
+
+public interface CityRepository extends Repository<City, Long> {
+
+	Page<City> findAll(Pageable pageable);
+
+	City findByNameAndStateAllIgnoringCase(String name, String state);
+
+}
+```
+
+> `@EntityScan` 어노테이션을 사용해서 문서를 스캔하는 위치를 커스터마이즈할 수 있다.
+
+> 풍부한 오브젝트 매핑 기술을 포함하고 있는 Spring Data MongoDB의 보아 자세한 사항에 대해서는 [reference documentation](https://spring.io/projects/spring-data-mongodb)를 참조해라.
+
+#### 32.2.4 Embedded Mongo
+
+스프링 부트는 임베디드 Mongo에 대한 자동 설정을 제공한다. 스프링 부트 어플리케이션에서 사용하기 위해서는 `de.flapdoodle.embed:de.flapdoodle.embed.mongo` 의존성을 추가해라.
+
+`spring.data.mongodb.port`속성을 설정해서 Mongo가 Listen하는 포트를 설정할 수 있다. 무작위로 할당된 포트를 사용하려면, 0의 값을 사용해라. `MongoAutoConfiguration`으로 생성된 `MongoClient`는 무작위로 할당된 포트를 사용해서 자동적으로 설정된다.
+
+> 커스텀 포트를 설정하고 싶지 않으면, 임베디드 Mongo는 기본적으로 랜덤 포트(27017가 아닌))를 사용한다.
+
+클래스패스에 SLF4J를 있는 경우 Mongo로 만들어진 출력은 `org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongo`라는 이름의 로거에 자동적으로 라우트된다.
+
+Mongo 인스턴스의 설정과 로깅 라우팅을 완전히 조작하기 위해서 `IMongodConfig`와 `IRuntimeConfig`빈을 선언할 수 있다.
+
+#### 32.3 Neo4j
+
+
+
+
 --- 
 
 ##### 단어  
 
+assuming : 가령 ~라면, ~라고 가정하고  
+as with : ~와 같이, ~에서 처럼  
 arbitrary : 임의적인, 제멋대로인  
 appropriate : 적절한  
 make use of smt : ~을 이용[활용]하다  
