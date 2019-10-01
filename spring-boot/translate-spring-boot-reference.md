@@ -3106,8 +3106,60 @@ public interface CityRepository extends Repository<City, Long> {
 
 Mongo 인스턴스의 설정과 로깅 라우팅을 완전히 조작하기 위해서 `IMongodConfig`와 `IRuntimeConfig`빈을 선언할 수 있다.
 
-#### 32.3 Neo4j
+## 32.3 Neo4j
 
+Neo4j는 첫번째 클래스 관계로 연결된 풍부한 노드 데이터 모델을 사용하는 오픈소스 NoSQL 그래프 데이터베이스이다. 전통적인 RDBMS에 접근 방식보다 큰 데이터에 연결하는 것에 대해 더 적합하다. 스프링 부트는 `spring-boot-starter-data-neo4j` "Starter"를 포함해서 Neo4j를 사용하여 작업하는것에 대해 몇몇의 편리함을 제공한다.
+
+#### 32.3.1 Connecting to a Neo4j Database
+
+Neo4j 서버에 접근하기 위해서, `org.neo4j.ogm.session.Session` 자동 설정을 주입할 수 있다. 기본적으로, 인스턴스는 Bolt 프로토콜을 사용해서 `localhost:7687`에 Neo4j 서버에 연결하려 한다. 다음의 예제는 Neo4j `Session`을 주입하는 법을 보여준다.
+
+```java
+@Component
+public class MyBean {
+
+	private final Session session;
+
+	@Autowired
+	public MyBean(Session session) {
+		this.session = session;
+	}
+
+	// ...
+
+}
+```
+`spring.data.neo4j.*`를 설정을 사용해서 uri와 자격정보를 설정 할 수 있다.
+
+```
+spring.data.neo4j.uri=bolt://my-server:7687
+spring.data.neo4j.username=neo4j
+spring.data.neo4j.password=secret
+```
+
+`org.neo4j.ogm.config.Configuration`빈이나 `org.neo4j.ogm.session.SessionFactory`를 추가해서 세션 구축의 모든 조작을 할 수 있다.
+
+#### 32.3.2 Using the Embedded Mode
+
+어플리케이션의 의존성에 `org.neo4j:neo4j-ogm-embedded-driver`를 추가하는 경우, 스프링 부트는 어플리케이션을 종료 될 때 데이터를 지속하지 않는 Neo4j의 공정중의 내장된 인스턴스 자동적으로 설정한다.
+
+> 내장된 Neo4j OGM 드라이버는 Neo4j 커널 자체를 제공하지 않으므로, 직접 의존성으로 `org.neo4j:neo4j`를 선언해야한다. 호환된 버전의 목록에 대해 Neo4j OGM doumentation을 참조해라.
+
+다양한 드라이버가 클래스패스에 있을 떄 내장된 드라이버는 다른 드라이버들보다 우선한다. `spring.data.neo4j.embedded.enabled=false`를 설정해서 내장된 모드를 명시적으로 비활성화 할 수 있다.
+
+위에 설명한 것처럼 클래스 패스에 Neo4j 커널과 내장된 드라이버가 있는 경우 Data Neo4j Tests는 내장된 Neo4j 인스턴스를 자동적으로 사용한다.
+
+> `spring.data.neo4j.uri=file://var/tmp/graph.db.` 처럼 설정에 있는 데이터베이스 파일에 제공된 경로로서 내장된 모드에 대한 영속성을 활성화 할 수 있다.
+
+#### 32.3.3 Neo4jSession
+
+기본적으로, 웹 어플리케이션을 실행하는 경우, 세션은 요청의("Open Session in View" 패턴을 사용한다.) 전체 처리를 위해 쓰레드에 바인드 된다. 이러한 작동을 원하지 않는 경우에는 `application.properties` 파일에 다음의 라인을 추가해라:
+
+```
+spring.data.neo4j.open-in-view=false
+```
+
+#### 32.3.4 Spring Data Neo4j Repositories
 
 
 
@@ -3115,6 +3167,11 @@ Mongo 인스턴스의 설정과 로깅 라우팅을 완전히 조작하기 위�
 
 ##### 단어  
 
+take[have] (the) precedence of[over] : ~보다 우월[우선]하다  
+compatible : 호환이 되는, 양립될 수 있는, 화합할 수 있는  
+in-process : 제조 과정에 있는, 제조 과정의, 공정중, 인프로세스  
+creation : 구축, 창조, 창작, 창출  
+approach : 다가가다[오다] / 접근법, 처리방법  
 assuming : 가령 ~라면, ~라고 가정하고  
 as with : ~와 같이, ~에서 처럼  
 arbitrary : 임의적인, 제멋대로인  
