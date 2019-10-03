@@ -3161,12 +3161,83 @@ spring.data.neo4j.open-in-view=false
 
 #### 32.3.4 Spring Data Neo4j Repositories
 
+Spring Data는 Neo4j에 대한 지원을 하는 repository를 포함한다.
+
+Spring Data Neo4j는 다른 많은 Spring Data 모듈처럼 Spring Data JPA와 공통의 인프라를 공유한다. 다음의 예제에 보여지는 것 처럼, 이전의 JPA 예제에서 JPA `@Entiry`대신에 Neo4j OGM `@NodeEntity`로 `City`를 정의할 수 있고 repository 추상화는 동일한 방식으로 작동한다.
+
+```java
+package com.example.myapp.domain;
+
+import java.util.Optional;
+
+import org.springframework.data.neo4j.repository.*;
+
+public interface CityRepository extends Neo4jRepository<City, Long> {
+
+	Optional<City> findOneByNameAndState(String name, String state);
+
+}
+```
+
+`spring-boot-starter-data-neo4j` "Starter"는 repository 지원뿐만 아니라 트랜잭션 관리도 사용가능하다. `@Configuration`빈에 있는 각각`@EnableNeo4jRepositories`와 `@EntityScan`를 사용하는 엔티티와 repository에 대한 위치를 커스터마이즈 할 수 있다.
+
+> 오브젝트 매핑 기술을 포함하고 있는 Spring Data Neo4j의 자세한 사항들은 [reference documentation](https://docs.spring.io/spring-data/neo4j/docs/5.1.11.RELEASE/reference/html/)을 참조해라.
+
+### 32.4 Solr
+
+Apache Solr는 검색 엔진이다. 스프링 부트는 Spring Data Solr로 제공 된 추상화와 Solr 5 client 라이브러리에 대한 기본 자동 설정을 제공한다. 편리한 방법으로 의존성을 수집하는 `spring-boot-starter-data-solr` "Starter"가 있다. 
+
+#### 32.4.1 Connecting to Solr
+
+다른 스프링 빈으로서 자동 설정된 `SolrClient`인스턴스를 주입할 수 있다. 기본적으로 인스턴스는 `localhost:8983/solr`의 서버로 접근하려 한다. 다음의 예제는 Solr 빈을 주입하는 방법에 대해서 보여준다.
+
+```java
+@Component
+public class MyBean {
+
+	private SolrClient solr;
+
+	@Autowired
+	public MyBean(SolrClient solr) {
+		this.solr = solr;
+	}
+
+	// ...
+
+}
+```
+
+`SolrClient`타입의 자신만의 `@Bean`을 추가하는 경우, 기본값을 대체한다.
+
+#### 32.4.2 Spring Data Solr Repositories
+
+Spring Data Apache Solr에 대해서 지원하는 repository를 포함한다. 이전에 JPA repository처럼, 기본적인 원리는 쿼리가 메소드 이름에 기반해서 자동적으로 생성된다는 것이다.
+
+사실은 Spring Data와 Spring Data Solr 둘 다 동일한 공통 인프라를 공유한다. 이전에 JPA 예제에서 `City`가 JPA `@Entity`대신에 이젠 `@SolrDocument`클래스라고 가정하고 동일한 방식으로 작동한다.
+
+IP: Spring Data Solr의 더 자세한 사항은, [reference documentation](https://docs.spring.io/spring-data/solr/docs/4.0.11.RELEASE/reference/html/)을 참조해라.
+
+### 32.5 Elasticsearch
+
+Elasticsearch는 RESTful 검색과 분석 엔진으로 널리 배포된 오픈 소스이다. 스프링 뷰ㅜ트는 Elasticsearch에 대해 기본 자동 구성을 제공한다
+
+스프링 부트는 몇몇의 HTTP 클라이언트를 지원한다.:
+
+- 공식 Java "Low Level"과 "High Level" REST 클라이언트
+- [Jest](https://github.com/searchbox-io/Jest)
+
+전송 클라이언트는 여전히 Spring Data Elasticsearch로 사용되어지고 있고 `spring-boot-starter-data-elasticsearch` "Starter"을 사용해서 실행할 수 있다.
+
+#### 32.5.1 Connecting to Elasticsearch by REST clients
+
 
 
 --- 
 
 ##### 단어  
 
+distributed : 널리 분포된, 광범위한, 배포된   
+basic principle : 기본 원칙, 기본(적인) 원리  
 take[have] (the) precedence of[over] : ~보다 우월[우선]하다  
 compatible : 호환이 되는, 양립될 수 있는, 화합할 수 있는  
 in-process : 제조 과정에 있는, 제조 과정의, 공정중, 인프로세스  
