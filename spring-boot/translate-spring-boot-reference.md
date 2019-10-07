@@ -2396,9 +2396,9 @@ Setters는 많은 설정 옵션에 대해서 제공한다. 몇몇의 protected �
 
 - Jetty와 Tomcat을 사용하면, war 패키징을 하는 경우 작동한다. 실행가능한 war는 `java -jar`를 실행할 때 작동하고, 또한 어느 표준 컨테이너에 배포 할 수 있다. JSP는 실행가능한 jar를 사용할 때 지원받을 수 없다.
 - Undertow는 JSP를 지원하지 않는다.
-- 커스텀 `error.jsp` 페이지를 생성하는 것은 [에러 핸들링](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-error-handling)에 대한 기본 뷰를 재정의를 안한다. 대신 [커스텀 에러 페이지](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-error-handling-custom-error-pages)가 사용해야 한다.
+- 커스텀 `error.jsp` 페이지를 생성하는 것은 [에러 핸들링](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-error-handling)에 대한 기본 뷰를 재정의를 안한다. 대신 [커스텀 에러 페이지](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-error-handling-custom-error-pages)를 사용해야 한다.
 
-설정하는 방법을 볼 수 있도록 [JSP 예제](https://github.com/spring-projects/spring-boot/tree/v2.1.7.RELEASE/spring-boot-samples/spring-boot-sample-web-jsp)가 있다.
+설정하는 방법을 볼 수 있는 [JSP 예제](https://github.com/spring-projects/spring-boot/tree/v2.1.7.RELEASE/spring-boot-samples/spring-boot-sample-web-jsp)가 있다.
 
 
 ### 29.5 Embedded Reactive Server Support
@@ -3229,13 +3229,67 @@ Elasticsearch는 RESTful 검색과 분석 엔진으로 널리 배포된 오픈 �
 전송 클라이언트는 여전히 Spring Data Elasticsearch로 사용되어지고 있고 `spring-boot-starter-data-elasticsearch` "Starter"을 사용해서 실행할 수 있다.
 
 #### 32.5.1 Connecting to Elasticsearch by REST clients
+#### 32.5.2 Connecting to Elasticsearch by Using Jest
+#### 32.5.3 Connecting to Elasticsearch by Using Spring Data
+#### 32.5.4 Spring Data Elasticsearch Repositories
+### 32.6 Cassandra
+#### 32.6.1 Connecting to Cassandra
+#### 32.6.2 Spring Data Cassandra Repositories
+### 32.7 Couchbase
+#### 32.7.1 Connecting to Couchbase
+#### 32.7.2 Spring Data Couchbase Repositories
+### 32.8 LDAP
+#### 32.8.1 Connecting to an LDAP Server
+#### 32.8.2 Spring Data LDAP Repositories
+#### 32.8.3 Embedded In-memory LDAP Server
+### 32.9 InfluxDB
+#### 32.9.1 Connecting to InfluxDB
 
+### 33. Caching
+
+스프링 프레임워크는 어플리케이션에 투명하게 캐싱을 추가하는 것에 대한 지원을 제공한다. 핵심은, 추상화는 메소드에 캐싱을 허용하므로 캐시에 있는 사용 가능한 정보에 기반한 실행 횟수를 줄인다. 캐싱 로직은 호출자의 개입이 없이 투명하게 적용된다. 스프링 부트는 `@EnableCaching` 어노테이션 을 통해 캐싱을 지원이 활성화하는 한 캐시 인프라를 자동 설정한다.
+
+> 더 자세한 것들은 스프링 프레임워크 레퍼런스의 관련 섹션을 확인해라.
+
+간단명료하게, 다음 예제에서 보여지는 것 처럼, 당신의 서비스 운명에 캐싱을 추가하는 것은 메소드에 관련있는 어노테이션을 추가하는 것 만큼 쉽다. 
+
+```java
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MathService {
+
+	@Cacheable("piDecimals")
+	public int computePiDecimal(int i) {
+		// ...
+	}
+
+}
+```
+
+이 예제는 잠재적으로 비용이 많이 드는 운용에서 캐싱의 사용을 보여준다. `computePiDecimal`을 호줄하기 전에, 추상화는 `i`인자와 일치하는 `piDecimals` 캐시에 들어갈 항목을 찾는다. 항목을 찾았으면, 캐시에 있는 내용은 즉시 호출자에게 반환되고 메소드는 호출되지 않는다. 그렇지 않으면, 메소드가 호출되고 캐시는 값이 반환되기 전에 업데이트 된다.
+
+	> 주의
+	투명하게 표준 JSR-107 (JCache) 어노테이션을 사용할 수 도 있다. 하지만, Spring Cache와 JCache 어노테이션에 일치하는 것과 혼합하지 않는 것을 강력히 조언한다. (However, we strongly advise you to not mix and match the Spring Cache and JCache annotations.)
 
 
 --- 
 
 ##### 단어  
 
+entry : (개별)항목  
+invoking : 호출  
+demonstrate : 증거를 들어가며 보여주다, 입증하다
+as ~ as : ~만큼  
+In a nutshell : 아주 간결하게, 아주 분명히, 간단명료하게  
+relevant : 관련있는, 적절한  
+as long as : ~이기만[하기만] 하면, ~하는 동안은, ~하는 한은, ~이기 때문에  
+via : (어떤 장소를) 경유하여[거쳐]  
+invoker : 호출자  
+interference : 간섭, 참견, 개입, 방해  
+thus : 이렇게 하여, 이와 같이, 따라서, 그러므로  
+at its core : 핵심은  
 distributed : 널리 분포된, 광범위한, 배포된   
 basic principle : 기본 원칙, 기본(적인) 원리  
 take[have] (the) precedence of[over] : ~보다 우월[우선]하다  
