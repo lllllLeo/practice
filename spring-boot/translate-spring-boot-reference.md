@@ -3273,11 +3273,64 @@ public class MathService {
 	> 주의
 	투명하게 표준 JSR-107 (JCache) 어노테이션을 사용할 수 도 있다. 하지만, Spring Cache와 JCache 어노테이션에 일치하는 것과 혼합하지 않는 것을 강력히 조언한다. (However, we strongly advise you to not mix and match the Spring Cache and JCache annotations.)
 
+특정 캐시 라이브러리를 추가하지 않는경우에는, 스프링 부트는 메모리에 공존하는 맵을 사용하는 단순 제공자를 자동 설정한다. 캐시가 필요할 때(이전의 예제에 있던 `piDecimals`같은), 이 제공자는 당신에게 캐시를 만들어 줄 것이다. 이 단순 공급자는 개발 용도에 대해선 추천하지 않지만 시작하기 좋고 이 기능을 이해하는지 확인하는 것에 좋다. 캐시 공급자를 사용하기로 결정했을 때, 어플리케이션에서 사용하는 캐시를 설정하는 방법을 이해하기 위해서 문서를 읽어서 확인을 해라. 거의 모든 공급자들은 어플리케이션에서 사용하는 모든 캐시를 명확하게 설정하는 것을 요구 할 것이다. 일부는 `spring.cache.cache-names` 속성으로 기본적으로 정의된 캐시를 사용자 정의하는 방법을 제공한다.
+
+> 캐시에서 투명하게 데이터를 제거하거나 업데이트도 가능하다.
+
+### 33.1 Supported Cache Providers
+
+캐시 추상화는 `org.springframework.cache.Cache and org.springframework.cache.CacheManager` 인터페이스로 구체화 된 추상화를 필요로하고 실제 저장공간을 제공하지 않는다.
+
+`cacheResolver`([`CachingConfigurer`](https://docs.spring.io/spring/docs/5.1.10.RELEASE/javadoc-api/org/springframework/cache/annotation/CachingConfigurer.html)을 봐라)이란 이름으로 된 `CacheResolver`나 `CacheMangager` 타입의 빈을 정의하지 않은 경우, 스프링 부트는 다음의 공급자를 감지하려고 한다.
+
+1. Generic
+2. JCache (JSR-107) (EhCache 3, Hazelcast, Infinispan, and others)
+3. EhCache 2.x
+4. Hazelcast
+5. Infinispan
+6. Couchbase
+7. Redis
+8. Caffeine
+9. Simple
+
+> `spring.cache.type` 속성을 설정함으로서 특정 캐시 공급자를 강제 할 수 도 있다. 특정 환경(테스트 같은)에서 캐싱을 완전히 비활성화할 필요가 있는 경우 이 속성을 사용해라.
+
+> 기보노 캐싱 의존성을 빠르게 추가하려면  `spring-ov==boot-starter-cache` "Starter"를 사용해라. starter는 `spring-context-support`에서 가져온다. 수동적으로 추가하는 경우, 지원하는 JCache, EhCache 2.x나 Caffeine을 사용하기 위해서 `spring-context-support`를 포함해야 한다.
+
+`CacheManager`가 스프링 부트에서 자동 설정 된 경우, `CacheManagerCustomizer` 인터페이스를 구현하는 빈으로 노출함으로써 `CacheManager`가 완전히 초기화되기 전에 구성을 더 많은 수정을 할 수 있다. 다음의 예제는 기본 맵에 `null` 값 물려받아야 한다는 것을 말하는 플래스를 설정하고 있다.
+
+```java
+@Bean
+public CacheManagerCustomizer<ConcurrentMapCacheManager> cacheManagerCustomizer() {
+	return new CacheManagerCustomizer<ConcurrentMapCacheManager>() {
+		@Override
+		public void customize(ConcurrentMapCacheManager cacheManager) {
+			cacheManager.setAllowNullValues(false);
+		}
+	};
+}
+```
+
+> 위의 예제에서, 자동 설정된 `ConcurrentMapCacheManager`가 기대된다. 이 경우가 아니라면, 커스터마이저는 전혀 호출되지 않는다. 당신이 원하는 많은 커스터마이저 만큼 가질 수 있고, `@Order`나 `Ordered`를 사용해서 이들에게 명령할 수도 있다.
+
+#### 33.1.1 Generic
+
+#### 33.1.2 JCache (JSR-107)
 
 --- 
 
 ##### 단어  
 
+pass down : 물려주다.  
+underlying : 기본, 근본적인, 근원적인  
+certain : 확실한, 틀림없는, 특정  
+특정 : particular, specific, certain  
+altogether : 완전히, 전적으로, 모두 합쳐, 총, 전체적으로 보아, 대체로  
+materialize : 구체화되다[실현되다]  
+from : ~에서, ~로부터  
+make up your mind : 마음을 정하다[결정하다], 결심하다.  
+production usage : 개발 용도  
+concurrent : 공존하는, 동시에 발생하는  
 entry : (개별)항목  
 invoking : 호출  
 demonstrate : 증거를 들어가며 보여주다, 입증하다
@@ -3441,7 +3494,7 @@ representation : 묘사
 richer : 풍부한  
 Doing so ~ : 이렇게 하면, 그렇게 하면  
 alongside : ~옆에, 나란히, ~화 함께, ~와 동시에  
-make sure ~ : 반드시 (~하도록) 하다  
+make sure ~ : 반드시 (~하도록) 하다, ~임을 확인하다  
 equivalent : 동등한, 맞먹는  
 so that : ~하도록 하다  
 preserved : 보존된  
