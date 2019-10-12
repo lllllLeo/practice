@@ -3314,13 +3314,40 @@ public CacheManagerCustomizer<ConcurrentMapCacheManager> cacheManagerCustomizer(
 > 위의 예제에서, 자동 설정된 `ConcurrentMapCacheManager`가 기대된다. 이 경우가 아니라면, 커스터마이저는 전혀 호출되지 않는다. 당신이 원하는 많은 커스터마이저 만큼 가질 수 있고, `@Order`나 `Ordered`를 사용해서 이들에게 명령할 수도 있다.
 
 #### 33.1.1 Generic
+Generic 캐싱은 적어도 `org.springframework.cache.Cache` 하나를 컨텍스트에 정의하는 경우에사용된다.
 
 #### 33.1.2 JCache (JSR-107)
+
+JCache는 클래스패스에 `javax.cache.spi.CachingProvider`가 존재함을 통해서 부트스트랩되고 `JCacheCacheManager`은 `spring-boot-starter-cache` "Starter"에서 제공된다. 다양한 호환 라이브러리들을 사용 가능하고, 스프링 부트는 Ehcache 3, Hazelcast와 Infinispan에 대해 의존성 관리를 제공한다. 다른 호환 라이브러리들도 추가할 수 있다.
+
+공급자가 하나 이상으로 존재할 경우, 공급자는 명확하게 명시해줘야한다. 다음의 예제처럼, 표준 JSR-107가 설정 파일의 위치를 정의하기 위한 표준화 한 방법을 실행하지 않는다 하더라도 스프링 부트는 세부 사항들을 구현을 해서 캐시 설정을 수용하기 위해서 최선을 다한다.
+
+```
+   # Only necessary if more than one provider is present
+spring.cache.jcache.provider=com.acme.MyCachingProvider
+spring.cache.jcache.config=classpath:acme.xml
+```
+
+> 캐시 라이브러리가 네이티브 구현체와 지원하는 JSR-107 둘 다 제공할 때, 다른 JSR-107 구현체로 스위치하는 경우에 동일한 기능을 사용 가능하게 하도록 스프링 부트는 지원하는 JSR-107을 선호한다. 
+
+> 스프링 부트는 Hazelcast에 대한 일반적인 지원을 가지고 있다. 하나의 `HazelcastInstance`가 사용 가능한 경우, `spring.cache.jcache.config`속성을 명시하지 않는 한 `CacheManager`에 대해서도 자동적으로 재사용된다.
+
+기본적인 `javax.cache.cacheManger`을 커스터마이즈하는 두 가지 방법이 있다:
+ - 캐시는 `spring.cache.cache-names` 속성을 설정함으로써 시작할 때 생성할 수 있다. 커스텀 한 `javax.cache.configuration.Configuration` 빈을 정의하는 경우, 이는 커스터마이즈 하기 위해 사용된다.
+ - `org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer` 빈을 모든 사용자 정의에 대해서 `CacheManger`의 참조를 사용해서 호출한다.
+
+ > 표준 `javax.cache.CacheManager` 빈을 정의하는 경우, 추상화가 예상하는 `org.springframework.cache.CacheManger` 구현체에 자동적으로 덮어 씌워진다. 더 이상의 커스터마이즈는 적용되지 않는다.
+
+#### 33.1.3 EhCache 2.x
+
 
 --- 
 
 ##### 단어  
 
+accommodate : (의견 / 살거나 지낼 공간 등을) 수용하다, 
+as well : (~뿐만 아니라/~은 물론) ~도
+compliant : 부합하는, 준수하는, 부응하는, 따르는, 순응하는, 호환  
 pass down : 물려주다.  
 underlying : 기본, 근본적인, 근원적인  
 certain : 확실한, 틀림없는, 특정  
