@@ -3340,11 +3340,112 @@ spring.cache.jcache.config=classpath:acme.xml
 
 #### 33.1.3 EhCache 2.x
 
+EhCache 2.x는 클래스패스의 최상위에서 `ehcache.xml`라는 파일 이름을 찾을 수 있는 경우에 사용된다. EhCache 2.x가 찾아지면, `spring-boot-starter-chace` "Starter"로서 제공되는 `EhCacheCacheManager`는 캐시 매니저를 부트스트랩하는데 사용된다.  다음에 보여지는 예제처럼 다른 설정 파일을 제공할 수도 있다.
+
+```
+spring.cache.ehcache.config=classpath:config/another-config.xml
+```
+
+#### 33.1.4 Hazelcast
+
+스프링 부트는 Hazelcast에 대한 일반적인 지원을 가지고 있다. `HazelcastInstance`가 자동 설정된 경우, `Cachemanager`에서 자동적으로 덮어씌워진다.
+
+#### 33.1.5 Infinispan
+
+Infinispan은 기본 설정 파일 위치를 가지고 있지 않으므로 위치를 명확하게 명시해줘야 한다. 그렇지 않으면, 기본적인 부트스트랩이 사용된다.
+
+```
+spring.cache.infinispan.config=infinispan.xml
+```
+
+캐시는 `spring.cache.cache-names`를 설정함으로서 실행될 떄 생성할 수 있다. 사용자 정의한 `ConfigurationBuilder` 빈을 정의한 경우에는, 이는 캐시를 커스터마이즈 하기 위해 사용된다.
+
+> 스프링 부트에서 Infinispan의 지원은 임베디드 모드에서 제약이 있고 매우 기본적이다. 더 많은 옵션을 원한다면, 공식 Infinispan 스프링 부트 스타터를 대신 사용해야 한다. 더 자세한 사항들은 [Infinispan's documentation](https://github.com/infinispan/infinispan-spring-boot)을 참조해라.
+
+#### 33.1.6 Couchbase
+
+Couchbase 자바 클라이언트와 `couchbase-spring-cache`구현체가 사용가능하고 Couchbase가 설정되어 있을 경우, `CouchbaseCacheManager`은 자동으로 설정된다. `spring.cache.cache-names` 속성을 설정함으로써 실행 시킬 떄 추가적인 캐시를 생성하는 것도 가능하다. 이 캐시들은 자동 설정되어있는 `Bucket`에서 작동한다. 커스터마이저를 사용해서 다른 `Bucket`에서 추가적인 캐시를 생성할 수 도 있다. 가령 "main" `Bucket`에서 두 개의 캐시(`cache1`와 `cache2`)와 "다른" `Bucket`에서 캐시가 2초간 살아있게 시간을 커스텀 한 하나의 캐시를 필요로 한다면 다음 처럼, 설정을 통해서 처음의 2개의 캐시를 생성할 수 있다.
+
+```
+spring.cache.cache-names=cache1,cache2
+```
+
+그러고 남은 `Bucket`과 `cache3`캐시를 설정하기위해 `@Configuration`클래스를 정의 할 수 있다.
+
+```java
+@Configuration
+public class CouchbaseCacheConfiguration {
+
+	private final Cluster cluster;
+
+	public CouchbaseCacheConfiguration(Cluster cluster) {
+		this.cluster = cluster;
+	}
+
+	@Bean
+	public Bucket anotherBucket() {
+		return this.cluster.openBucket("another", "secret");
+	}
+
+	@Bean
+	public CacheManagerCustomizer<CouchbaseCacheManager> cacheManagerCustomizer() {
+		return c -> {
+			c.prepareCache("cache3", CacheBuilder.newInstance(anotherBucket())
+					.withExpiration(2));
+		};
+	}
+
+}
+```
+
+이 설정 예제는 자동 설정을 통해서 생성 된 `Cluster`를 재사용한다.
+
+#### 33.1.7 Redis
+
+Redis가 설정되어있고 활성화 되어 있는 경우, `RedisCacheManager`는 자동 설정된다. `spring.cache.cache-names` 속성을 설정함으로써 실행 될 때 추가적으로 캐시를 생성할 수도 있고 `spring.cache.redis.*` 속성을 사용함으로써 캐시 기본값을 설정할 수 있다. 예를 들어서, 다음의 설정은 10분 동안 살아있게 하는 `cache1`과 `cache2` 캐시를 생성한다.
+
+```
+spring.cache.cache-names=cache1,cache2
+spring.cache.redis.time-to-live=600000
+```
+
+> 기본적으로, 키 접두사가 추가되어 두 개의 분리된 캐시가 동일한 키를 사용하는 경우, Redis는 중복된 키를 가지지 않고 무효한 값을 반환하지 않는다. 당신의 `RedisCacheManager`를 생성하는 경우, 이 설정을 활성화 한 설정을 계속 사용하는 것을 강력히 추천한다.
+
+> 자신만의 `RedisCacheConfiguration` `@Bean`을 추가함으로서 설정의 모든 조작을 할 수 있다. 만약 직렬화 전략을 커스터마이즈하는 것을 찾고 있는다면 이는 유용할 수 있다.
+
+#### 33.1.8 Caffeine
+
+Caffeine은 Guava에 대한 지원을 대채하는 Guava 캐시의 다시 쓰여진 Java 8이다. Caffeine이 존재하는 경우, `CaffeineCacheManager`(`spring-boot-starter-cache` "Starter"로 제동되는)는 자동 설정된다. 캐시는 `spring.cache.cache-names` 속성을 설정함으로서 실행할 때 생성할 수 있고 다음 중 하나처럼 커스터마이즈 할 수 있다.(표시된 순서대로)
+
+1. `spring.cache.caffeine.spec`으로 캐시 사양을 정의한다.
+2. `com.github.benmanes.caffeine.cache.CaffeineSpec`빈을 정의한다.
+3. `com.github.benmanes.caffeine.cache.Caffeine`빈을 정의한다.
+
+예를 들어서, 다음의 설정은 최대 500 크기와 10분 동안 살아있는 `cache1`과 `cache2`캐시를 생성한다.
+
+```
+spring.cache.cache-names=cache1,cache2
+spring.cache.caffeine.spec=maximumSize=500,expireAfterAccess=600s
+```
+
+`com.github.benmanes.caffeine.cache.CacheLoader`빈이 정의되어 있는 경우, `CaffeineCcheManager`에 자동적으로 관련을 맺는다. `CacheLoader`는 캐시 매니저로 모든 캐시를 관리하는 것으로 관련되어지기 때문에, `CacheLoader<Object, Object>`로 정의해줘야 한다. 자동 설정은 다른 generic type을 무시한다.
+
+
+#### 33.1.9 Simple
+
 
 --- 
 
 ##### 단어  
 
+be associated with : ~와 관련되다.  
+in the indicated order : 표시된 순서대로, 지시된 순서대로,  
+supersede : 대체[대신]하다  
+overlap : 겹치다, 포개지다,  
+overlapping : 부분적으로 덮는, 중복된,  
+default : 기본값  
+extra : 추가의, 남은, 가외의, 부가의, 여분의  
+restricted : 제한된[한정된], (할 수 있는 일의 범위 등이)제한된[제약을 받는]  
 accommodate : (의견 / 살거나 지낼 공간 등을) 수용하다, 
 as well : (~뿐만 아니라/~은 물론) ~도
 compliant : 부합하는, 준수하는, 부응하는, 따르는, 순응하는, 호환  
