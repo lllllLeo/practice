@@ -3433,11 +3433,43 @@ spring.cache.caffeine.spec=maximumSize=500,expireAfterAccess=600s
 
 #### 33.1.9 Simple
 
+다른 공급자들을 찾을 수 없는 경우, 캐시 저장소로 `ConcurrentHashMap`를 사용해서 간단한 구현이 구성된다. 이것은 어플리케이션에 캐싱 라이브러리가 없는 경우에 기본값이다. 기본적으로, 캐시는 필요에 의해서 생성되지만 `cache-names` 속성을 설정해서 사용가능한 캐시의 목록을 제한할 수 도 있다. 예를 들어서, `cache1`와 `cache2` 캐시들만 원하는 경우, 다음처럼 `cache-names`  속성을 설정해라.
+
+```
+spring.cache.cache-names=cache1,cache2
+```
+
+이렇게 하고 어플리케이션이 목록에 없는 캐시를 사용하면, 캐시가 필요할 때 런타임 실패하지만 시작 중에서는 아니다. 이는 선언되어 있지 않은 캐시를 사용하는 경우 "real" 캐시 공급자가 하는 행동과 유사하다.
+
+#### 33.1.10 None
+
+설정에 `@EnableCaching`가 존재할 때, 적합한 캐시 설정도 예상되어야 한다(해야한다). 확실한 환경에서 완전히 캐싱을 비활성화 할 필요가 있는 경우에는, 다음에 보이는 예제처럼 no-op 구현을 사용해서 `none` 캐시 타입을 강제해라.
+
+```
+spring.cache.type=none
+```
+
+## 34. Messaging
+
+스프링 프레임워크는 `JmsTemplate`를 사용해서 JMS API의 사용을 간소화 한 것으로 부터 메시지를 비동기로 받는 완전한 인프라에 이르기 까지 메시징 시스템의 통합에 대해서 광범위한 지원을 제공한다. (The Spring Framework provides extensive support for integrating with messaging systems, from simplified use of the JMS API using JmsTemplate to a complete infrastructure to receive messages asynchronously.) Spring AMQP Advanced Message Queuing Protocol에 대한 설정과 유사한 기능을 제공한다. 스프링 부트는 `RabbitTemplate`과 RabbitMQ 에 대한 자동 설정 옵션을 제공한다. Spring WebSocket는 원래부터 STOMP 메시징에 대한 지원을 포함하고 있고 스프링 부트는 starter을 통한 지원과 적은 양의 자동 설정에 대한 지원을 가지고 있다. 스프링 부트는 Apache Kafka에 대한 지원도 한다.
+
+### 34.1 JMS
+
+`javax.jms.ConnectionFactory` 인터페이스는 JMS broker와 상호작용하기 위한 `javax.jms.Connection` 생성의 표준 메서드 제공한다. 스프링은 JMS와 작업하기 위해서 `ConnectionFactory`가 필요함에도 불구하고, 일반적으로 직접 사용 할 필요가 없고 대신 높은 레벨 메시징 추상화에 의지할 수 있다. (자세한 사항들에 대해서는 Spring Framework reference documentation의 [관련 섹션](https://docs.spring.io/spring/docs/5.1.10.RELEASE/spring-framework-reference/integration.html#jms)을 참조해라. 스프링 부트는 메시지를 보내고 받기 위해 필요한 인프라를 자동 설정도 한다.
+
+#### 34.1.1 ActiveMQ Support
+
+
 
 --- 
 
 ##### 단어  
 
+interaction : 상호작용  
+interacting : 상호작용, (특히 작업 중에)소통하다[교류하다]
+simplified : 간소화한, 간략하게 한, 쉽게 한  
+is expected : ~으로 예상된다 -> ~일 것이다.  
+[[none, no, not !]]
 be associated with : ~와 관련되다.  
 in the indicated order : 표시된 순서대로, 지시된 순서대로,  
 supersede : 대체[대신]하다  
