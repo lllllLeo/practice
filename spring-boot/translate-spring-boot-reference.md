@@ -3459,12 +3459,46 @@ spring.cache.type=none
 
 #### 34.1.1 ActiveMQ Support
 
+클래스패스에서 ActiveMQ가 활성화되어 있을 떄, 스프링 부트는 `ConnectionFactory`를 설정할 수도 있다. 브로커가 존재하는 경우, 내장된 브로커는 자동으로 시작되고 설정된다.(설정을 통해서 브로커 URL이 정의되지 않은 경우)
+
+> `spring-boot-starter-activemq`를 사용한다면, JMS로 통합하기 위한 스프링 인프라처럼 내장 ActiveMQ 인스턴스나 연결하기 위해서 필요한 의존성이 제공된다.
+
+ActiveMQ 설정은 `spring.activemq.*.`에 외부 설정 속성으로 조작되어 있다. 예를 들어서, `application.properties`에 다음의 부분을 선언할 수 있다.
+
+```
+spring.activemq.broker-url=tcp://192.168.1.210:9876
+spring.activemq.user=admin
+spring.activemq.password=secret
+```
+
+기본적으로, `CachingConnectionFactory`는 `spring.jms.*`에 외부 설정 속성을 사용해서 조작할 수 있는 합리적인 설정을 한 네이티브 `ConnectionFactory`를 둘러싸고 있다.
+
+```
+spring.jms.cache.session-cache-size=5
+```
+
+네이티브 풀링을 사용하려고 하는 경우, 다음에 보여지는 예제와 같이 `org.messaginghub.pooled-jms`에 의존성을 추가하고 그에 따른 `JmsPoolConnectionFactory`를 설정함으로서 할 수 있다.
+
+```
+spring.activemq.pool.enabled=true
+spring.activemq.pool.max-connections=50
+```
+
+> 지원되는 옵션에 자세한 사항은 `ActiveMQProperties`를 참조해라. 더 고급 커스텀를 위한 `ActiveMQConnectionFactoryCustomizer`를 구현한 임의적인 수의 빈들을 등록할 수 도 있다.
+
+기본적으로, ActiveMQ는 아직 대상이 존재하지 않는 경우, 제공된 이름에 맞게 대상을 해결하도록 대상을 생성한다. (By default, ActiveMQ creates a destination if it does not yet exist so that destinations are resolved against their provided names.)
+
+##### Artemis Support
 
 
 --- 
 
 ##### 단어  
 
+against : ~에 대조하다, ~에 반대하여
+destination : 대상  
+arbitrary : 제멋대로인, 임의적인  
+arccordingly : 그에 따른, 상응하는,  
 interaction : 상호작용  
 interacting : 상호작용, (특히 작업 중에)소통하다[교류하다]
 simplified : 간소화한, 간략하게 한, 쉽게 한  
