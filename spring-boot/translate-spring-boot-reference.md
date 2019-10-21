@@ -3490,12 +3490,53 @@ spring.activemq.pool.max-connections=50
 
 ##### Artemis Support
 
+스프링 부트는 클래스패스에서 Artemis가 활성화인 것을 감지할 때 `ConnectionFactory`를 자동 설정할 수 있다. 브로커가 존재하는 경우, 내장된 브로거는 자동적으로 시작되고 구성된다(모드 속성이 명확하게 설정되어있지 않는 한에서). 지원되는 모드는 `embedded`와 `native`이다. 후자가 설정 될 때, 스프링 부트는 기본 설정으로 로컬 머신에서 실행하고 있는 브로커에 연결하는 `ConnectionFactory` 를 설정한다.
+
+> `spring-boot-starter-artemis`를 사용하는 경우에는, JMS와 통합하기 위해서 스프링 인프라 뿐만 아니라 존재하는 Artemis 인스턴스에 연결하기위해 필요한 의존성을 제공한다. `org.apache.activemq:artemis-jms-server`를 추가하면 임베디드 모드를 사용할 수 있다.
+
+Artemis 설정은 `spring.artemis.*`에서 외부 설정 속성으로 조작한다. 예를 들어서, `application.properties`에 다음의 섹션을 선언할 수 있다.
+
+```
+spring.artemis.mode=native
+spring.artemis.host=192.168.1.210
+spring.artemis.port=9876
+spring.artemis.user=admin
+spring.artemis.password=secret
+```
+
+브로커를 넣을 때, 영속성을 사용하기를 원하는 경우 선택할 수 있고, 사용 가능하게 만들어진 대상을 나열할 수 있다.(**문장구조** When embedding the broker, you can choose if you want to enable persistence and list the destinations that should be made available.) These can be specified as a comma-separated list to create them with the default options, 또는 `org.apache.activemq.artemis.jms.server.config.JMSQueueConfiguration` 또는 `org.apache.activemq.artemis.jms.server.config.TopicConfiguration` 타입의 빈을 정의할 수 있다.
+
+기본적으로, `spring.jms.*`에서 외부 설정 속성으로 조작할 수 있는 적절한 설정으로 `CachingConnectionFactory`는 네이티브 `ConnectionFactory`를 랩핑한다.
+
+```
+spring.jms.cache.session-cache-size=5
+```
+
+네이티브 풀링을 사용하려는 경우, 다음에 보여지는 예제처럼 `org.messaginghub:pooled-jms`에 의존성을 추가하고 그에 맞게 `JmsPoolConnectionFactory`를 설정함으로써 할 수 있다.
+
+```
+spring.artemis.pool.enabled=true
+spring.artemis.pool.max-connections=50
+```
+
+더 지원되는 옵션에 대한 것은 `ArtemisProperties`를 참조해라.
+
+JNDI는 검색을 포함하지 않고 대상은 Artemis 설정에서 `name` 속성 또는 설정을 통해 제공된 이름을 사용해서 이름에 맞게 해결된다.
+
+##### Using a JNDI ConnectionFactory
+
+
 
 --- 
 
 ##### 단어  
 
-against : ~에 대조하다, ~에 반대하여
+lookup : 검색, 색인  
+would rather... (than) : (~하기 보다는 차라리) ... 하겠다[하고 싶다]
+sensible : 합리적인, 적절한, 실용적인  
+embed : 장착하다, 장치하다, 박다, 
+integrate with : ~와 통합하다.  
+against : ~에 대조하다, ~에 반대하여  
 destination : 대상  
 arbitrary : 제멋대로인, 임의적인  
 arccordingly : 그에 따른, 상응하는,  
