@@ -3525,12 +3525,69 @@ JNDI는 검색을 포함하지 않고 대상은 Artemis 설정에서 `name` 속�
 
 ##### Using a JNDI ConnectionFactory
 
+당신의 어플리케이션 서버에서 어플리케이션을 실행하는 경우, 스프링 부트는 JNDI를 사용해서 JMS `ConnectionFactory`를 위치시키려고 한다. 기본적으로, `java:/JmsXA`와 `java:/XAConnectionFactory` 위치를 체크한다. 다음의 예제처럼 대안의 위치를 정의할 필요가 있는 경우에  `spring.jms.jndi-name` 속성을 사용할 수 있다.
+
+```
+spring.jms.jndi-name=java:/MyConnectionFactory
+```
+
+##### Sending a Message
+
+스프링의 `JmsTemplate`는 자동 설정이고, 다음의 예제처럼 당신의 빈에 직접 autowire를 할 수 있다.
+
+```java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyBean {
+
+    private final JmsTemplate jmsTemplate;
+
+    @Autowired
+    public MyBean(JmsTemplate jmsTemplate) {
+        this.jmsTemplate = jmsTemplate;
+    }
+
+    // ...
+
+}
+```
+
+> `JmsMessagingTemplate`는 비슷한 방식으로 주입할 수 있다. `DestinationResolver`나 `MessageConverter`빈이 정의되어 있는 경우, `JmsMessagingTemplate`는 자동으로 구성된 `JmsTemplate`에 자동적으로 연관된다.
+
+##### Receiving a Message
+
+JMS 인프라가 존재할 때, 어떤 빈이든 `@JmsListener`를 사용해서 어노테이트해서 리스너 엔드포인트를 생성할 수 있다.(When the JMS infrastructure is present, any bean can be annotated with @JmsListener to create a listener endpoint.)
+/// 번역 잘 모르겠음
+`JmsListenerContainerFactory`빈이 정의되어 있지 않는 경우에는, 기본값이 자동적으로 구성된다. `DestinationResolver`나 `MessageConverter`빈이 정의되어 있는 경우에는, 기본 팩토리에 자동적으로 연관된다.
+
+기본적으로, 기본 팩토리는 트랜잭션이다. `JtaTransactionManager`이 존재하는 인프라를 실행한 경우, 기본적으로 리스너 컨테이너에 관련되고 그게 아닌 경우, `sessionTransacted`플래그가 사용가능하다/활성화된다. 후자의 시나리오에서, 당신의 로컬 데이터 스토어 트랜직션을 당신의 리스너 메소드(또는 delegate thereof)에 `@Transactional`를 추가함으로서 들어오는 메시지의 프로세싱과 연관시킬 수 있다. 이는 로컬 트랜잭션이 완료되면/될 때 들어오는 메시지가 승인됐다고 보장한다. 동일한 JMS 세션에서 행해지는 응답 메시지 전송도 포함한다.
+
+다음은 `someQueue` destination에서 리스너 엔드포인트를 생성하는 컴포넌트이다.
+
+```java
+@Component
+public class MyBean {
+
+    @JmsListener(destination = "someQueue")
+    public void processMessage(String content) {
+        // ...
+    }
+
+}
+```
+
+`@EnableJms`에 대한 더 자세한 사항들은 [`@EnableJms` Javadoc](https://docs.spring.io/spring/docs/5.2.1.RELEASE/javadoc-api/org/springframework/jms/annotation/EnableJms.html)을 참조해라.
 
 
 --- 
 
 ##### 단어  
 
+once : (접속사) ...하자마자, ...할 떄
+latter : (둘 중에서) 후자의, (나열된 것들 중에서) 마지막의  
 lookup : 검색, 색인  
 would rather... (than) : (~하기 보다는 차라리) ... 하겠다[하고 싶다]
 sensible : 합리적인, 적절한, 실용적인  
