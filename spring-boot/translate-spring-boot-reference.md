@@ -3584,8 +3584,80 @@ public class MyBean {
 
 --- 
 
+`JmsListenerContainerFactory`인스턴스를 더 생성할 필요가 있다거나 기본값을 오버라이드 하고 싶은 경우, Spring Boot은 자동 설정으로 되어있는  동일한 설정으로서 되어있는 `DefaultJmsListenerContainerFactory`를 초기화에 하는데 사용할 수 있는 `DefaultJmsListenerContainerFactoryCOnfigurer`를 제공한다.
+
+예로 다음의 예는 지정된 `MessageConverter`를 사용한 다른 팩토리를 보여준다.
+
+```java
+@Configuration(proxyBeanMethods = false)
+static class JmsConfiguration {
+
+    @Bean
+    public DefaultJmsListenerContainerFactory myFactory(
+            DefaultJmsListenerContainerFactoryConfigurer configurer) {
+        DefaultJmsListenerContainerFactory factory =
+                new DefaultJmsListenerContainerFactory();
+        configurer.configure(factory, connectionFactory());
+        factory.setMessageConverter(myMessageConverter());
+        return factory;
+    }
+
+}
+```
+
+그러면 다음의 예처럼 모든 `@JmsListener`가 어노테이트된 메소드에서 팩토리를 사용할 수 있다.
+
+```java
+@Component
+public class MyBean {
+
+    @JmsListener(destination = "someQueue", containerFactory="myFactory")
+    public void processMessage(String content) {
+        // ...
+    }
+
+}
+```
+
+#### 4.13.2 AMQP
+
+Advanced Message Queuing Protocol (AMQP)는 메시지 지향 미들웨어를 위한 와이어-레벨 프로토콜인 플랫폼 내츄럴이다. Spring AMQP 프로젝트는 AMQP-기반 메시징 솔류션의 개발에 대한 코어 Spring 컨셉을 지원한다. Spring Boot는 RabbitMQ를 통한 AMQP를 사용해서 작업하는 여러가지의 편리함을 제공하고 "Starter"에 `spring-boot-starter-amqp`가 포함되어 있다.
+
+##### RabbitMQ support
+
+[RabbitMQ](https://www.rabbitmq.com/)는 가볍고, 안정적, 확장성 그리고 휴대 가능한 메시지 브로커를 기반으로한 AMQP 프로토콜이다. Spring은 AMQP protocol을 통해서 커뮤니티하기 위해 `RabbitMQ`는 사용한다.
+
+RabbitMQ 설정은 `spring.rabbitmq.*`의 외부 구성 프로퍼티로 컨트롤 된다. 예를 들어서, `application.properties`에서 다음 섹션을 선언할 수 있다.
+
+```
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=admin
+spring.rabbitmq.password=secret
+```
+
+대신에, `addresses` 속성을 사용해서 같은 커넥션을 구성할 수 도 있다.
+
+```
+spring.rabbitmq.addresses=amqp://admin:secret@localhost
+```
+
+`ConnectionNameStrategy`빈이 컨텍스트에 존재한다면, 자동 설정으로 `ConnectionFactory`로서 생성된 이름과 연결에 자동적으로 사용된다.
+이는 자동적으로 사용된다. 지원되는 옵션을 더 보고 싶으면 `RabbitProperties`를 참조해라.
+(it will be automatically used to name connections created by the auto-configured ConnectionFactory) 
+
+```
+See [Understanding AMQP, the protocol used by RabbitMQ](https://spring.io/blog/2010/06/14/understanding-amqp-the-protocol-used-by-rabbitmq/) for more details.
+```
+
+##### Sending a Message
+
+
+
 ##### 단어  
 
+scalable : 확장성  
+reliable : 믿을만한, 신뢰할 수 있는  
 once : (접속사) ...하자마자, ...할 떄
 latter : (둘 중에서) 후자의, (나열된 것들 중에서) 마지막의  
 lookup : 검색, 색인  
